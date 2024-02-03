@@ -18,13 +18,16 @@ import PIL.Image
 import numpy as np
 import time
 import pathlib
+import os
 
 
 CASE_0 = '64/'
 CASE_1 = '64_INV/'
 CASES = [CASE_0, CASE_1]
 
-DataSourcePath = "C:/Users/eid/Desktop/Code_Images/"
+DataSourcePath = os.path.dirname(os.path.abspath(__name__))
+# "C:/Users/eid/Desktop/Code_Images/"
+print(f"Data source: {DataSourcePath}")
 DATA_0 = 'Asphalt/'
 DATA_1 = 'Bridge/'
 DATA_2 = 'Mendelay_1/'
@@ -205,8 +208,8 @@ def process_data(size, file):
     pass
 
 
-file = DataSourcePath + data + case 
-print(file)
+file = os.path.join(DataSourcePath, data , case) 
+print(f"file: {file}")
 size = 64
 process_data(size, file)
 
