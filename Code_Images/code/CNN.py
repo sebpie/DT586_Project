@@ -25,7 +25,8 @@ CASE_0 = '64/'
 CASE_1 = '64_INV/'
 CASES = [CASE_0, CASE_1]
 
-DataSourcePath = os.path.dirname(os.path.abspath(__name__))
+# Datasets are in the parent directory.
+DataSourcePath = pathlib.Path(__file__).parent.parent.resolve()
 # "C:/Users/eid/Desktop/Code_Images/"
 print(f"Data source: {DataSourcePath}")
 DATA_0 = 'Asphalt/'
@@ -205,7 +206,7 @@ def process_data(size, file):
     val_loss = train_val_loss[epochs_ - 1]
     time = time_for_training
 
-    pass
+    return model
 
 
 file = os.path.join(DataSourcePath, data , case)
