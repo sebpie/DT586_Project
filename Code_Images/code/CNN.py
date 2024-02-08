@@ -25,7 +25,8 @@ CASE_0 = '64/'
 CASE_1 = '64_INV/'
 CASES = [CASE_0, CASE_1]
 
-DataSourcePath = os.path.dirname(os.path.abspath(__name__))
+# Datasets are in the parent directory.
+DataSourcePath = pathlib.Path(__file__).parent.parent.resolve()
 # "C:/Users/eid/Desktop/Code_Images/"
 print(f"Data source: {DataSourcePath}")
 DATA_0 = 'Asphalt/'
@@ -47,42 +48,42 @@ case = CASES[1]
 
 
 def set_ups(size):
-    
+
     # BUILD MODEL
     model = Sequential()
     model.add(layers.experimental.preprocessing.Rescaling(1./255))
-    
+
     model.add(Conv2D(16, (5,5), input_shape = (size,size,num_channels)))
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=(5,5)))
     model.add(layers.Dropout(0.2))
-    
+
     model.add(Conv2D(32, (3,3)))
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=(3,3)))
     model.add(layers.Dropout(0.2))
-    
+
     model.add(Conv2D(64, (2,2)))
     model.add(Activation("relu"))
     model.add(MaxPooling2D(pool_size=(2,2)))
-    model.add(layers.Dropout(0.2)) 
-    
+    model.add(layers.Dropout(0.2))
+
     model.add(Flatten())
-    
+
     model.add(Dense(32))
-    model.add(Activation("relu"))   
-    
+    model.add(Activation("relu"))
+
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
-    
+
     return model
-    
+
     pass
 
 def train(size, train_data, model):
     dataset_url = train_data
-    data_dir = tf.keras.utils.get_file(origin=[], 
-                                       fname=dataset_url, 
+    data_dir = tf.keras.utils.get_file(origin=[],
+                                       fname=dataset_url,
                                        extract=False)
     data_dir = pathlib.Path(data_dir)
     image_count = len(list(data_dir.glob('*/*.jpg')))
@@ -188,27 +189,27 @@ def train(size, train_data, model):
     return model, xc, train_acc, train_loss, val_acc, val_loss
     pass
 
-    
+
 
 def process_data(size, file):
 
 
     train_data = file
-    
+
     model = set_ups(size)
-    
+
     model, xc, train_acc, train_loss, train_val_acc, train_val_loss = train(size, train_data, model)
-    
+
     acc = train_acc[epochs_ - 1]
     val_acc = train_val_acc[epochs_ - 1]
     loss = train_loss[epochs_ - 1]
     val_loss = train_val_loss[epochs_ - 1]
     time = time_for_training
 
-    pass
+    return model
 
 
-file = os.path.join(DataSourcePath, data , case) 
+file = os.path.join(DataSourcePath, data , case)
 print(f"file: {file}")
 size = 64
 process_data(size, file)
@@ -216,16 +217,16 @@ process_data(size, file)
 """
 
 for d in DATA:
-    
-    for c in CASES:
-        
 
-            
-            file = DataSourcePath + d + c 
+    for c in CASES:
+
+
+
+            file = DataSourcePath + d + c
             print(file)
-            
+
             size = 64
-            
+
             process_data(size, file)
 
     pass

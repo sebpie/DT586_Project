@@ -1,0 +1,16 @@
+// DJI Video Timed Metadata for payload cameras
+
+// version = 1
+
+syntax = "proto3";
+
+import "dji/dvtm_library.proto";
+
+message DvtmPayload {
+  DjiVideoGlobalInfo          video_global_info = 1;
+  repeated DjiCameraBasic     camera_basic = 5;
+  repeated DjiGpsBasic        gps_basic = 6;
+  repeated DjiFlyingState     flying_state = 7;
+  repeated DjiGimbal          gimbal = 8;
+  repeated DjiLaserRanging    laser_ranging = 9;
+}
