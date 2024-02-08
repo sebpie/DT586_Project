@@ -6,16 +6,11 @@ Created on Mon May  3 18:20:17 2021
 """
 
 
-
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras import layers
 from tensorflow.keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
 from tensorflow.keras.callbacks import History
-import matplotlib.pyplot as plt
-import PIL
-import PIL.Image
-import numpy as np
 import time
 import pathlib
 import os
@@ -25,8 +20,7 @@ CASE_0 = '64/'
 CASE_1 = '64_INV/'
 CASES = [CASE_0, CASE_1]
 
-# Datasets are in the parent directory.
-DataSourcePath = pathlib.Path(__file__).parent.parent.resolve()
+DataSourcePath = os.path.dirname(os.path.abspath(__name__))
 # "C:/Users/eid/Desktop/Code_Images/"
 print(f"Data source: {DataSourcePath}")
 DATA_0 = 'Asphalt/'
@@ -47,25 +41,25 @@ data = DATA[4]
 case = CASES[1]
 
 
-def set_ups(size):
+def setup(size=64):
 
     # BUILD MODEL
     model = Sequential()
     model.add(layers.experimental.preprocessing.Rescaling(1./255))
 
-    model.add(Conv2D(16, (5,5), input_shape = (size,size,num_channels)))
+    model.add(Conv2D(16, (5, 5), input_shape = (size, size, num_channels)))
     model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=(5,5)))
+    model.add(MaxPooling2D(pool_size=(5, 5)))
     model.add(layers.Dropout(0.2))
 
-    model.add(Conv2D(32, (3,3)))
+    model.add(Conv2D(32, (3, 3)))
     model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=(3,3)))
+    model.add(MaxPooling2D(pool_size=(3, 3)))
     model.add(layers.Dropout(0.2))
 
-    model.add(Conv2D(64, (2,2)))
+    model.add(Conv2D(64, (2, 2)))
     model.add(Activation("relu"))
-    model.add(MaxPooling2D(pool_size=(2,2)))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(layers.Dropout(0.2))
 
     model.add(Flatten())
@@ -78,7 +72,6 @@ def set_ups(size):
 
     return model
 
-    pass
 
 def train(size, train_data, model):
     dataset_url = train_data
@@ -89,8 +82,6 @@ def train(size, train_data, model):
     image_count = len(list(data_dir.glob('*/*.jpg')))
     print(image_count)
 
-    #NAME = "Cracks-vs-No_cracks-CNN"
-
     batch_size_ = 64
     img_height = size
     img_width = size
@@ -100,7 +91,7 @@ def train(size, train_data, model):
 
     time_for_training = 0
     lr1 = 0.001
-    lr2 = 0.0005 #deafualt = 0.001
+    lr2 = 0.0005 #default = 0.001
     lr3 = 0.00030326537671498954
 
     lr_ = lr1
@@ -137,7 +128,6 @@ def train(size, train_data, model):
       elif epoch < 50:
           return lr3
       else:
-     #     return lr_
           return lr * tf.math.exp(-0.1)
 
 
@@ -157,13 +147,10 @@ def train(size, train_data, model):
     train_Time = TrainTime()
 
 
-
-
     # COMPILE MODEL
     model.compile(loss="binary_crossentropy",
                   optimizer=tf.keras.optimizers.Adam(learning_rate = lr_),
                   metrics=['accuracy'])
-
 
     seqModel = model.fit(
       train_ds,
@@ -174,7 +161,7 @@ def train(size, train_data, model):
       )
 
 
-    print(history.history.keys())
+    print(f"History: {history.history.keys()}")
     # visualizing losses and accuracy
     train_loss   = seqModel.history['loss']
     val_loss     = seqModel.history['val_loss']
@@ -184,19 +171,14 @@ def train(size, train_data, model):
     xc           = range(epochs_)
 
 
-
-
     return model, xc, train_acc, train_loss, val_acc, val_loss
-    pass
 
 
-
-def process_data(size, file):
-
+def process_data(file, size=64):
 
     train_data = file
 
-    model = set_ups(size)
+    model = setup(size)
 
     model, xc, train_acc, train_loss, train_val_acc, train_val_loss = train(size, train_data, model)
 
@@ -208,28 +190,3 @@ def process_data(size, file):
 
     return model
 
-
-file = os.path.join(DataSourcePath, data , case)
-print(f"file: {file}")
-size = 64
-process_data(size, file)
-
-"""
-
-for d in DATA:
-
-    for c in CASES:
-
-
-
-            file = DataSourcePath + d + c
-            print(file)
-
-            size = 64
-
-            process_data(size, file)
-
-    pass
-
-"""
-print("END")
