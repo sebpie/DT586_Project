@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Mon May  3 18:20:17 2021
+Modified on Thu Feb 8 20:13:32 2024
 
-@author: eid
+@author: eid, seb
 """
 
 
@@ -20,7 +21,8 @@ CASE_0 = '64/'
 CASE_1 = '64_INV/'
 CASES = [CASE_0, CASE_1]
 
-DataSourcePath = os.path.dirname(os.path.abspath(__name__))
+# Datasets are in the parent directory.
+DataSourcePath = pathlib.Path(__file__).parent.parent.resolve()
 # "C:/Users/eid/Desktop/Code_Images/"
 print(f"Data source: {DataSourcePath}")
 DATA_0 = 'Asphalt/'
@@ -36,7 +38,6 @@ IMG_STATES = [IMG_STATE_1, IMG_STATE_2]
 
 
 num_channels = 3
-epochs_ = 20
 data = DATA[4]
 case = CASES[1]
 
@@ -73,16 +74,15 @@ def setup(size=64):
     return model
 
 
-def train(size, train_data, model):
-    dataset_url = train_data
+def train(train_data, model, size=64, batch_size=64, epochs=20):
+    print(f"Training model with dataset in {train_data}")
     data_dir = tf.keras.utils.get_file(origin=[],
-                                       fname=dataset_url,
+                                       fname=train_data,
                                        extract=False)
     data_dir = pathlib.Path(data_dir)
     image_count = len(list(data_dir.glob('*/*.jpg')))
     print(image_count)
 
-    batch_size_ = 64
     img_height = size
     img_width = size
 #    num_channels = 3
@@ -104,7 +104,7 @@ def train(size, train_data, model):
       subset="training",
       seed=seed_,
       image_size=(img_height, img_width),
-      batch_size=batch_size_)
+      batch_size=batch_size)
 
     val_ds = tf.keras.preprocessing.image_dataset_from_directory(
       data_dir,
@@ -112,7 +112,7 @@ def train(size, train_data, model):
       subset="validation",
       seed=seed_,
       image_size=(img_height, img_width),
-      batch_size=batch_size_)
+      batch_size=batch_size)
 
     class_names = train_ds.class_names
     print(class_names)
@@ -155,8 +155,8 @@ def train(size, train_data, model):
     seqModel = model.fit(
       train_ds,
       validation_data=val_ds,
-      batch_size=batch_size_,
-      epochs=epochs_,
+      batch_size=batch_size,
+      epochs=epochs,
       callbacks=[lr_callback, history, train_Time]
       )
 
@@ -168,25 +168,27 @@ def train(size, train_data, model):
     train_acc    = seqModel.history['accuracy']
     val_acc      = seqModel.history['val_accuracy']
 #    learningRate = seqModel.history['lr']
-    xc           = range(epochs_)
+    xc           = range(epochs)
 
 
     return model, xc, train_acc, train_loss, val_acc, val_loss
 
 
-def process_data(file, size=64):
-
-    train_data = file
+def process_data(train_data, size=64, epochs=20):
 
     model = setup(size)
 
-    model, xc, train_acc, train_loss, train_val_acc, train_val_loss = train(size, train_data, model)
+    model, xc, train_acc, train_loss, train_val_acc, train_val_loss = train(size=size, train_data=train_data, model=model, epochs=epochs)
 
-    acc = train_acc[epochs_ - 1]
-    val_acc = train_val_acc[epochs_ - 1]
-    loss = train_loss[epochs_ - 1]
-    val_loss = train_val_loss[epochs_ - 1]
+    acc = train_acc[epochs - 1]
+    val_acc = train_val_acc[epochs - 1]
+    loss = train_loss[epochs - 1]
+    val_loss = train_val_loss[epochs - 1]
     time = time_for_training
 
     return model
 
+def get_dataset_dir(data, inverted=False):
+  case = CASES[1] if inverted else CASES[0]
+
+  return os.path.join(DataSourcePath, data , case)
