@@ -25,12 +25,33 @@ CASES = [CASE_0, CASE_1]
 DataSourcePath = pathlib.Path(__file__).parent.parent.resolve()
 # "C:/Users/eid/Desktop/Code_Images/"
 print(f"Data source: {DataSourcePath}")
-DATA_0 = 'Asphalt/'
-DATA_1 = 'Bridge/'
-DATA_2 = 'Mendelay_1/'
-DATA_3 = 'Mendelay_2/'
-DATA_4 = 'Private/'
-DATA = [DATA_0, DATA_1, DATA_2, DATA_3, DATA_4]
+
+datasets = {}
+
+def _add_dataset(name, *paths):
+  global datasets
+  datasets[name] = os.path.join(DataSourcePath, *paths )
+
+_add_dataset('Asphalt', 'Asphalt/', '64')
+_add_dataset('Asphalt_INV', 'Asphalt/', '64_INV/')
+_add_dataset('Bridge', 'Bridge/', '64')
+_add_dataset('Bridge_INV', 'Bridge', '64_INV')
+_add_dataset('Mendelay_1', 'Mendelay_1', '64')
+_add_dataset('Mendelay_1_INV', 'Mendelay_1', '64_INV')
+_add_dataset('Mendelay_2', 'Mendelay_2', '64')
+_add_dataset('Mendelay_2_INV', 'Mendelay_2', '64_INV')
+_add_dataset('Private', 'Private', '64')
+_add_dataset('Private', 'Private', 'INV')
+_add_dataset('Mendelay_FULL', 'Mendelay_FULL')
+
+
+# DATA_0 = 'Asphalt/'
+# DATA_1 = 'Bridge/'
+# DATA_2 = 'Mendelay_1/'
+# DATA_3 = 'Mendelay_2/'
+# DATA_4 = 'Private/'
+# DATA_5 = 'Mendelay_FULL'
+# DATA = [DATA_0, DATA_1, DATA_2, DATA_3, DATA_4, DATA_5]
 
 IMG_STATE_1 ='Negative/'
 IMG_STATE_2 = 'Positive/'
@@ -38,8 +59,8 @@ IMG_STATES = [IMG_STATE_1, IMG_STATE_2]
 
 
 num_channels = 3
-data = DATA[4]
-case = CASES[1]
+# data = DATA[4]
+# case = CASES[1]
 
 
 def setup(size=64):
@@ -81,7 +102,7 @@ def train(train_data, model, size=64, batch_size=64, epochs=20):
                                        extract=False)
     data_dir = pathlib.Path(data_dir)
     image_count = len(list(data_dir.glob('*/*.jpg')))
-    print(image_count)
+    print(f"image_count: {image_count}")
 
     img_height = size
     img_width = size
@@ -171,7 +192,7 @@ def train(train_data, model, size=64, batch_size=64, epochs=20):
     xc           = range(epochs)
 
 
-    return model, xc, train_acc, train_loss, val_acc, val_loss
+    return model, history, seqModel
 
 
 def process_data(train_data, size=64, epochs=20):
@@ -188,7 +209,12 @@ def process_data(train_data, size=64, epochs=20):
 
     return model
 
-def get_dataset_dir(data, inverted=False):
-  case = CASES[1] if inverted else CASES[0]
 
-  return os.path.join(DataSourcePath, data , case)
+def plot(history):
+  import pandas as pd
+  import matplotlib.pyplot as plt
+
+  pd.DataFrame(history.history).plot(figsize=(8,5))
+  plt.grid(True)
+  plt.gca().set_ylim(0,1)
+  plt.show()
