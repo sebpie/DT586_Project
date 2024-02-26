@@ -80,7 +80,6 @@ def save_image():
 # API endpoint to create folder and save image
 @app.route('/create_folder', methods=['POST'])
 def create_folder_and_save_image():
-    # Ensure this function is only invoked during an actual request
     if request.method == 'POST':
         # Create folder if it doesn't exist
         folder_name = datetime.now().strftime('%Y-%m-%d')  # Format: YYYY-MM-DD
@@ -122,8 +121,8 @@ def list_folders():
 @app.route('/settings')
 def settings():
     
-    username = request.args.get('username')  # Retrieve the logged-in username
-    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+    username = request.args.get('username')  
+    return render_template('settings.html', username=username)  # Passing the username to the settings.html
 
 
 
@@ -164,23 +163,3 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 
-# @app.route('/save_image', methods=['POST'])
-# def save_image():
-#     try:
-#         data = request.json
-#         image_data = data.get('image_data')
-#         if image_data:
-#             # Decode the base64 image data
-#             image_binary = base64.b64decode(image_data.split(',')[1])
-#             # Save the image to the images folder
-#             folder_name = 'images'
-#             if not os.path.exists(folder_name):
-#                 os.makedirs(folder_name)
-#             image_filename = os.path.join(folder_name, 'captured_image.png')
-#             with open(image_filename, 'wb') as f:
-#                 f.write(image_binary)
-#             return jsonify({'message': 'Image saved successfully'})
-#         else:
-#             return jsonify({'error': 'No image data received'})
-#     except Exception as e:
-#         return jsonify({'error': 'Error saving image: ' + str(e)})
