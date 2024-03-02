@@ -1,3 +1,3 @@
-crack_detective/__pycache__/__init__.cpython-310.pyc
-crack_detective/__pycache__/auth.cpython-310.pyc
-crack_detective/__pycache__/db.cpython-310.pyc
+crack_detective/__pycache__/
+.venv/
+.vscode/
