@@ -3,6 +3,8 @@ import os
 from flask import Flask
 from flask import render_template #remove this today
 
+from . import video
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -29,8 +31,8 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
-    
-    #--- remove this today --- 
+
+    #--- remove this today ---
     # render the login page in director auth as the index page
     @app.route('/')
     def index():
@@ -39,6 +41,8 @@ def create_app(test_config=None):
 
     from . import db
     db.init_app(app)
+
+    video.init_app(app)
 
     from . import auth
     app.register_blueprint(auth.bp)
