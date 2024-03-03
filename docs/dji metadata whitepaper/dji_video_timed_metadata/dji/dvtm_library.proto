@@ -1,0 +1,179 @@
+// DJI Video Timed Metadata Format using Protobuf 3
+
+// version = 1
+
+syntax = "proto3";
+
+// Global Information, only appear once in whole video ==========================
+message DjiModuleInfo {
+  enum ModuleType {
+    // The body of any kinds of camera which generate this video,
+    // including gimbal camera, payload camera, or fly camera with
+    // non-removable drone.
+    MODULE_CAMERA_BODY = 0;
+
+    // interchangeable drone
+    MODULE_DRONE = 1;
+
+    // interchangeable lens
+    MODULE_LENS = 2;
+  }
+  ModuleType module_type = 1;
+  string     model_name = 2;         // limited to 32 characters
+  string     serial_number = 3;      // limited to 32 characters
+  string     firmware_version = 4;   // limited to 32 characters
+}
+
+message DjiVideoGlobalInfo {
+  repeated DjiModuleInfo module_info = 1;
+
+  // The video full path file name, limited to 128 characters
+  string  file_name = 3;
+
+  fixed32 video_uuid = 4;             // the video unique ID
+  string  record_start_time = 5;      // uses RFC 3339
+  uint32  resolution_height = 6;      // unit: pixel
+  uint32  resolution_width = 7;       // unit: pixel
+  float   video_framerate = 8;
+  enum VideoType {
+    VIDEO_NORMAL = 0;
+    VIDEO_DELAY = 1;
+    VIDEO_SLOW_MOTION = 2;
+    VIDEO_QUICK_MOVIE = 3;
+    VIDEO_TIMELAPSE = 4;
+    VIDEO_MOTIONLAPSE = 5;
+    VIDEO_HYPERLAPSE = 6;
+    VIDEO_HDR = 7;
+    VIDEO_LOOP_RECORD = 8;
+  }
+  VideoType video_type = 9;
+  enum VideoEncoder {
+    ENCODER_H264 = 0;
+    ENCODER_H265 = 1;
+  }
+  VideoEncoder video_encoder = 10;
+  uint32 library_proto_version = 11; // version of dvtm_library.proto
+  uint32 product_proto_version = 12; // version of product corresponding proto file
+}
+// [end] Global Information, only appear once in whole video ====================
+
+// Describe every data source as a message ===================================
+
+// All device_id field in messages is internal reserved at present.
+// User should not care about or depends on this field.
+
+message DjiCameraBasic {
+  uint32 device_id = 1;
+  int64  timestamp = 2;
+  uint32 frame_id = 3;
+
+  // reserved for future use
+  string camera_name = 4;
+
+  sint32 exposure_bias_tenfold = 5;  // exposure bias, tenfold expression, reserved for IR camera
+  float  exposure_time = 6;          // exposure time (uint: s)
+  uint32 iso = 7;                    // photographic sensitivity, reserved for IR camera
+  uint32 fnumber_tenfold = 8;        // F-Number, tenfold expression
+  float  focal_length = 9;           // actual focal length in mm
+  float  digital_zoom_ratio = 10;
+}
+
+message DjiLaserRanging {
+  uint32 device_id = 1;
+  int64  timestamp = 2;
+  uint32 frame_id = 3;
+
+  // processed data of laser ranging function, fields 5-10 is only valid
+  // if ranging_enabled is true, which means you enable this function
+  // by yourself on APP. fields 6-8 is only valid if gps_status in DjiGpsBasic
+  // message is not GPS_INVALID.
+  bool   ranging_enabled = 4;
+  uint32 target_distance = 5;        // mm
+  float  target_longitude = 6;       // degree
+  float  target_latitude = 7;        // degree
+  uint32 target_altitude = 8;        // mm
+  uint32 screen_offset_x = 9;        // target offset on horizontal direction of screen in permillage
+  uint32 screen_offset_y = 10;       // target offset on vertical direction of screen in permillage
+
+  // raw sensor data, always on. fields 12-19 is only valid if laser_status is LASER_NORMAL.
+  enum LaserStatus {
+    LASER_NORMAL = 0;                // laser ranging finder works fine.
+    LASER_TOO_CLOSE = 1;             // target distance is less than minimum range of finder.
+    LASER_TOO_FAR = 2;               // target distance is larger than maximum range of finder.
+  }
+  LaserStatus laser_status = 11;
+  uint32 distance1 = 12;             // unit: mm
+  uint32 intensity1 = 13;            // signal intensity, range: 0~255
+  uint32 distance2 = 14;             // unit: mm
+  uint32 intensity2 = 15;            // signal intensity, range: 0~255
+  uint32 distance3 = 16;             // unit: mm
+  uint32 intensity3 = 17;            // signal intensity, range: 0~255
+  uint32 distance4 = 18;             // unit: mm
+  uint32 intensity4 = 19;            // signal intensity, range: 0~255
+}
+
+message DjiGpsBasic {
+  uint32 device_id = 1;
+  int64  timestamp = 2;
+  uint32 frame_id = 3;
+  double gps_latitude = 4;           // unit: rad, WGS-84 coordinate system
+  double gps_longitude = 5;          // unit: rad, WGS-84 coordinate system
+  // unit: mm, ellipsoidal height in WGS-84 coordinate system if gps_status is GPS_RTK.
+  // height from barometer if gps_status is not GPS_RTK.
+  int32  gps_altitude_mm = 6;
+  enum GpsStatus {
+    GPS_NORMAL = 0;                  // working with non-RTK GPS
+    GPS_INVALID = 1;                 // GPS signal is non-available, measurement interrupted
+    GPS_RTK = 2;                     // working with RTK-GPS
+  }
+  GpsStatus gps_status = 7;
+}
+
+message DjiFlyingState {
+  uint32 device_id = 1;
+  int64  timestamp = 2;
+  uint32 frame_id = 3;
+
+  // drone body speed components in NED coordinate system.
+  int32  speed_x_dms = 4;            // north direction, unit: 0.1 m/s
+  int32  speed_y_dms = 5;            // east direction, unit: 0.1 m/s
+  int32  speed_z_dms = 6;            // vertical direction, unit: 0.1 m/s
+
+  // The Euler angles of drone body relative to the NED (North, East, Down)
+  // coordinate system. Rotation sequence of the Euler angle is
+  // ZYX (yaw, pitch, roll), intrinsic.
+  sint32 pitch_decidegree = 7;       // unit: 0.1 degree
+  sint32 roll_decidegree = 8;        // unit: 0.1 degree
+  sint32 yaw_decidegree = 9;         // unit: 0.1 degree
+
+  // height relative to home point, unit: 0.1m
+  sint32 relative_height_decimeter = 10;
+}
+
+message DjiGimbal {
+  uint32 device_id = 1;
+  int64  timestamp = 2;
+  uint32 frame_id = 3;
+  enum GimbalPosition {
+    GIMBAL_POS_NORMAL = 0;
+    GIMBAL_POS_REVERSE = 1;
+  }
+  GimbalPosition gimbal_position = 4;
+  enum GimbalMode {
+    GIMBAL_MODE_FREE = 0;
+    GIMBAL_MODE_FPV = 1;
+    GIMBAL_MODE_FOLLOW = 2;
+  }
+  GimbalMode gimbal_mode = 5;
+
+  // The Euler angles of gimbal relative to the NED (North, East, Down)
+  // coordinate system. Rotation sequence of the Euler angle is
+  // ZXY (yaw, roll, pitch), intrinsic. For upward gimbal, the Euler
+  // angles translate from the real quaternion of gimbal after rotate
+  // 180 degree around the X axis of moving body.
+  sint32 pitch_decidegree = 6;       // unit: 0.1 degree
+  sint32 roll_decidegree = 7;        // unit: 0.1 degree
+  sint32 yaw_decidegree = 8;         // unit: 0.1 degree
+}
+
+// [end] Describe every data source as a message =============================
