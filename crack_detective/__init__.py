@@ -1,7 +1,6 @@
 import os
 
 from flask import Flask
-from flask import render_template #remove this today
 
 
 def create_app(test_config=None):
@@ -25,16 +24,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-    
-    #--- remove this today --- 
-    # render the login page in director auth as the index page
-    @app.route('/')
-    def index():
-        return render_template('auth/login.html')
 
 
     from . import db
@@ -42,5 +31,10 @@ def create_app(test_config=None):
 
     from . import auth
     app.register_blueprint(auth.bp)
+
+    #this imports the stream page and registers it with the app
+    from . import stream
+    app.register_blueprint(stream.bp)
+    app.add_url_rule('/', endpoint='index')
 
     return app
