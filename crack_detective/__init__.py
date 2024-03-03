@@ -26,20 +26,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-<<<<<<< HEAD
-=======
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
-    #--- remove this today ---
-    # render the login page in director auth as the index page
-    @app.route('/')
-    def index():
-        return render_template('auth/login.html')
->>>>>>> e39d01624abfb04005b0fd9ca31618c4d569574c
-
 
     from . import db
     db.init_app(app)
