@@ -21,7 +21,7 @@ function updateFolderList() {
                   const folderIcon = document.createElement('i');
                   folderIcon.classList.add('fa', 'fa-folder', 'folder-icon');
 
-                  // Create folder name span
+                 
                   const folderName = document.createElement('span');
                   folderName.classList.add('folder-name');
                   folderName.textContent = folder;
@@ -29,10 +29,10 @@ function updateFolderList() {
                   listItem.appendChild(folderIcon);
                   listItem.appendChild(folderName);
 
-                  // Adding the delete icon
+                 
                   const deleteIcon = document.createElement('i');
                   deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
-                  deleteIcon.dataset.folderName = folder; // Store folder name in dataset
+                  deleteIcon.dataset.folderName = folder; 
                   listItem.appendChild(deleteIcon);
 
                   foldersList.appendChild(listItem);
@@ -66,8 +66,8 @@ function deleteFolder(event) {
           })
           .then(response => response.json())
           .then(data => {
-              alert(data.message); // Display success or error message
-              updateFolderList(); // Refresh folder list after deletion
+              alert(data.message); 
+              updateFolderList(); 
           })
           .catch(error => console.error('Error deleting folder:', error));
       }
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
           .then(data => {
               const foldersList = document.getElementById('folders');
               if (data.folders && data.folders.length > 0) {
-                  foldersList.innerHTML = ''; // Clear existing list
+                  foldersList.innerHTML = ''; 
                   data.folders.forEach(folder => {
                       const listItem = document.createElement('li');
                       listItem.classList.add('folder-item');
