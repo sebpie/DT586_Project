@@ -3,10 +3,12 @@ import sqlite3
 import os 
 import base64
 import uuid
+import shutil 
 from datetime import datetime
 
 
 app = Flask(__name__)
+print(app.instance_path)
 
 # Function to create the users table
 def create_users_table():
@@ -52,7 +54,6 @@ def home():
     username = request.args.get('username')
     return render_template('home.html', username=username)
 
-
 @app.route('/save_image', methods=['POST'])
 def save_image():
     try:
@@ -77,52 +78,68 @@ def save_image():
         return jsonify({'error': 'Error saving image: ' + str(e)})
 
 
-# API endpoint to create folder and save image
+
 @app.route('/create_folder', methods=['POST'])
-def create_folder_and_save_image():
-    if request.method == 'POST':
-        # Create folder if it doesn't exist
-        folder_name = datetime.now().strftime('%Y-%m-%d')  # Format: YYYY-MM-DD
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
+def create_folder():
+    try:
+        # Get folder name from the request JSON data
+        data = request.json
+        folder_name = data.get('folder_name')
 
-        # Save image to the folder (assuming image data is sent in the request)
-        image_data = request.form.get('image_data')  # Adjust this based on your frontend implementation
+        if folder_name:
+            # Define the full path to the uploads directory
+            uploads_dir = os.path.join(app.root_path, 'uploads')
+            folder_path = os.path.join(uploads_dir, folder_name)
 
-        if image_data:
-            try:
-                # Decode base64 image data
-                image_binary = base64.b64decode(image_data)
-                
-                # Write image binary to file
-                with open(os.path.join(folder_name, 'image.jpg'), 'wb') as f:
-                    f.write(image_binary)
-                
-                return jsonify({'message': 'Folder created and image saved successfully'})
-            except Exception as e:
-                return jsonify({'error': 'Error saving image: ' + str(e)})
+            # Create folder if it doesn't exist
+            if not os.path.exists(folder_path):
+                os.makedirs(folder_path)
+                return jsonify({'message': f'Folder {folder_name} created successfully'})
+            else:
+                return jsonify({'error': f'Folder {folder_name} already exists'})
         else:
-            return jsonify({'error': 'No image data received'})
-    else:
-        return jsonify({'error': 'Invalid request method'})
+            return jsonify({'error': 'No folder name received'})
+    except Exception as e:
+        return jsonify({'error': 'Error creating folder: ' + str(e)})
 
 
-@app.route('/folders', methods=['GET'])
+@app.route('/list_folders', methods=['GET'])
 def list_folders():
-    if request.method == 'GET':
-        folder_path = os.getenv('FOLDER_PATH')
-        folder_path = r"E:\A_hogskolan\project\flask"
+    try:
+        folder_path = 'uploads'  # Path to the folder where you store images
         folders = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
         return jsonify({'folders': folders})
+    except Exception as e:
+        return jsonify({'error': 'Error listing folders: ' + str(e)})
 
+@app.route('/delete_folder', methods=['POST'])
+def delete_folder():
+    try:
+       
+        data = request.json
+        folder_name = data.get('folder_name')
 
+        if folder_name:
+            
+            uploads_dir = os.path.join(app.root_path, 'uploads')
+            folder_path = os.path.join(uploads_dir, folder_name)
 
+           
+            if os.path.exists(folder_path):
+                shutil.rmtree(folder_path)
+                return jsonify({'message': f'Folder {folder_name} deleted successfully'})
+            else:
+                return jsonify({'error': f'Folder {folder_name} does not exist'})
+        else:
+            return jsonify({'error': 'No folder name received'})
+    except Exception as e:
+        return jsonify({'error': 'Error deleting folder: ' + str(e)})
 
 @app.route('/settings')
 def settings():
     
-    username = request.args.get('username')  
-    return render_template('settings.html', username=username)  # Passing the username to the settings.html
+    username = request.args.get('username')  # Retrieve the logged-in username
+    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
 
 
 
@@ -155,11 +172,10 @@ def list_users():
     return jsonify({'users': user_list})
 
 
+
 @app.route('/gallery')
 def gallery():
     return render_template('gallery.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
