@@ -216,6 +216,10 @@ position: absolute;
       padding: 20px;
       margin-top: 40px;
   }
+
+  #folder-action {
+    width: 500px; /* Adjust the width as per your preference */
+  }
   
   #refresh-btn {
         background-color: #002F31;
@@ -254,6 +258,19 @@ position: absolute;
         border-radius: 5px; 
         border:none !important;
       }
+
+      #create-btn {
+        background-color: #0b4465;
+        color: white;
+        font-weight: 500;
+        margin-left: 0;
+        margin-top: 20px;
+        font-size: 16px !important;
+        padding: 2px 15px;
+        cursor: pointer;
+        border-radius: 5px;
+        border: none !important;
+    }
 
       /* folder structure */
 .folder-list {

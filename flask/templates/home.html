@@ -19,7 +19,7 @@
 
     <div>
       <label for="folder-action">Select an action:</label>
-      <select id="folder-action">
+      <select id="folder-action" class="form-select" aria-label="Default select example">
         <option value="select">select</option>
         <option value="create">Create Folder</option>
         <option value="list">Show List of Folders</option>
@@ -29,19 +29,23 @@
 
   <!-- Create Folder Popup -->
   <div id="create-folder-popup" style="display: none; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; justify-content: center; align-items: center;">
-    <div style="background-color: white; padding: 20px; border-radius: 10px;">
-      <h1>Create Folder</h1>
+    <div style="background-color: white; padding: 20px; border-radius: 10px; position: relative;">
+      <span id="close-popup" style="position: absolute;
+      top: 7px;
+      right: 25px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 500;">X</span>
+      <h3 class=" mt-2 text-center teal mb-3">Create Folder</h3>
       <form id="create-folder-form">
         <label for="folder-name">Folder Name:</label>
-        <input type="text" id="folder-name" name="folder_name">
-        <button type="submit">Create Folder</button>
+        <input type="text" id="folder-name" name="folder_name" class = "mb-4">
+        <button type="submit" id="create-btn">Create Folder</button>
       </form>
       <div id="response-message"></div>
-      <button id="close-popup">Close</button>
     </div>
   </div>
-
-  <div id="response-message"></div>
+  
 
   <!-- <h1>Delete Folder</h1>
     <form id="delete-folder-form">
@@ -52,7 +56,7 @@
 
     <div id="delete-folder-popup" style="display: none; background-color: rgba(0, 0, 0, 0.5); position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; justify-content: center; align-items: center;">
       <div style="background-color: white; padding: 20px; border-radius: 10px;">
-        <h1>Create Folder</h1>
+        <h1>Do you want to delete the folder?</h1>
         <form id="delete-folder-form">
           <label for="delete-folder-name">Folder Name:</label>
           <input type="text" id="delete-folder-name" name="folder_name">
@@ -67,7 +71,7 @@
 
 <!-- Add a section to display the list of folders -->
 <div id="folder-list" style="display: none;">
-    <h1>List of Folders</h1>
+  <h3 class=" mt-5 teal mb-3">List of Folders</h3>
     <ul class="folder-list" id="folders">
   </ul>
 </div>
