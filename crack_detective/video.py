@@ -1,19 +1,27 @@
 from .auth import login_required
 from . import VideoProcessing
-from flask import Flask, Response, request
+from flask import Flask, Response, jsonify, request
 from flask import g
 
 def get_videoprocessor():
     if 'videoprocessor' not in g:
+        # specify output format 720x400
         g.videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
-        g.videoprocessor.open()
+        if "video_input" in g:
+            g.videoprocessor.open(g.video_input)
+        else:
+            g.videoprocessor.open()
 
     return g.videoprocessor
 
+video_sources = []
 
 def init_app(app:Flask):
 
     # TODO: initialise list of possible input video
+    global video_sources
+    video_sources.append("rtmp://0.0.0.0:8000/live/stream")
+
 
     @app.route("/live_stream")
     def live_stream():
@@ -29,10 +37,12 @@ def init_app(app:Flask):
     def control_input():
         match(request.method):
             case "GET":
-                if 'video_input' not in g:
-                    return {"error" : "No video input selected"} , 400
+                ret = { "video_sources": video_sources}
 
-                return { 'video_input' : g.video_input }
+                if 'video_input' in g:
+                    ret['video_input'] = g.video_input
+
+                return jsonify(ret)
 
             case "PUT":
                 try:
@@ -49,7 +59,7 @@ def init_app(app:Flask):
     """
     @app.route("/api/output", methods = ["GET", "PUT"])
     @login_required()
-    def control_outut():
+    def control_output():
         match(request.method):
             case "GET":
                 if 'output_dir' not in g:
