@@ -5,6 +5,7 @@ cachetools==5.3.3
 certifi==2024.2.2
 charset-normalizer==3.3.2
 click==8.1.7
+ffmpeg==1.4
 Flask==3.0.2
 flatbuffers==23.5.26
 gast==0.5.4
