@@ -74,16 +74,58 @@ function deleteFolder(event) {
   }
 }
 
+function updateFolderSelect() {
+    fetch('/list_folders')
+        .then(response => response.json())
+        .then(data => {
+            const folderSelect = document.getElementById('folder-action');
+            folderSelect.innerHTML = ''; // Clear existing options
+            
+            // Add default options
+            const selectOption = document.createElement('option');
+            selectOption.value = 'select';
+            selectOption.textContent = 'Select';
+            folderSelect.appendChild(selectOption);
+
+            const createOption = document.createElement('option');
+            createOption.value = 'create';
+            createOption.textContent = 'Create Folder';
+            folderSelect.appendChild(createOption);
+
+            const listOption = document.createElement('option');
+            listOption.value = 'list';
+            listOption.textContent = 'List of Folders';
+            folderSelect.appendChild(listOption);
+
+            if (data.folders && data.folders.length > 0) {
+                // Add folder options
+                data.folders.forEach(folder => {
+                    const folderOption = document.createElement('option');
+                    folderOption.value = folder;
+                    folderOption.textContent = folder;
+                    folderSelect.appendChild(folderOption);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
 document.addEventListener('DOMContentLoaded', function() {
   // Event listener for folder action dropdown
-  document.getElementById('folder-action').addEventListener('change', function() {
-      var selectedOption = this.value;
-      if (selectedOption === 'create') {
-          document.getElementById('create-folder-popup').style.display = 'flex';
-      } else {
-          document.getElementById('create-folder-popup').style.display = 'none';
-      }
-  });
+//   document.getElementById('folder-action').addEventListener('change', function() {
+//       var selectedOption = this.value;
+//       if (selectedOption === 'create') {
+//           document.getElementById('create-folder-popup').style.display = 'flex';
+//       } else {
+//           document.getElementById('create-folder-popup').style.display = 'none';
+//       }
+//   });
+
+
+  updateFolderSelect();
 
   // Event listener for folder creation form submission
   document.getElementById('create-folder-form').addEventListener('submit', function(event) {
@@ -117,14 +159,50 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Event listener for folder action dropdown (list folders)
-  document.getElementById('folder-action').addEventListener('change', function() {
-      var selectedOption = this.value;
-      if (selectedOption === 'list') {
-          document.getElementById('folder-list').style.display = 'block';
-      } else {
-          document.getElementById('folder-list').style.display = 'none';
-      }
-  });
+//   document.getElementById('folder-action').addEventListener('change', function() {
+//       var selectedOption = this.value;
+//       if (selectedOption === 'list') {
+//           document.getElementById('folder-list').style.display = 'block';
+//       } else {
+//           document.getElementById('folder-list').style.display = 'none';
+//       }
+//   });
+
+document.getElementById('folder-action').addEventListener('change', function() {
+    var selectedOption = this.value;
+    if (selectedOption === 'create') {
+        document.getElementById('create-folder-popup').style.display = 'flex';
+    } else if (selectedOption === 'list') {
+        document.getElementById('folder-list').style.display = 'block';
+    } else {
+        // PUT request to the selected folder
+        sendPutRequest(selectedOption);
+    }
+});
+
+// Function to send a PUT request to the selected folder
+function sendPutRequest(folderName) {
+    fetch('/folder/' + folderName, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ folder_name: folderName })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+}
+
 
   // Fetching the list of folders from the server 
   function fetchFolders() {
