@@ -1,12 +1,16 @@
 from .auth import login_required
 from . import VideoProcessing
 from flask import Flask, Response, jsonify, request
-from flask import g
+from flask import g, current_app
+import os
 
 def get_videoprocessor():
     if 'videoprocessor' not in g:
         # specify output format 720x400
         g.videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
+        if os.name == "nt":
+            g.videoprocessor.ffmpeg_path = os.path.join(current_app.root_path, "bin", "ffmpeg.exe")
+
         if "video_input" in g:
             g.videoprocessor.open(g.video_input)
         else:
@@ -33,7 +37,7 @@ def init_app(app:Flask):
     """
     """
     @app.route("/api/input", methods = ["GET", "PUT"])
-    @login_required()
+    @login_required
     def control_input():
         match(request.method):
             case "GET":
@@ -58,7 +62,7 @@ def init_app(app:Flask):
     """
     """
     @app.route("/api/output", methods = ["GET", "PUT"])
-    @login_required()
+    @login_required
     def control_output():
         match(request.method):
             case "GET":
