@@ -11,7 +11,7 @@ UPLOAD_DIR = "uploads"
 bp = Blueprint('home', __name__)
 
 # Route for the home page
-@bp.route('/home')
+@bp.route('/')
 def home():
     username = request.args.get('username')
     return render_template('home.html', username=username)
