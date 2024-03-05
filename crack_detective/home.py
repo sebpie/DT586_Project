@@ -6,7 +6,16 @@ import uuid
 import shutil 
 from datetime import datetime
 
+UPLOAD_DIR = "uploads"
+
 def init_home(app: Flask):
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(os.path.join(app.instance_path, UPLOAD_DIR))
+    except OSError:
+        pass
+
     # Route for the home page
     @app.route('/home')
     def home():
@@ -23,7 +32,7 @@ def init_home(app: Flask):
 
             if folder_name:
                 # Define the full path to the uploads directory
-                uploads_dir = os.path.join(app.root_path, 'uploads')
+                uploads_dir = os.path.join(app.instance_path, UPLOAD_DIR)
                 folder_path = os.path.join(uploads_dir, folder_name)
 
                 # Create folder if it doesn't exist
@@ -41,7 +50,7 @@ def init_home(app: Flask):
     @app.route('/list_folders', methods=['GET'])
     def list_folders():
         try:
-            folder_path = 'uploads'  # Path to the folder where you store images
+            folder_path = os.path.join(app.instance_path, UPLOAD_DIR)  # Path to the folder where you store images
             folders = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
             return jsonify({'folders': folders})
         except Exception as e:
@@ -56,7 +65,7 @@ def init_home(app: Flask):
 
             if folder_name:
                 
-                uploads_dir = os.path.join(app.root_path, 'uploads')
+                uploads_dir = os.path.join(app.root_path, UPLOAD_DIR)
                 folder_path = os.path.join(uploads_dir, folder_name)
 
             
