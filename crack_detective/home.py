@@ -1,10 +1,7 @@
-from flask import Blueprint, Flask, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, Flask, render_template, request, jsonify
 import sqlite3
 import os
-import base64
-import uuid
 import shutil
-from datetime import datetime
 
 UPLOAD_DIR = "uploads"
 
