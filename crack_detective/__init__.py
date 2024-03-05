@@ -37,10 +37,9 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    #this imports the stream page and registers it with the app
-    from . import stream
-    # app.register_blueprint(stream.bp)
     home.init_home(app)
-    # app.add_url_rule('/', endpoint='index')
+    app.register_blueprint(home.bp)
+
+    app.add_url_rule('/', endpoint='home')
 
     return app
