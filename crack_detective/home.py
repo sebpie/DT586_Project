@@ -59,8 +59,8 @@ def init_home(app: Flask):
         except Exception as e:
             return jsonify({'error': 'Error creating folder: ' + str(e)})
 
-    @app.route('/list_folders', methods=['GET'])
-    def list_folders():
+    @app.route('/folders', methods=['GET'])
+    def folders():
         try:
             folder_path = os.path.join(app.instance_path, UPLOAD_DIR)  # Path to the folder where you store images
             folders = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]

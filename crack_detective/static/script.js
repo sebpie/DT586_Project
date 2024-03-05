@@ -7,7 +7,7 @@ function addDeleteIconEventListeners() {
 
 // Function to update the list of folders
 function updateFolderList() {
-  axios.get('/list_folders')
+  axios.get('/folders')
       .then(response => {
           const foldersList = document.getElementById('folders');
           foldersList.innerHTML = '';
@@ -75,7 +75,7 @@ function deleteFolder(event) {
 }
 
 function updateFolderSelect() {
-    fetch('/list_folders')
+    fetch('/folders')
         .then(response => response.json())
         .then(data => {
             const folderSelect = document.getElementById('folder-action');
@@ -206,7 +206,7 @@ function sendPutRequest(folderName) {
 
   // Fetching the list of folders from the server 
   function fetchFolders() {
-      fetch('/list_folders')
+      fetch('/folders')
           .then(response => response.json())
           .then(data => {
               const foldersList = document.getElementById('folders');
