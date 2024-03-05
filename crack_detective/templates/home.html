@@ -5,16 +5,17 @@
   <h3 class=" mt-5 teal">Video Feed</h3>
   <div class="image-cont">
       <div id="upload-container">
+        <img src="https://www.hkr.se/Static/redesign/images/header_logo.svg" srcset="{{url_for('live_stream') }}" />
           <video id="video-element" autoplay></video>
       </div>
       <div style = "display:flex;">
           <button id="start-stop-btn">Start/Stop</button>
           <button id="capture-btn" style ="margin-left:23px;">Capture</button>
           <canvas id="canvas" width="640" height="360" style="display: none;"></canvas>
-         
+
       </div>
     </div>
-      
+
     <!-- select option -->
 
     <div>
@@ -45,7 +46,7 @@
       <div id="response-message"></div>
     </div>
   </div>
-  
+
 
   <!-- <h1>Delete Folder</h1>
     <form id="delete-folder-form">
@@ -66,7 +67,7 @@
         <button id="close-popup-delete">Close</button>
       </div>
     </div>
-  
+
     <div id="response-message"></div>
 
 <!-- Add a section to display the list of folders -->
@@ -75,7 +76,7 @@
     <ul class="folder-list" id="folders">
   </ul>
 </div>
-</div> 
+</div>
 
   {% endblock %}
 </body>
