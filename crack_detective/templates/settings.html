@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+          <!-- content -->
+  <div class="profilepage mb-4">
+    <div class="container">
+ <h3 class = "mt-4 blue">Edit Profile</h3>
+ <hr>
+<div class="row">
+   
+   <!-- edit form column -->
+   <div class="col-md-10 personal-info ">
+    <div id="error-messages"></div>
+     </div>
+
+     
+     <form class="form-horizontal" role="form">
+     
+        <label for="username" class="form-label">User Name:</label>
+       <input type="text" id="username" name="username" class="form-control mb-3" >
+       
+  
+      <label for="Password" class="form-label">Password:</label>
+      <input type="text" id="Password" name="Password" class="form-control mb-3" >
+  
+      <label for="newPassword" class="form-label">Confirm password:</label>
+      <input type="text" id="newPassword" name="newPassword" class="form-control mb-3" >
+  
+
+
+       <div class="form-group">
+         <label class="col-md-3 control-label"></label>
+         <div class="col-md-10">
+          <button type="button" class="save-btn edit-button mt-4 mb-2" onclick="validateForm()">Save</button>
+          <button type="button" class="cancel_btn mt-4 mb-2 ml-3 mr-4" onclick="cancelEdit()">Cancel</button>
+         </div>
+       </div>
+
+     </form>
+   </div>
+</div>
+</div>
+</div> 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Retrieve the username passed from the Flask route
+        var username = "{{ username }}";
+        // Set the value of the username input field
+        document.getElementById('username').value = username;
+    });
+</script>
+{% endblock %}
