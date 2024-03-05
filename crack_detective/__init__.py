@@ -3,6 +3,7 @@ import os
 from flask import Flask
 
 from . import video
+from . import home
 
 
 def create_app(test_config=None):
@@ -36,9 +37,9 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    #this imports the stream page and registers it with the app
-    from . import stream
-    app.register_blueprint(stream.bp)
-    app.add_url_rule('/', endpoint='index')
+    home.init_home(app)
+    app.register_blueprint(home.bp)
+
+    app.add_url_rule('/', endpoint='home')
 
     return app
