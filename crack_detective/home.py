@@ -1,12 +1,31 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, Flask, render_template, request, jsonify, redirect, url_for
 import sqlite3
-import os 
+import os
 import base64
 import uuid
-import shutil 
+import shutil
 from datetime import datetime
 
 UPLOAD_DIR = "uploads"
+
+bp = Blueprint('home', __name__)
+
+# Route for the home page
+@bp.route('/home')
+def home():
+    username = request.args.get('username')
+    return render_template('home.html', username=username)
+
+@bp.route('/settings')
+def settings():
+    username = request.args.get('username')  # Retrieve the logged-in username
+    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+
+@bp.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
+
 
 def init_home(app: Flask):
 
@@ -15,12 +34,6 @@ def init_home(app: Flask):
         os.makedirs(os.path.join(app.instance_path, UPLOAD_DIR))
     except OSError:
         pass
-
-    # Route for the home page
-    @app.route('/home')
-    def home():
-        username = request.args.get('username')
-        return render_template('home.html', username=username)
 
 
     @app.route('/create_folder', methods=['POST'])
@@ -46,7 +59,6 @@ def init_home(app: Flask):
         except Exception as e:
             return jsonify({'error': 'Error creating folder: ' + str(e)})
 
-
     @app.route('/list_folders', methods=['GET'])
     def list_folders():
         try:
@@ -59,16 +71,16 @@ def init_home(app: Flask):
     @app.route('/delete_folder', methods=['POST'])
     def delete_folder():
         try:
-        
+
             data = request.json
             folder_name = data.get('folder_name')
 
             if folder_name:
-                
+
                 uploads_dir = os.path.join(app.root_path, UPLOAD_DIR)
                 folder_path = os.path.join(uploads_dir, folder_name)
 
-            
+
                 if os.path.exists(folder_path):
                     shutil.rmtree(folder_path)
                     return jsonify({'message': f'Folder {folder_name} deleted successfully'})
@@ -78,12 +90,6 @@ def init_home(app: Flask):
                 return jsonify({'error': 'No folder name received'})
         except Exception as e:
             return jsonify({'error': 'Error deleting folder: ' + str(e)})
-
-    @app.route('/settings')
-    def settings():
-        
-        username = request.args.get('username')  # Retrieve the logged-in username
-        return render_template('settings.html', username=username)  # Pass the username to the settings.html template
 
     @app.route('/users', methods=['GET'])
     def list_users():
@@ -96,9 +102,3 @@ def init_home(app: Flask):
         user_list = [{'id': user[0], 'username': user[1], 'password': user[2]} for user in users]
 
         return jsonify({'users': user_list})
-
-
-
-    @app.route('/gallery')
-    def gallery():
-        return render_template('gallery.html')
