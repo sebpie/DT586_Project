@@ -1,3 +1,5 @@
+import os
+
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
@@ -12,4 +14,8 @@ bp = Blueprint('stream', __name__)
 @bp.route('/')
 @login_required
 def index():
-    return render_template('stream/index.html')
+    image_names = os.listdir('crack_detective/static/images')
+    return render_template('stream/index.html', image_names=image_names)
+
+
+#API to fetch pictures from current directory and display them
