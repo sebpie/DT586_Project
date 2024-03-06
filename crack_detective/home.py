@@ -1,12 +1,27 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, Blueprint
 import sqlite3
-import os 
-import base64
-import uuid
-import shutil 
-from datetime import datetime
+import os
+import shutil
 
 UPLOAD_DIR = "uploads"
+
+bp = Blueprint('home', __name__)
+
+# Route for the home page
+@bp.route('/')
+def home():
+    username = request.args.get('username')
+    return render_template('home.html', username=username)
+
+@bp.route('/settings')
+def settings():
+    username = request.args.get('username')  # Retrieve the logged-in username
+    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+
+@bp.route('/gallery')
+def gallery():
+    return render_template('gallery.html')
+
 
 def init_home(app: Flask):
 
@@ -59,16 +74,16 @@ def init_home(app: Flask):
     @app.route('/delete_folder', methods=['POST'])
     def delete_folder():
         try:
-        
+
             data = request.json
             folder_name = data.get('folder_name')
 
             if folder_name:
-                
+
                 uploads_dir = os.path.join(app.root_path, UPLOAD_DIR)
                 folder_path = os.path.join(uploads_dir, folder_name)
 
-            
+
                 if os.path.exists(folder_path):
                     shutil.rmtree(folder_path)
                     return jsonify({'message': f'Folder {folder_name} deleted successfully'})
@@ -81,7 +96,7 @@ def init_home(app: Flask):
 
     @app.route('/settings')
     def settings():
-        
+
         username = request.args.get('username')  # Retrieve the logged-in username
         return render_template('settings.html', username=username)  # Pass the username to the settings.html template
 
@@ -96,7 +111,6 @@ def init_home(app: Flask):
         user_list = [{'id': user[0], 'username': user[1], 'password': user[2]} for user in users]
 
         return jsonify({'users': user_list})
-
 
 
     @app.route('/gallery')
