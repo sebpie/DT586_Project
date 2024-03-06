@@ -23,7 +23,7 @@ def init_home(app: Flask):
         return render_template('home.html', username=username)
 
 
-    @app.route('/folders', methods=['POST'])
+    @app.route('/create_folder', methods=['POST'])
     def create_folder():
         try:
             # Get folder name from the request JSON data
@@ -47,7 +47,7 @@ def init_home(app: Flask):
             return jsonify({'error': 'Error creating folder: ' + str(e)})
 
 
-    @app.route('/folders', methods=['GET'])
+    @app.route('/list_folders', methods=['GET'])
     def list_folders():
         try:
             folder_path = os.path.join(app.instance_path, UPLOAD_DIR)  # Path to the folder where you store images
