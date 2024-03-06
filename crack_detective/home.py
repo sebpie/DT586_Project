@@ -1,4 +1,4 @@
-from flask import Blueprint, Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Blueprint
 import sqlite3
 import os
 import shutil
@@ -23,7 +23,6 @@ def gallery():
     return render_template('gallery.html')
 
 
-
 def init_home(app: Flask):
 
     # ensure the instance folder exists
@@ -31,6 +30,12 @@ def init_home(app: Flask):
         os.makedirs(os.path.join(app.instance_path, UPLOAD_DIR))
     except OSError:
         pass
+
+    # Route for the home page
+    @app.route('/home')
+    def home():
+        username = request.args.get('username')
+        return render_template('home.html', username=username)
 
 
     @app.route('/create_folder', methods=['POST'])
@@ -56,8 +61,9 @@ def init_home(app: Flask):
         except Exception as e:
             return jsonify({'error': 'Error creating folder: ' + str(e)})
 
-    @app.route('/folders', methods=['GET'])
-    def folders():
+
+    @app.route('/list_folders', methods=['GET'])
+    def list_folders():
         try:
             folder_path = os.path.join(app.instance_path, UPLOAD_DIR)  # Path to the folder where you store images
             folders = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
@@ -88,6 +94,12 @@ def init_home(app: Flask):
         except Exception as e:
             return jsonify({'error': 'Error deleting folder: ' + str(e)})
 
+    @app.route('/settings')
+    def settings():
+
+        username = request.args.get('username')  # Retrieve the logged-in username
+        return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+
     @app.route('/users', methods=['GET'])
     def list_users():
         connection = sqlite3.connect('users.db')
@@ -99,3 +111,8 @@ def init_home(app: Flask):
         user_list = [{'id': user[0], 'username': user[1], 'password': user[2]} for user in users]
 
         return jsonify({'users': user_list})
+
+
+    @app.route('/gallery')
+    def gallery():
+        return render_template('gallery.html')
