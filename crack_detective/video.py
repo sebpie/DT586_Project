@@ -8,6 +8,8 @@ def get_videoprocessor():
     if 'videoprocessor' not in g:
         # specify output format 720x400
         g.videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
+
+        # if using Windows, specify path to ffmpeg binary
         if os.name == "nt":
             g.videoprocessor.ffmpeg_path = os.path.join(current_app.root_path, "bin", "ffmpeg.exe")
 
