@@ -1,5 +1,6 @@
 from queue import Queue
 from threading import Thread
+from typing import Callable
 import cv2
 import ffmpeg
 import numpy as np
@@ -27,16 +28,19 @@ class VideoProcessor(object):
         self.height = height
         self.frame_buffer = Queue(maxsize=framebuffer_size)
         self.ffmpeg_path=ffmpeg_path
+        self.subscribers = []
 
     def _framegrabber(self):
         while True:
             in_bytes = self.ffmpeg_process.stdout.read(self.width * self.height * PIXEL_SIZE[self.color])
             frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.color]])
 
-            if(self.frame_buffer.full()):
-                print(f"buffer is full. drop a frame.")
-                self.frame_buffer.get(False) # Drops the oldest frame from the buffer
-            self.frame_buffer.put(frame)
+            self.dispatch(frame)
+
+            # if(self.frame_buffer.full()):
+            #     print(f"buffer is full. drop a frame.")
+            #     self.frame_buffer.get(False) # Drops the oldest frame from the buffer
+            # self.frame_buffer.put(frame)
         return
 
     def open(self, url=DEFAULT_URL):
@@ -62,28 +66,36 @@ class VideoProcessor(object):
             pass
         pass
 
-    def get_frame(self, format=".jpg", width=None, height=None):
-        frame = self.frame_buffer.get()
+    # def get_frame(self, frame, format=".jpg", width=None, height=None):
 
-        if(height or width ):
-            if not height:
-                height = int(self.height * width / self.width)
-            if not width:
-                width = int(self.width * height / self.height)
+    #     return frame
 
-            frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
+    def dispatch(self, frame):
+        # print(f"ENTER dispatch. number of subscribers: {len(self.subscribers)}")
+        for cb, format, width, height in self.subscribers:
+            # print(f"Dispatch to: {cb} height: {height}")
+            if(height or width ):
+                if not height:
+                    height = int(self.height * width / self.width)
+                if not width:
+                    width = int(self.width * height / self.height)
 
-        if format != "raw":
-            _, buffer = cv2.imencode(format, frame)
-            frame = buffer.tobytes()
+                frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
 
-        return frame
+            if format != "raw":
+                _, buffer = cv2.imencode(format, frame)
+                frame = buffer.tobytes()
 
-    def gen_frames(self, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT):
-        while True:
-            frame = self.get_frame(format=".jpg")
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+            cb(frame)
+
+
+
+    def subscribe(self, callback:Callable[[bytes], None], format=".jpg", width=None, height=None) -> None:
+        self.subscribers.append((callback, format, width, height))
+
+    def unsubscribe(self, callback:Callable[[bytes], None]) -> None:
+            subscriber = [item for item in self.subscribers if item[0] == callback ]
+            self.subscribers.remove(subscriber)
 
 
 def test_videoprocessor():
