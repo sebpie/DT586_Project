@@ -3,7 +3,7 @@ from threading import Thread
 import cv2
 import ffmpeg
 import numpy as np
-
+import os
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_BUFFER_SIZE=60 # 2s at 30fps
@@ -17,11 +17,16 @@ class VideoProcessor(object):
     ffmpeg_process = None
     _t_framegrabber: Thread = None
 
-    def __init__(self, color=DEFAULT_COLOR, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, framebuffer_size=DEFAULT_BUFFER_SIZE) -> None:
+    def __init__(self,
+                 color=DEFAULT_COLOR,
+                 width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
+                 framebuffer_size=DEFAULT_BUFFER_SIZE,
+                 ffmpeg_path=None) -> None:
         self.color = color
         self.width = width
         self.height = height
         self.frame_buffer = Queue(maxsize=framebuffer_size)
+        self.ffmpeg_path=ffmpeg_path
 
     def _framegrabber(self):
         while True:
@@ -37,6 +42,9 @@ class VideoProcessor(object):
     def open(self, url=DEFAULT_URL):
         if url.startswith("rtmp://"):
             print(f"Start ffmpeg subprocess to capture {url}.")
+            args = {"pipe_stdout" : True}
+            if self.ffmpeg_path:
+                args["cmd"] = self.ffmpeg_path
             self.ffmpeg_process = (
                 ffmpeg
                 .input(url, listen=1)
@@ -44,7 +52,7 @@ class VideoProcessor(object):
                         format='rawvideo',
                         pix_fmt=self.color,
                         s=f'{self.width}x{self.height}')
-                .run_async(pipe_stdout=True)
+                .run_async(**args)
             )
             print(f"start thread to buffer ffmpeg output")
             self._t_framegrabber = Thread(target=self._framegrabber, daemon=True)
