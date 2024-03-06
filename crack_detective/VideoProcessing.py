@@ -33,15 +33,14 @@ class VideoProcessor(object):
     def _framegrabber(self):
         while True:
             in_bytes = self.ffmpeg_process.stdout.read(self.width * self.height * PIXEL_SIZE[self.color])
+            # XXX: is there a better way to check if ffmpeg has died?
+            if len(in_bytes) == 0:
+                print(f"Error reading from FFMPEG.")
+                break
             frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.color]])
 
             self.dispatch(frame)
 
-            # if(self.frame_buffer.full()):
-            #     print(f"buffer is full. drop a frame.")
-            #     self.frame_buffer.get(False) # Drops the oldest frame from the buffer
-            # self.frame_buffer.put(frame)
-        return
 
     def open(self, url=DEFAULT_URL):
         if url.startswith("rtmp://"):
@@ -66,9 +65,6 @@ class VideoProcessor(object):
             pass
         pass
 
-    # def get_frame(self, frame, format=".jpg", width=None, height=None):
-
-    #     return frame
 
     def dispatch(self, frame):
         # print(f"ENTER dispatch. number of subscribers: {len(self.subscribers)}")
