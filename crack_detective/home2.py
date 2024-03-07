@@ -11,13 +11,17 @@ bp = Blueprint('home', __name__)
 # Route for the home page
 @bp.route('/')
 def home():
+    # print("Instance Path:", current_app.instance_path)
     username = request.args.get('username')
     return render_template('home.html', username=username)
+
 
 @bp.route('/settings')
 def settings():
     username = request.args.get('username')  # Retrieve the logged-in username
     return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+
+
 
 @bp.route('/gallery')
 def gallery():
@@ -33,11 +37,7 @@ def init_home(app: Flask):
         pass
     app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
-    # Route for the home page
-    @app.route('/home')
-    def home():
-        username = request.args.get('username')
-        return render_template('home.html', username=username)
+    
 
 
     @app.route('/api/folders', methods=['POST'])
@@ -86,7 +86,7 @@ def init_home(app: Flask):
             return jsonify({'error': 'Error deleting folder: ' + str(e)})
         
 
-
+    
     @app.route('/users', methods=['GET'])
     def list_users():
         connection = sqlite3.connect('users.db')
@@ -99,3 +99,7 @@ def init_home(app: Flask):
 
         return jsonify({'users': user_list})
 
+
+
+
+    
