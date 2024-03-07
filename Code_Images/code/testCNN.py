@@ -69,31 +69,11 @@ def main():
     if args.save:
         model.save(args.save)
 
-    x = load_imgdir(test_dir, "Positive")
-    prediction = model.predict(x)
-    print(f"Prediction: {prediction}")
+    # x = load_imgdir(test_dir, "Positive")
+    # prediction = model.predict(x)
+    # print(f"Prediction: {prediction}")
 
-    for crack_detected in prediction:
-        if(crack_detected > 0.95):
-            colour = Fore.GREEN
-        elif(crack_detected > 0.5):
-            colour = Fore.YELLOW
-        else:
-            colour = Fore.RED
-
-        print(f"{colour}{file}{Style.RESET_ALL} [{crack_detected}]. Class: {np.argmax( crack_detected, axis=1)}")
-
-
-    # for file in pathlib.Path(test_dir, "Positive").iterdir():
-    #     # print(f"Analysing file: {file}")
-    #     img = keras.utils.load_img(file, target_size=(size, size))
-
-    #     img_array = keras.utils.img_to_array(img)
-    #     print(f"img: {img} | img_array: {img_array}")
-    #     x = np.expand_dims(img_array, axis=0)
-    #     crack_detected = model.predict(x)
-
-    #     # print(f"{file}: {crack_detected}")
+    # for crack_detected in prediction:
     #     if(crack_detected > 0.95):
     #         colour = Fore.GREEN
     #     elif(crack_detected > 0.5):
@@ -102,6 +82,26 @@ def main():
     #         colour = Fore.RED
 
     #     print(f"{colour}{file}{Style.RESET_ALL} [{crack_detected}]. Class: {np.argmax( crack_detected, axis=1)}")
+
+
+    for file in pathlib.Path(test_dir, "Positive").iterdir():
+        # print(f"Analysing file: {file}")
+        img = keras.utils.load_img(file, target_size=(size, size))
+
+        img_array = keras.utils.img_to_array(img)
+        # print(f"img: {img} | img_array: {img_array}")
+        x = np.expand_dims(img_array, axis=0)
+        crack_detected = model.predict(x)
+
+        # print(f"{file}: {crack_detected}")
+        if(crack_detected > 0.95):
+            colour = Fore.GREEN
+        elif(crack_detected > 0.5):
+            colour = Fore.YELLOW
+        else:
+            colour = Fore.RED
+
+        print(f"{colour}{file}{Style.RESET_ALL} [{crack_detected}]. Class: {np.argmax( crack_detected, axis=1)}")
 
 
     # img = keras.utils.load_img("PetImages/Cat/6779.jpg", target_size=image_size)

@@ -1,10 +1,11 @@
 from .auth import login_required
 from . import VideoProcessing
+from .utils import Buffer
 from flask import Flask, Response, jsonify, request
 from flask import g, current_app
 import os
 
-def get_videoprocessor():
+def get_videoprocessor() -> VideoProcessing.VideoProcessor:
     if 'videoprocessor' not in g:
         # specify output format 720x400
         g.videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
@@ -33,8 +34,22 @@ def init_app(app:Flask):
     def live_stream():
 
         videoprocessor = get_videoprocessor()
+        buffer = Buffer(maxsize=60)
+        def callback(frame):
+            nonlocal buffer
+            print(f"INSIDE callback!")
+            buffer.put(frame)
 
-        return Response(videoprocessor.gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+        videoprocessor.subscribe(callback, width=640, height=360)
+
+        # def gen_frames():
+        #     while True:
+        #         frame = buffer.stream()
+        #         yield (b'--frame\r\n'
+        #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+
+        return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') for frame in buffer.stream()),
+                        mimetype='multipart/x-mixed-replace; boundary=frame')
 
     """
     """
