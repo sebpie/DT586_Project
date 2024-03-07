@@ -71,8 +71,7 @@ def main(args=None):
         ffmpeg_args["cmd"] = args.ffmpeg_path
 
     kwargs = get_crop_kwargs(args)
-    print("-----------------------------------------")
-    print(f"CROP ARGS: {kwargs}")
+
     return (
         ffmpeg
         .input(args.input_file[0], loop=1)
