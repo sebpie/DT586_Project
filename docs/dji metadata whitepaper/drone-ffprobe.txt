@@ -1,0 +1,5 @@
+
+Input #0, flv, from 'rtmp://0.0.0.0:8000/live/stream':
+  Duration: N/A, start: 84.007000, bitrate: N/A
+  Stream #0:0: Audio: aac (LC), 44100 Hz, mono, fltp
+  Stream #0:1: Video: h264 (High), yuv420p(tv, bt470bg/bt470bg/smpte170m, progressive), 1280x720, 1k tbr, 1k tbn
