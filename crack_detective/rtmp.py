@@ -25,7 +25,7 @@ def get_crop_kwargs(args):
             kwargs['y'] = f"""
                             if(eq(mod(floor(st(9,t*{args.sliding_speed})/(ih - out_h)),2),0),
                             mod(ld(9),ih - out_h),
-                            ih-h-mod(ld(9), ih - out_h))
+                            ih - out_h - mod(ld(9), ih - out_h))
                         """
 
         case "horizontal":
@@ -56,10 +56,10 @@ def parse_args():
     parser.add_argument("--height", type=int, default=720, help="Height in pixel of the cropping window and output stream.")
     parser.add_argument("--crop_x", type=int, default=0, help="The horizontal position, in the input file, of the left edge of the output video.")
     parser.add_argument("--crop_y", type=int, default=0, help="The vertical position, in the input file, of the top edge of the output video.")
-    parser.add_argument("--scan", choices=["bounce", "horizontal", "vertical", "static"])
+    parser.add_argument("--scan", default="bounce", choices=["bounce", "horizontal", "vertical", "static"])
     parser.add_argument("--sliding_speed", default=100, type=int, help="Speed at which the cropping window moves across the input image.")
     parser.add_argument("--ffmpeg_path", default=os.environ.get("FFMPEG_BINARY", None), help="Path to ffmpeg binary executable.")
-    parser.add_argument("--pix_fmt", default="bgr24", help="Pixel format for output stream.")
+    parser.add_argument("--pix_fmt", default="yuv420p", help="Pixel format for output stream.")
     parser.add_argument("--fps", default=30, type=int, help="Frame rate of the output stream.")
     return parser.parse_args()
 
@@ -76,11 +76,12 @@ def main(args=None):
         ffmpeg
         .input(args.input_file[0], loop=1)
         .crop(**kwargs)
-        .filter("fps", fps=args.fps, round="up")
+        .filter("fps", fps=args.fps, round="down")
         .output(args.url,
                 format='flv',
                 pix_fmt=args.pix_fmt,
                 s=f'{args.width}x{args.height}')
+        .global_args("-re")
         .run(**ffmpeg_args)
     )
 if __name__ == '__main__':
