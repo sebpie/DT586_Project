@@ -1,0 +1,15 @@
+ffmpeg -i "background.mp4" -i "foreground.mp4" -filter_complex ^
+overlay='^
+if(eq(mod(floor(st(8,t*320)/(W-w)),2),0),^
+mod(ld(8),W-w),^
+W-w-mod(ld(8),W-w))^
+:^
+if(eq(mod(floor(st(9,t*140)/(H-h)),2),0),^
+mod(ld(9),H-h),^
+H-h-mod(ld(9),H-h))^
+:^
+eval=frame^
+:^
+repeatlast=1^
+' ^
+"OUTPUT.mp4"
