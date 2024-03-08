@@ -77,9 +77,8 @@ def init_home(app: Flask):
     def delete_folder(folder_name):
         try:
             folder_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name)
-            print(folder_path)
+            # print(folder_path)
             if os.path.exists(folder_path):
-                print("yes")
                 shutil.rmtree(folder_path)
                 return jsonify({'message': f'Folder {folder_name} deleted successfully'})
             else:
@@ -88,12 +87,6 @@ def init_home(app: Flask):
             return jsonify({'error': 'Error deleting folder: ' + str(e)}), 500
     
   
-
-    @app.route('/settings')
-    def settings():
-
-        username = request.args.get('username')  # Retrieve the logged-in username
-        return render_template('settings.html', username=username)  # Pass the username to the settings.html template
 
     @app.route('/users', methods=['GET'])
     def list_users():
@@ -108,6 +101,4 @@ def init_home(app: Flask):
         return jsonify({'users': user_list})
 
 
-    @app.route('/gallery')
-    def gallery():
-        return render_template('gallery.html')
+  
