@@ -51,6 +51,7 @@ class VideoProcessor(object):
             self.ffmpeg_process = (
                 ffmpeg
                 .input(url, listen=1)
+                .filter("fps", fps=30, round="up")
                 .output('pipe:',
                         format='rawvideo',
                         pix_fmt=self.color,
