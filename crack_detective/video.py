@@ -37,7 +37,6 @@ def init_app(app:Flask):
         buffer = Buffer(maxsize=60)
         def callback(frame):
             nonlocal buffer
-            print(f"INSIDE callback!")
             buffer.put(frame)
 
         videoprocessor.subscribe(callback, width=640, height=360)
