@@ -6,7 +6,6 @@
   <div class="image-cont">
       <div id="upload-container">
         <img src="https://www.hkr.se/Static/redesign/images/header_logo.svg" srcset="{{url_for('live_stream') }}" />
-          <video id="video-element" autoplay></video>
       </div>
       <div style = "display:flex;">
           <button id="start-stop-btn">Start/Stop</button>
@@ -41,7 +40,7 @@
         <label for="folder-name">Folder Name:</label>
         <input type="text" id="folder-name" name="folder_name" class = "mb-4">
         <button type="submit" id="create-btn">Create Folder</button>
-        
+
       </form>
       <div id="response-message"></div>
     </div>
