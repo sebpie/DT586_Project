@@ -33,18 +33,6 @@ def init_home(app: Flask):
         pass
     app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 
-    # Route for the home page
-    @app.route('/home')
-    def home():
-        username = request.args.get('username')
-        return render_template('home.html', username=username)
-    # Route for the home page
-    @app.route('/home')
-    def home():
-        username = request.args.get('username')
-        return render_template('home.html', username=username)
-
-
     @app.route('/api/folders', methods=['POST'])
     def create_folder():
         try:
