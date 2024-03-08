@@ -2,32 +2,44 @@ from .auth import login_required
 from . import VideoProcessing
 from .utils import Buffer
 from flask import Flask, Response, jsonify, request
-from flask import g, current_app
+from flask import session, current_app
 import os
 
-def get_videoprocessor() -> VideoProcessing.VideoProcessor:
-    if 'videoprocessor' not in g:
-        # specify output format 720x400
-        g.videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
-
-        # if using Windows, specify path to ffmpeg binary
-        if os.name == "nt":
-            g.videoprocessor.ffmpeg_path = os.path.join(current_app.root_path, "bin", "ffmpeg.exe")
-
-        if "video_input" in g:
-            g.videoprocessor.open(g.video_input)
-        else:
-            g.videoprocessor.open()
-
-    return g.videoprocessor
-
+videoprocessor : VideoProcessing.VideoProcessor = None
 video_sources = []
+
+def create_videoprocessor(url=None) -> VideoProcessing.VideoProcessor:
+    print(f"Creating a new VideoProcessor instance.")
+    # specify output format 720x400
+    videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
+
+    # if using Windows, specify path to ffmpeg binary
+    if os.name == "nt":
+        videoprocessor.ffmpeg_path = os.path.join(current_app.root_path, "bin", "ffmpeg.exe")
+
+    # if "video_input" in session:
+    #     videoprocessor.open(session["video_input"])
+    # else:
+    #     videoprocessor.open()
+    videoprocessor.open(url)
+
+    return videoprocessor
+
+def get_videoprocessor():
+    global videoprocessor
+    if not videoprocessor or videoprocessor.ffmpeg_process.poll() is not None:
+        videoprocessor = create_videoprocessor()
+
+    return videoprocessor
 
 def init_app(app:Flask):
 
     # TODO: initialise list of possible input video
     global video_sources
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
+
+    global videoprocessor
+    videoprocessor = create_videoprocessor(video_sources[0])
 
 
     @app.route("/live_stream")
@@ -41,13 +53,16 @@ def init_app(app:Flask):
 
         videoprocessor.subscribe(callback, width=640, height=360)
 
-        # def gen_frames():
-        #     while True:
-        #         frame = buffer.stream()
-        #         yield (b'--frame\r\n'
-        #                 b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+        def gen_frames():
+            n = 0
+            for frame in buffer.stream():
+                n = n + 1
+                print(f"get frame #{n} ")
+                yield (b'--frame\r\n'
+                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
-        return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n') for frame in buffer.stream()),
+        # return Response(*(b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream()),
+        return Response(gen_frames(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
     """
