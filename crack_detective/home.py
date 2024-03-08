@@ -38,6 +38,11 @@ def init_home(app: Flask):
     def home():
         username = request.args.get('username')
         return render_template('home.html', username=username)
+    # Route for the home page
+    @app.route('/home')
+    def home():
+        username = request.args.get('username')
+        return render_template('home.html', username=username)
 
 
     @app.route('/api/folders', methods=['POST'])
@@ -67,7 +72,7 @@ def init_home(app: Flask):
     @app.route('/api/folders', methods=['GET'])
     def list_folders():
         try:
-            folder_path = os.path.join(app.instance_path, UPLOAD_DIR)  # Path to the folder where you store images
+            folder_path = os.path.join(app.instance_path, UPLOAD_DIR)
             folders = [f for f in os.listdir(folder_path) if os.path.isdir(os.path.join(folder_path, f))]
             return jsonify({'folders': folders})
         except Exception as e:
@@ -76,15 +81,16 @@ def init_home(app: Flask):
     @app.route('/api/folders/<folder_name>', methods=['DELETE'])
     def delete_folder(folder_name):
         try:
-            folder_path = os.path.join(app.config['UPLOAD_FOLDER'], folder_name)
+            folder_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name)
+            # print(folder_path)
             if os.path.exists(folder_path):
                 shutil.rmtree(folder_path)
                 return jsonify({'message': f'Folder {folder_name} deleted successfully'})
             else:
-                return jsonify({'error': f'Folder {folder_name} does not exist'})
+                return jsonify({'error': f'Folder {folder_name} does not exist'}), 404
         except Exception as e:
-            return jsonify({'error': 'Error deleting folder: ' + str(e)})
-        
+            return jsonify({'error': 'Error deleting folder: ' + str(e)}), 500
+
 
 
     @app.route('/users', methods=['GET'])
@@ -98,4 +104,3 @@ def init_home(app: Flask):
         user_list = [{'id': user[0], 'username': user[1], 'password': user[2]} for user in users]
 
         return jsonify({'users': user_list})
-
