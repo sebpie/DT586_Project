@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateFolderList();
 });
 
-
+});
   //settings page
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -226,4 +226,4 @@ document.addEventListener('DOMContentLoaded', function() {
     var username = "{{ username }}";
     // Set the value of the username input field
     document.getElementById('username').value = username;
-});
+})
