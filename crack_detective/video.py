@@ -11,14 +11,16 @@ from colorama import Fore, Back, Style
 videoprocessor : VideoProcessing.VideoProcessor = None
 video_sources = []
 
-def create_videoprocessor(url=None) -> VideoProcessing.VideoProcessor:
+def create_videoprocessor(url=None, app:Flask=None) -> VideoProcessing.VideoProcessor:
     print(f"Creating a new VideoProcessor instance.")
     # specify output format 720x400
     videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
 
     # if using Windows, specify path to ffmpeg binary
     if os.name == "nt":
-        videoprocessor.ffmpeg_path = os.path.join(current_app.root_path, "bin", "ffmpeg.exe")
+        if app is None:
+            app = current_app
+        videoprocessor.ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
     # if "video_input" in session:
     #     videoprocessor.open(session["video_input"])
@@ -42,7 +44,7 @@ def init_app(app:Flask):
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
 
     global videoprocessor
-    videoprocessor = create_videoprocessor(video_sources[0])
+    videoprocessor = create_videoprocessor(video_sources[0], app)
 
 
     @app.route("/live_stream")
