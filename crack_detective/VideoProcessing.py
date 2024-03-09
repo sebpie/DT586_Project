@@ -97,17 +97,3 @@ class VideoProcessor(object):
             # subscriber = [item for item in self.subscribers if item == callback ][0]
             # self.subscribers.remove(subscriber)
             self.subscribers.remove(callback)
-
-def test_videoprocessor():
-    print("Start the video processor (rtmp server / ffmpeg)")
-    processor = VideoProcessor(height=1, width=1, framebuffer_size=30*60)
-    processor.start()
-
-    for frame in processor.gen_frames():
-        print(f"processor generated a frame")
-
-def version():
-    print(f"version: {0.1}")
-
-if __name__ == "__main__":
-    test_videoprocessor()
