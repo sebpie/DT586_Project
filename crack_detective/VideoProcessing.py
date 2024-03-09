@@ -4,7 +4,6 @@ from typing import Callable
 import cv2
 import ffmpeg
 import numpy as np
-import os
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_BUFFER_SIZE=60 # 2s at 30fps
@@ -33,9 +32,14 @@ class VideoProcessor(object):
     def _framegrabber(self):
         while True:
             in_bytes = self.ffmpeg_process.stdout.read(self.width * self.height * PIXEL_SIZE[self.color])
-            # XXX: is there a better way to check if ffmpeg has died?
+
             if len(in_bytes) == 0:
-                print(f"Error reading from FFMPEG.")
+                if self.ffmpeg_process.poll() is not None:
+                    print("Process is dead.")
+                    # XXX: how to restart?
+                    break
+
+                print(f"Error reading from FFMPEG. poll: {self.ffmpeg_process.poll()}")
                 break
             frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.color]])
 
@@ -58,6 +62,7 @@ class VideoProcessor(object):
                         s=f'{self.width}x{self.height}')
                 .run_async(**args)
             )
+            print(f"ffmpeg is running: {self.ffmpeg_process}. Poll(): {self.ffmpeg_process.poll()}")
             print(f"start thread to buffer ffmpeg output")
             self._t_framegrabber = Thread(target=self._framegrabber, daemon=True)
             self._t_framegrabber.start()
@@ -91,7 +96,7 @@ class VideoProcessor(object):
         self.subscribers.append((callback, format, width, height))
 
     def unsubscribe(self, callback:Callable[[bytes], None]) -> None:
-            subscriber = [item for item in self.subscribers if item[0] == callback ]
+            subscriber = [item for item in self.subscribers if item[0] == callback ][0]
             self.subscribers.remove(subscriber)
 
 
