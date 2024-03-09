@@ -77,6 +77,7 @@ class VideoProcessor(object):
                         format='rawvideo',
                         pix_fmt=self.color,
                         s=f'{self.width}x{self.height}')
+                .global_args("-nostdin", "-hide_banner", "-log_level", "warning")
                 .run_async(**args)
             )
             print(f"ffmpeg is running: {self.ffmpeg_process}. Poll(): {self.ffmpeg_process.poll()}")
