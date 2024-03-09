@@ -14,20 +14,16 @@ video_sources = []
 
 def create_videoprocessor(url=None, app:Flask=None) -> VideoProcessing.VideoProcessor:
     print(f"Creating a new VideoProcessor instance.")
-    # specify output format 720x400
-    videoprocessor = VideoProcessing.VideoProcessor(width=720, height=400)
 
     # if using Windows, specify path to ffmpeg binary
     if os.name == "nt":
         if app is None:
             app = current_app
-        videoprocessor.ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
+        ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
-    # if "video_input" in session:
-    #     videoprocessor.open(session["video_input"])
-    # else:
-    #     videoprocessor.open()
-    videoprocessor.open(url)
+    videoprocessor = VideoProcessing.VideoProcessor(url, ffmpeg_path=ffmpeg_path)
+
+    videoprocessor.start()
 
     return videoprocessor
 
@@ -89,7 +85,7 @@ def init_app(app:Flask):
             finally:
                 # print(Fore.RED + f"live_stream() returned. Taking care of garbage collection")
                 # print(f"UNsubscribing {callback}"+ Style.RESET_ALL)
-                videoprocessor.unsubscribe(buffer)
+                videoprocessor.unsubscribe(buffer.put)
 
         # return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream())),
         return Response(gen_frames(buffer),

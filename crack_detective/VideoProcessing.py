@@ -21,31 +21,36 @@ class VideoProcessor(object):
     _t_framegrabber: Thread = None
 
     def __init__(self,
+                 url=None,
                  color=DEFAULT_COLOR,
                  width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
-                 framebuffer_size=DEFAULT_BUFFER_SIZE,
+                #  framebuffer_size=DEFAULT_BUFFER_SIZE,
                  ffmpeg_path=None) -> None:
-        self.color = color
-        self.width = width
-        self.height = height
-        self.frame_buffer = Queue(maxsize=framebuffer_size)
+        self.url = url or DEFAULT_URL
+        self.color = color or DEFAULT_COLOR
+        self.width = width or DEFAULT_WIDTH
+        self.height = height or DEFAULT_WIDTH
+        # self.frame_buffer = Queue(maxsize=framebuffer_size)
         self.ffmpeg_path=ffmpeg_path
 
         # subscribers: a lit of callback methods that consumers register.
         self.subscribers = []
 
+        print(f"New instance of VideoProcessor: {self.__dict__}")
+
     def _framegrabber(self):
+        print(f"--thread framegrabber--")
         while True:
             in_bytes = self.ffmpeg_process.stdout.read(self.width * self.height * PIXEL_SIZE[self.color])
 
-            if len(in_bytes) == 0:
-                if self.ffmpeg_process.poll() is not None:
-                    print(Fore.RED + "ffmpeg process is dead." + Style.RESET_ALL)
-                    # XXX: how to restart?
-                    break
-
-                print(f"Error reading from FFMPEG. poll: {self.ffmpeg_process.poll()}")
+            if self.ffmpeg_process.poll() is not None:
+                print(Fore.RED + "ffmpeg process is dead." + Style.RESET_ALL)
                 break
+
+            if len(in_bytes) == 0:
+                print(f"Error reading from FFMPEG. poll: {self.ffmpeg_process.poll()}")
+                continue
+
             frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.color]])
 
             if type(frame) is not np.ndarray:
@@ -53,18 +58,20 @@ class VideoProcessor(object):
             else:
                 for callback in self.subscribers:
                     callback(frame)
+        print(Fore.YELLOW  + "restarting ffmpeg" + Style.RESET_ALL)
+        self.start()
 
 
+    def start(self):
 
-    def open(self, url=DEFAULT_URL):
-        if url.startswith("rtmp://"):
-            print(f"Start ffmpeg subprocess to capture {url}.")
+        if self.url.startswith("rtmp://"):
+            print(f"Start ffmpeg subprocess to capture {self.url}.")
             args = {"pipe_stdout" : True}
             if self.ffmpeg_path:
                 args["cmd"] = self.ffmpeg_path
             self.ffmpeg_process = (
                 ffmpeg
-                .input(url, listen=1)
+                .input(self.url, listen=1)
                 .filter("fps", fps=30, round="up")
                 .output('pipe:',
                         format='rawvideo',
@@ -85,15 +92,15 @@ class VideoProcessor(object):
     def subscribe(self, callback:Callable[[bytes], None]) -> None:
         self.subscribers.append(callback)
 
-    def unsubscribe(self, callback:Callable[[bytes], None]) -> None:
-            subscriber = [item for item in self.subscribers if item == callback ][0]
-            self.subscribers.remove(subscriber)
-
+    def unsubscribe(self, callback:Callable[[bytes ], None]) -> None:
+            # subscriber = [item for item in self.subscribers if item == callback ][0]
+            # self.subscribers.remove(subscriber)
+            self.subscribers.remove(callback)
 
 def test_videoprocessor():
     print("Start the video processor (rtmp server / ffmpeg)")
     processor = VideoProcessor(height=1, width=1, framebuffer_size=30*60)
-    processor.open()
+    processor.start()
 
     for frame in processor.gen_frames():
         print(f"processor generated a frame")
