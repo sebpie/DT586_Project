@@ -5,6 +5,9 @@ from flask import Flask, Response, jsonify, request
 from flask import session, current_app
 import os
 
+from colorama import init as colorama_init
+from colorama import Fore, Back, Style
+
 videoprocessor : VideoProcessing.VideoProcessor = None
 video_sources = []
 
@@ -49,19 +52,28 @@ def init_app(app:Flask):
         buffer = Buffer(maxsize=60)
         def callback(frame):
             nonlocal buffer
+            # print(Fore.GREEN + f"Adding frame to buffer. (size: {buffer.qsize()}) " + Style.RESET_ALL)
             buffer.put(frame)
 
+        # print(f"Subscribing with : {callback}")
         videoprocessor.subscribe(callback, width=640, height=360)
 
         def gen_frames():
+            nonlocal callback
             n = 0
-            for frame in buffer.stream():
-                n = n + 1
-                print(f"get frame #{n} ")
-                yield (b'--frame\r\n'
-                        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+            try:
+                for frame in buffer.stream():
+                    n = n + 1
+                    # print(Fore.RED + f"get frame #{n}/{buffer.qsize()}. size: {len(frame)}" + Style.RESET_ALL)
+                    yield (b'--frame\r\n'
+                            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+            finally:
+                # print(Fore.RED + f"live_stream() returned. Taking care of garbage collection")
+                # print(f"UNsubscribing {callback}"+ Style.RESET_ALL)
+                videoprocessor.unsubscribe(callback)
 
         # return Response(*(b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream()),
+        print(Fore.RED + f"live return"+ Style.RESET_ALL)
         return Response(gen_frames(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
