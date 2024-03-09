@@ -4,6 +4,8 @@ from typing import Callable
 import cv2
 import ffmpeg
 import numpy as np
+from colorama import Fore, Style
+from colorama import init as colorama_init
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_BUFFER_SIZE=60 # 2s at 30fps
@@ -12,6 +14,7 @@ DEFAULT_HEIGHT=720
 DEFAULT_COLOR='bgr24'
 PIXEL_SIZE= { "bgr24": 3, }
 
+colorama_init()
 
 class VideoProcessor(object):
     ffmpeg_process = None
@@ -35,7 +38,7 @@ class VideoProcessor(object):
 
             if len(in_bytes) == 0:
                 if self.ffmpeg_process.poll() is not None:
-                    print("Process is dead.")
+                    print(Fore.RED + "ffmpeg process is dead." + Style.RESET_ALL)
                     # XXX: how to restart?
                     break
 
@@ -43,7 +46,10 @@ class VideoProcessor(object):
                 break
             frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.color]])
 
-            self.dispatch(frame)
+            if type(frame) is not np.ndarray:
+                print(Fore.Yellow + f"couldnt convert frame to 'numpy.ndarray'" + Style.RESET_ALL)
+            else:
+                self.dispatch(frame)
 
 
     def open(self, url=DEFAULT_URL):
@@ -82,6 +88,7 @@ class VideoProcessor(object):
                 if not width:
                     width = int(self.width * height / self.height)
 
+                # print(Fore.YELLOW + f"frame type: {type(frame)}")
                 frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
 
             if format != "raw":
