@@ -33,6 +33,7 @@ def create_videoprocessor(url=None, app:Flask=None) -> VideoProcessing.VideoProc
 def get_videoprocessor():
     global videoprocessor
     if not videoprocessor or videoprocessor.ffmpeg_process.poll() is not None:
+        print(Fore.RED + f"no videoprocessor found. Creating one." + Style.RESET_ALL)
         videoprocessor = create_videoprocessor()
 
     return videoprocessor
@@ -49,7 +50,7 @@ def init_app(app:Flask):
 
     @app.route("/live_stream")
     def live_stream():
-
+        print(Fore.BLUE + f"ENTER /live_stream" + Style.RESET_ALL)
         videoprocessor = get_videoprocessor()
         buffer = Buffer(maxsize=60)
         def callback(frame):
@@ -57,7 +58,7 @@ def init_app(app:Flask):
             # print(Fore.GREEN + f"Adding frame to buffer. (size: {buffer.qsize()}) " + Style.RESET_ALL)
             buffer.put(frame)
 
-        # print(f"Subscribing with : {callback}")
+        print(f"Subscribing with : {callback}")
         videoprocessor.subscribe(callback, width=640, height=360)
 
         def gen_frames():
@@ -74,9 +75,8 @@ def init_app(app:Flask):
                 # print(f"UNsubscribing {callback}"+ Style.RESET_ALL)
                 videoprocessor.unsubscribe(callback)
 
-        # return Response(*(b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream()),
-        print(Fore.RED + f"live return"+ Style.RESET_ALL)
-        return Response(gen_frames(),
+        return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream())),
+        # return Response(gen_frames(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
     """
