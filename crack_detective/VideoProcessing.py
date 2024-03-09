@@ -30,6 +30,8 @@ class VideoProcessor(object):
         self.height = height
         self.frame_buffer = Queue(maxsize=framebuffer_size)
         self.ffmpeg_path=ffmpeg_path
+
+        # subscribers: a lit of callback methods that consumers register.
         self.subscribers = []
 
     def _framegrabber(self):
@@ -49,7 +51,9 @@ class VideoProcessor(object):
             if type(frame) is not np.ndarray:
                 print(Fore.Yellow + f"couldnt convert frame to 'numpy.ndarray'" + Style.RESET_ALL)
             else:
-                self.dispatch(frame)
+                for callback in self.subscribers:
+                    callback(frame)
+
 
 
     def open(self, url=DEFAULT_URL):
@@ -78,32 +82,11 @@ class VideoProcessor(object):
         pass
 
 
-    def dispatch(self, frame):
-        # print(f"ENTER dispatch. number of subscribers: {len(self.subscribers)}")
-        for cb, format, width, height in self.subscribers:
-            # print(f"Dispatch to: {cb} height: {height}")
-            if(height or width ):
-                if not height:
-                    height = int(self.height * width / self.width)
-                if not width:
-                    width = int(self.width * height / self.height)
-
-                # print(Fore.YELLOW + f"frame type: {type(frame)}")
-                frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
-
-            if format != "raw":
-                _, buffer = cv2.imencode(format, frame)
-                frame = buffer.tobytes()
-
-            cb(frame)
-
-
-
-    def subscribe(self, callback:Callable[[bytes], None], format=".jpg", width=None, height=None) -> None:
-        self.subscribers.append((callback, format, width, height))
+    def subscribe(self, callback:Callable[[bytes], None]) -> None:
+        self.subscribers.append(callback)
 
     def unsubscribe(self, callback:Callable[[bytes], None]) -> None:
-            subscriber = [item for item in self.subscribers if item[0] == callback ][0]
+            subscriber = [item for item in self.subscribers if item == callback ][0]
             self.subscribers.remove(subscriber)
 
 

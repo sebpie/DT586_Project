@@ -4,6 +4,7 @@ from .utils import Buffer
 from flask import Flask, Response, jsonify, request
 from flask import session, current_app
 import os
+import cv2
 
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
@@ -53,30 +54,45 @@ def init_app(app:Flask):
         print(Fore.BLUE + f"ENTER /live_stream" + Style.RESET_ALL)
         videoprocessor = get_videoprocessor()
         buffer = Buffer(maxsize=60)
-        def callback(frame):
-            nonlocal buffer
-            # print(Fore.GREEN + f"Adding frame to buffer. (size: {buffer.qsize()}) " + Style.RESET_ALL)
-            buffer.put(frame)
 
-        print(f"Subscribing with : {callback}")
-        videoprocessor.subscribe(callback, width=640, height=360)
+        videoprocessor.subscribe(buffer.put)
 
-        def gen_frames():
-            nonlocal callback
+        width=request.args.get("width") or 640
+        height=request.args.get("height") or 360
+
+        def format_frame(frame, format=".jpg", width=None, height=None):
+            # Resize frame if required
+            if(height or width ):
+                if not height:
+                    height = int(videoprocessor.height * width / videoprocessor.width)
+                if not width:
+                    width = int(videoprocessor.width * height / videoprocessor.height)
+
+                # print(Fore.YELLOW + f"frame type: {type(frame)}")
+                frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
+
+            # Encode the image to given format
+            _, b = cv2.imencode(format, frame)
+            return b.tobytes()
+
+
+        def gen_frames(buffer):
             n = 0
             try:
                 for frame in buffer.stream():
-                    n = n + 1
-                    # print(Fore.RED + f"get frame #{n}/{buffer.qsize()}. size: {len(frame)}" + Style.RESET_ALL)
+                    # n = n + 1
+
+                    frame_jpg = format_frame(frame)
+
                     yield (b'--frame\r\n'
-                            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+                            b'Content-Type: image/jpeg\r\n\r\n' + frame_jpg + b'\r\n')  # concat frame one by one and show result
             finally:
                 # print(Fore.RED + f"live_stream() returned. Taking care of garbage collection")
                 # print(f"UNsubscribing {callback}"+ Style.RESET_ALL)
-                videoprocessor.unsubscribe(callback)
+                videoprocessor.unsubscribe(buffer)
 
-        return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream())),
-        # return Response(gen_frames(),
+        # return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream())),
+        return Response(gen_frames(buffer),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
     """
