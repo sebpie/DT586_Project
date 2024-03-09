@@ -5,92 +5,46 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteIcon.addEventListener('click', deleteFolder);
         });
     }
-
-    // Function to update the list of folders
+    
     function updateFolderList() {
         fetch('/api/folders')
             .then(response => response.json())
             .then(data => {
                 const foldersList = document.getElementById('folders');
+                const folderDropdown = document.getElementById('folder-action'); // Get the dropdown
+    
                 foldersList.innerHTML = '';
-
+                folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; // Reset dropdown
+    
                 if (data.folders && data.folders.length > 0) {
                     data.folders.forEach(folder => {
                         const listItem = document.createElement('li');
                         listItem.classList.add('folder-item');
-
+    
                         // Create folder icon
                         const folderIcon = document.createElement('i');
                         folderIcon.classList.add('fa', 'fa-folder', 'folder-icon');
-
+    
                         const folderName = document.createElement('span');
                         folderName.classList.add('folder-name');
                         folderName.textContent = folder;
-
+    
                         listItem.appendChild(folderIcon);
                         listItem.appendChild(folderName);
-
+    
                         const deleteIcon = document.createElement('i');
                         deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
                         deleteIcon.dataset.folderName = folder;
                         listItem.appendChild(deleteIcon);
-
+    
                         foldersList.appendChild(listItem);
+    
+                        // Add folder to dropdown
+                        const option = document.createElement('option');
+                        option.value = folder;
+                        option.textContent = folder;
+                        folderDropdown.appendChild(option);
                     });
-
-                    // Add event listener to newly created delete icons
-                    addDeleteIconEventListeners();
-                } else {
-                    foldersList.innerHTML = '<li>No folders found</li>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Function to add event listeners to delete icons
-    function addDeleteIconEventListeners() {
-        document.querySelectorAll('.delete-icon').forEach(deleteIcon => {
-            deleteIcon.addEventListener('click', deleteFolder);
-        });
-    }
-
-    // Function to update the list of folders
-    function updateFolderList() {
-        fetch('/api/folders')
-            .then(response => response.json())
-            .then(data => {
-                const foldersList = document.getElementById('folders');
-                foldersList.innerHTML = '';
-
-                if (data.folders && data.folders.length > 0) {
-                    data.folders.forEach(folder => {
-                        const listItem = document.createElement('li');
-                        listItem.classList.add('folder-item');
-
-                        // Create folder icon
-                        const folderIcon = document.createElement('i');
-                        folderIcon.classList.add('fa', 'fa-folder', 'folder-icon');
-
-                        const folderName = document.createElement('span');
-                        folderName.classList.add('folder-name');
-                        folderName.textContent = folder;
-
-                        listItem.appendChild(folderIcon);
-                        listItem.appendChild(folderName);
-
-                        const deleteIcon = document.createElement('i');
-                        deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
-                        deleteIcon.dataset.folderName = folder;
-                        listItem.appendChild(deleteIcon);
-
-                        foldersList.appendChild(listItem);
-                    });
-
-                    // Add event listener to newly created delete icons
-                    addDeleteIconEventListeners();
                 } else {
                     foldersList.innerHTML = '<li>No folders found</li>';
                 }
@@ -103,12 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener for folder creation form submission
     document.getElementById('create-folder-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent form submission
-
+        
         // Get the folder name from the input field
         const folderName = document.getElementById('folder-name').value;
 
         // Send a POST request to the Flask endpoint
-        fetch('/api/api/folders', {
+        fetch('/api/folders', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -119,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             document.getElementById('response-message').innerText = data.message || data.error;
             updateFolderList(); // Refresh folder list after creation
+            document.getElementById('create-folder-popup').style.display = 'none'
         })
         .catch(error => {
             console.error('Error:', error);
@@ -135,22 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('create-folder-popup').style.display = 'none';
         updateFolderList(); // Refresh folder list
     });
-
-    // Event listener for folder action dropdown
-    document.getElementById('folder-action').addEventListener('change', function() {
-        var selectedOption = this.value;
-        if (selectedOption === 'create') {
-            document.getElementById('create-folder-popup').style.display = 'flex';
-        } else if (selectedOption === 'list') {
-            // Show folder list
-            document.getElementById('folder-list').style.display = 'block';
-        } else {
-            // Handle other actions here
-            sendPutRequest(selectedOption);
-        }
-    });
-
-    // Function to send a PUT request to the selected folder
 
     // Event listener for folder action dropdown
     document.getElementById('folder-action').addEventListener('change', function() {
@@ -198,15 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(`/api/folders/${folderName}`, {
                 method: 'DELETE'
             })
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // Log the data received from the server
-                console.log('Response data:', data);
-                // Refresh folder list after deletion
-                updateFolderList();
+                console.log(data.message);
+                updateFolderList(); // Refresh folder list after deletion
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -218,12 +152,12 @@ document.addEventListener('DOMContentLoaded', function() {
     updateFolderList();
 });
 
-});
+  
   //settings page
-
+  
   document.addEventListener('DOMContentLoaded', function() {
     // Retrieve the username passed from the Flask route
     var username = "{{ username }}";
     // Set the value of the username input field
     document.getElementById('username').value = username;
-})
+});
