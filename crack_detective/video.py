@@ -45,16 +45,16 @@ def init_app(app:Flask):
     videoprocessor = create_videoprocessor(video_sources[0], app)
 
 
-    @app.route("/live_stream")
+    @app.route("/live_stream", methods=['GET'])
     def live_stream():
         print(Fore.BLUE + f"ENTER /live_stream" + Style.RESET_ALL)
         videoprocessor = get_videoprocessor()
         buffer = Buffer(maxsize=60)
 
-        videoprocessor.subscribe(buffer.put)
+        width=int(request.args.get("width", None))
+        height=int(request.args.get("height", None))
 
-        width=request.args.get("width") or 640
-        height=request.args.get("height") or 360
+        videoprocessor.subscribe(buffer.put)
 
         def format_frame(frame, format=".jpg", width=None, height=None):
             # Resize frame if required
@@ -65,6 +65,7 @@ def init_app(app:Flask):
                     width = int(videoprocessor.width * height / videoprocessor.height)
 
                 # print(Fore.YELLOW + f"frame type: {type(frame)}")
+                # print(f"Resize frame (type:{type(frame)}) to {width}x{height} (types: {type(width)}, {type(height)})")
                 frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
 
             # Encode the image to given format
@@ -73,12 +74,12 @@ def init_app(app:Flask):
 
 
         def gen_frames(buffer):
-            n = 0
+            nonlocal width, height
+
             try:
                 for frame in buffer.stream():
-                    # n = n + 1
 
-                    frame_jpg = format_frame(frame)
+                    frame_jpg = format_frame(frame, width=width, height=height)
 
                     yield (b'--frame\r\n'
                             b'Content-Type: image/jpeg\r\n\r\n' + frame_jpg + b'\r\n')  # concat frame one by one and show result
