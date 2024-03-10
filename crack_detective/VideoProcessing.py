@@ -9,8 +9,8 @@ from colorama import init as colorama_init
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_BUFFER_SIZE=60 # 2s at 30fps
-DEFAULT_WIDTH=1280
-DEFAULT_HEIGHT=720
+DEFAULT_WIDTH=6*224
+DEFAULT_HEIGHT=3*224
 DEFAULT_COLOR='bgr24'
 PIXEL_SIZE= { "bgr24": 3, }
 
@@ -73,6 +73,8 @@ class RTMPServer(object):
                 ffmpeg
                 .input(self.url, listen=1)
                 .filter("fps", fps=30, round="up")
+                .filter("pad", width=6*224, height=4*224, x=(1280-6*224)/2, y=0, color="green")
+                .filter("crop", w=6*224, h=3*224, x=0, y=(720-3*224)/2)
                 .output('pipe:',
                         format='rawvideo',
                         pix_fmt=self.color,
