@@ -1,4 +1,5 @@
 from queue import Queue
+from typing import Callable
 
 
 class Buffer(Queue):

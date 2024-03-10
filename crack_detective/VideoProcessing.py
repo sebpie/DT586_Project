@@ -1,10 +1,9 @@
 from threading import Thread
-from typing import Callable
 import ffmpeg
 import numpy as np
 from colorama import Fore, Style
 from colorama import init as colorama_init
-from utils import Subscribable
+from .utils import Subscribable
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_WIDTH=6*224
