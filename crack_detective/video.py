@@ -9,7 +9,7 @@ import cv2
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
 
-videoprocessor : VideoProcessing.RTMPServer = None
+rtmp_server : VideoProcessing.RTMPServer = None
 video_sources = []
 
 def create_videoprocessor(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
@@ -28,12 +28,12 @@ def create_videoprocessor(url=None, app:Flask=None, ffmpeg_path=None) -> VideoPr
     return videoprocessor
 
 def get_videoprocessor():
-    global videoprocessor
-    if not videoprocessor or videoprocessor.ffmpeg_process.poll() is not None:
+    global rtmp_server
+    if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
         print(Fore.RED + f"no videoprocessor found. Creating one." + Style.RESET_ALL)
-        videoprocessor = create_videoprocessor()
+        rtmp_server = create_videoprocessor()
 
-    return videoprocessor
+    return rtmp_server
 
 def init_app(app:Flask):
 
@@ -41,13 +41,13 @@ def init_app(app:Flask):
     global video_sources
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
 
-    global videoprocessor
-    videoprocessor = create_videoprocessor(video_sources[0], app)
+    global rtmp_server
+    rtmp_server = create_videoprocessor(video_sources[0], app)
 
 
-    @app.route("/live_stream", methods=['GET'])
-    def live_stream():
-        print(Fore.BLUE + f"ENTER /live_stream" + Style.RESET_ALL)
+    @app.route("/stream/preprocessed", methods=['GET'])
+    def stream_preprocessed():
+        print(Fore.BLUE + f"ENTER /stream/preprocessed" + Style.RESET_ALL)
         videoprocessor = get_videoprocessor()
         buffer = Buffer(maxsize=60)
 
