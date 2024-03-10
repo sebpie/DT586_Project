@@ -8,7 +8,6 @@ from colorama import Fore, Style
 from colorama import init as colorama_init
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
-DEFAULT_BUFFER_SIZE=60 # 2s at 30fps
 DEFAULT_WIDTH=6*224
 DEFAULT_HEIGHT=3*224
 DEFAULT_COLOR='bgr24'
@@ -24,19 +23,16 @@ class RTMPServer(object):
                  url=None,
                  color=DEFAULT_COLOR,
                  width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
-                #  framebuffer_size=DEFAULT_BUFFER_SIZE,
                  ffmpeg_path=None) -> None:
         self.url = url or DEFAULT_URL
         self.color = color or DEFAULT_COLOR
         self.width = width or DEFAULT_WIDTH
         self.height = height or DEFAULT_WIDTH
-        # self.frame_buffer = Queue(maxsize=framebuffer_size)
         self.ffmpeg_path=ffmpeg_path
 
         # subscribers: a lit of callback methods that consumers register.
         self.subscribers = []
 
-        print(f"New instance of VideoProcessor: {self.__dict__}")
 
     def _framegrabber(self):
         print(f"--thread framegrabber--")
@@ -64,7 +60,6 @@ class RTMPServer(object):
 
     def start(self):
 
-        if self.url.startswith("rtmp://"):
             print(f"Start ffmpeg subprocess to capture {self.url}.")
             args = {"pipe_stdout" : True}
             if self.ffmpeg_path:
@@ -86,10 +81,7 @@ class RTMPServer(object):
             print(f"start thread to buffer ffmpeg output")
             self._t_framegrabber = Thread(target=self._framegrabber, daemon=True)
             self._t_framegrabber.start()
-        else:
-            #TODO: open video source as a file with opencv
-            pass
-        pass
+
 
 
     def subscribe(self, callback:Callable[[bytes], None]) -> None:
