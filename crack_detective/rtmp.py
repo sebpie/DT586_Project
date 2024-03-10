@@ -39,7 +39,7 @@ def get_crop_kwargs(args):
             kwargs['y'] = f"""
                             if(eq(mod(floor(st(9,t*{args.sliding_speed})/(ih - out_h)),2),0),
                             mod(ld(9),ih - out_h),
-                            ih-h-mod(ld(9), ih - out_h))
+                            ih - out_h - mod(ld(9), ih - out_h))
                         """
     return kwargs
 
