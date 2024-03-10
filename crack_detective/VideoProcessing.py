@@ -1,7 +1,5 @@
-from queue import Queue
 from threading import Thread
 from typing import Callable
-import cv2
 import ffmpeg
 import numpy as np
 from colorama import Fore, Style
@@ -15,7 +13,22 @@ PIXEL_SIZE= { "bgr24": 3, }
 
 colorama_init()
 
-class RTMPServer(object):
+class Subscribable(object):
+    # subscribers: a lit of callback methods that consumers register.
+    subscribers = []
+
+    def subscribe(self, callback:Callable[[bytes], None]) -> None:
+        self.subscribers.append(callback)
+
+    def unsubscribe(self, callback:Callable[[bytes ], None]) -> None:
+            self.subscribers.remove(callback)
+
+    def publish(self, item):
+        for callback in self.subscribers:
+            callback(item)
+
+
+class RTMPServer(Subscribable):
     ffmpeg_process = None
     _t_framegrabber: Thread = None
 
@@ -29,9 +42,6 @@ class RTMPServer(object):
         self.width = width or DEFAULT_WIDTH
         self.height = height or DEFAULT_WIDTH
         self.ffmpeg_path=ffmpeg_path
-
-        # subscribers: a lit of callback methods that consumers register.
-        self.subscribers = []
 
 
     def _framegrabber(self):
@@ -52,8 +62,8 @@ class RTMPServer(object):
             if type(frame) is not np.ndarray:
                 print(Fore.Yellow + f"couldnt convert frame to 'numpy.ndarray'" + Style.RESET_ALL)
             else:
-                for callback in self.subscribers:
-                    callback(frame)
+                self.publish(frame)
+
         print(Fore.YELLOW  + "restarting ffmpeg" + Style.RESET_ALL)
         self.start()
 
@@ -81,13 +91,3 @@ class RTMPServer(object):
             print(f"start thread to buffer ffmpeg output")
             self._t_framegrabber = Thread(target=self._framegrabber, daemon=True)
             self._t_framegrabber.start()
-
-
-
-    def subscribe(self, callback:Callable[[bytes], None]) -> None:
-        self.subscribers.append(callback)
-
-    def unsubscribe(self, callback:Callable[[bytes ], None]) -> None:
-            # subscriber = [item for item in self.subscribers if item == callback ][0]
-            # self.subscribers.remove(subscriber)
-            self.subscribers.remove(callback)
