@@ -16,7 +16,7 @@ PIXEL_SIZE= { "bgr24": 3, }
 
 colorama_init()
 
-class VideoProcessor(object):
+class RTMPServer(object):
     ffmpeg_process = None
     _t_framegrabber: Thread = None
 
@@ -77,7 +77,7 @@ class VideoProcessor(object):
                         format='rawvideo',
                         pix_fmt=self.color,
                         s=f'{self.width}x{self.height}')
-                .global_args("-nostdin", "-hide_banner", "-log_level", "warning")
+                .global_args("-nostdin", "-hide_banner", "-loglevel", "warning")
                 .run_async(**args)
             )
             print(f"ffmpeg is running: {self.ffmpeg_process}. Poll(): {self.ffmpeg_process.poll()}")

@@ -9,19 +9,19 @@ import cv2
 from colorama import init as colorama_init
 from colorama import Fore, Back, Style
 
-videoprocessor : VideoProcessing.VideoProcessor = None
+videoprocessor : VideoProcessing.RTMPServer = None
 video_sources = []
 
-def create_videoprocessor(url=None, app:Flask=None) -> VideoProcessing.VideoProcessor:
+def create_videoprocessor(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
     print(f"Creating a new VideoProcessor instance.")
 
     # if using Windows, specify path to ffmpeg binary
-    if os.name == "nt":
+    if not ffmpeg_path and os.name == "nt":
         if app is None:
             app = current_app
         ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
-    videoprocessor = VideoProcessing.VideoProcessor(url, ffmpeg_path=ffmpeg_path)
+    videoprocessor = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path)
 
     videoprocessor.start()
 
@@ -51,8 +51,8 @@ def init_app(app:Flask):
         videoprocessor = get_videoprocessor()
         buffer = Buffer(maxsize=60)
 
-        width=int(request.args.get("width", None))
-        height=int(request.args.get("height", None))
+        width=request.args.get("width", None)
+        height=request.args.get("height", None)
 
         videoprocessor.subscribe(buffer.put)
 
@@ -60,8 +60,10 @@ def init_app(app:Flask):
             # Resize frame if required
             if(height or width ):
                 if not height:
+                    width = int(int)
                     height = int(videoprocessor.height * width / videoprocessor.width)
                 if not width:
+                    height = int(height)
                     width = int(videoprocessor.width * height / videoprocessor.height)
 
                 # print(Fore.YELLOW + f"frame type: {type(frame)}")
