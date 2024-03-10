@@ -23,11 +23,10 @@ def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProces
             app = current_app
         ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
-    videoprocessor = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path)
+    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path)
+    rtmp_server.start()
 
-    videoprocessor.start()
-
-    return videoprocessor
+    return rtmp_server
 
 def get_videoprocessor(stream):
     global video_processors
@@ -47,9 +46,9 @@ def init_app(app:Flask):
     # TODO: initialise list of possible input video
     global video_sources
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
-
-    video_processors["preprocessed"] = create_rtmpserver(video_sources[0], app)
-    # video_processors["processed"] = CrackDetector(video_processors["preprocessed"])
+    rtmp_server = create_rtmpserver(video_sources[0], app)
+    video_processors["preprocessed"] = rtmp_server
+    video_processors["processed"] = CrackDetector(rtmp_server)
 
     @app.route("/stream/<stream_name>", methods=['GET'])
     def stream_preprocessed(stream_name):
@@ -86,9 +85,7 @@ def init_app(app:Flask):
             return b.tobytes()
 
 
-        def gen_frames(buffer):
-            nonlocal width, height
-
+        def gen_frames(buffer, width=None, height=None):
             try:
                 for frame in buffer.stream():
 
@@ -102,7 +99,7 @@ def init_app(app:Flask):
                 videoprocessor.unsubscribe(buffer.put)
 
         # return Response(((b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + frame + b'\r\n' for frame in buffer.stream())),
-        return Response(gen_frames(buffer),
+        return Response(gen_frames(buffer, width, height),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
     """
