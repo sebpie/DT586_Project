@@ -13,3 +13,18 @@ class Buffer(Queue):
     def stream(self):
         while True:
             yield self.get()
+
+
+class Subscribable(object):
+    # subscribers: a lit of callback methods that consumers register.
+    subscribers = []
+
+    def subscribe(self, callback:Callable[[bytes], None]) -> None:
+        self.subscribers.append(callback)
+
+    def unsubscribe(self, callback:Callable[[bytes ], None]) -> None:
+            self.subscribers.remove(callback)
+
+    def publish(self, item):
+        for callback in self.subscribers:
+            callback(item)

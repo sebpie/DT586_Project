@@ -4,6 +4,7 @@ import ffmpeg
 import numpy as np
 from colorama import Fore, Style
 from colorama import init as colorama_init
+from utils import Subscribable
 
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_WIDTH=6*224
@@ -12,20 +13,6 @@ DEFAULT_COLOR='bgr24'
 PIXEL_SIZE= { "bgr24": 3, }
 
 colorama_init()
-
-class Subscribable(object):
-    # subscribers: a lit of callback methods that consumers register.
-    subscribers = []
-
-    def subscribe(self, callback:Callable[[bytes], None]) -> None:
-        self.subscribers.append(callback)
-
-    def unsubscribe(self, callback:Callable[[bytes ], None]) -> None:
-            self.subscribers.remove(callback)
-
-    def publish(self, item):
-        for callback in self.subscribers:
-            callback(item)
 
 
 class RTMPServer(Subscribable):
