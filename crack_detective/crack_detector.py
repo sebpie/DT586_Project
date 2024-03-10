@@ -14,16 +14,25 @@ class MockedModel(object):
 
 
 class CrackDetector(utils.Subscribable):
-    buffer_in = utils.Buffer(10)
-    buffer_out = utils.Buffer(10)
 
-    def __init__(self, source:utils.Subscribable, model : MockedModel = None):
+    def __set_source(self, source):
         self.source = source
-        source.subscribe(self.buffer_in.put)
+        self.source.subscribe(self.buffer_in.put)
+        self.width = self.source.width
+        self.height = self.source.height
+
+    def __set_model(self, model):
         self.model = model
 
         if(model is None):
             self.model = MockedModel()
+
+    def __init__(self, source:utils.Subscribable, model : MockedModel = None):
+        super().__init__()
+        self.buffer_in = utils.Buffer(10)
+
+        self.__set_source(source)
+        self.__set_model(model)
 
         self._t_worker = Thread(target=self._worker, daemon=True)
         self._t_worker.start()

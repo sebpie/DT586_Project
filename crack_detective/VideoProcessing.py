@@ -23,6 +23,9 @@ class RTMPServer(Subscribable):
                  color=DEFAULT_COLOR,
                  width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
                  ffmpeg_path=None) -> None:
+
+        super().__init__()
+
         self.url = url or DEFAULT_URL
         self.color = color or DEFAULT_COLOR
         self.width = width or DEFAULT_WIDTH

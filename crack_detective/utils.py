@@ -18,7 +18,11 @@ class Buffer(Queue):
 
 class Subscribable(object):
     # subscribers: a lit of callback methods that consumers register.
-    subscribers = []
+    subscribers = None
+
+    def __init__(self):
+        self.subscribers = []
+
 
     def subscribe(self, callback:Callable[[bytes], None]) -> None:
         self.subscribers.append(callback)
