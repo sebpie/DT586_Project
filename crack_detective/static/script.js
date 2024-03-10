@@ -161,3 +161,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set the value of the username input field
     document.getElementById('username').value = username;
 });
+
+//gallery page
+
+const images = ["../static/images/image1.jpg", "../static/images/image2.jpg", 
+"../static/images/image3.jpg","../static/images/image4.jpg","../static/images/image5.jpg",
+"../static/images/image6.jpg"]; // Add more images as needed
+let currentIndex = 0;
+
+document.addEventListener('DOMContentLoaded', function() {
+  const galleryImages = document.querySelectorAll('.gallery-image');
+
+  galleryImages.forEach(function(image, index) {
+    image.addEventListener('click', function() {
+      currentIndex = index;
+      openOverlay(images[currentIndex]);
+    });
+  });
+
+  // Listen for keyboard events
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'ArrowLeft') {
+      prevImage();
+    } else if (event.key === 'ArrowRight') {
+      nextImage();
+    }
+  });
+});
+
+function openOverlay(src) {
+  const overlay = document.getElementById('overlay');
+  const mainImageOverlay = document.getElementById('mainImageOverlay');
+
+  mainImageOverlay.src = src;
+  overlay.style.display = 'block';
+}
+
+function closeOverlay() {
+  const overlay = document.getElementById('overlay');
+  overlay.style.display = 'none';
+}
+
+function prevImage() {
+  currentIndex = (currentIndex - 1 + images.length) % images.length;
+  document.getElementById('mainImageOverlay').src = images[currentIndex];
+}
+
+function nextImage() {
+  currentIndex = (currentIndex + 1) % images.length;
+  document.getElementById('mainImageOverlay').src = images[currentIndex];
+}

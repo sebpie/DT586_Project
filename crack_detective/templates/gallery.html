@@ -4,57 +4,35 @@
 <section class="gallery-block grid-gallery">
 	<div class="container">
 		<div class="heading">
-			<h2>Grid Gallery</h2>
+      <h3 class=" mt-5 teal text-center mb-4">Grid Gallery</h3>
 		</div>
-		<div class="row">
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070505/Gallery/image1.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070505/Gallery/image1.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070507/Gallery/image2.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070507/Gallery/image2.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070506/Gallery/image3.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070506/Gallery/image3.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070505/Gallery/image4.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070505/Gallery/image4.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070506/Gallery/image5.jpg">
-					<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070506/Gallery/image5.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070508/Gallery/image6.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070508/Gallery/image6.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070509/Gallery/image7.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070509/Gallery/image7.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070510/Gallery/image8.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070510/Gallery/image8.jpg">
-        </a>
-			</div>
-			<div class="col-md-6 col-lg-4 item">
-				<a class="lightbox" href="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070507/Gallery/image9.jpg">
-        	<img class="img-fluid image scale-on-hover" src="https://res.cloudinary.com/dpnaptcei/image/upload/v1537070507/Gallery/image9.jpg">
-        </a>
-			</div>
-		</div>
-	</div>
+    <div class="row">
+      <div class="gallery-container">
+        <div class="gallery-grid">
+          <img src="../static/images/image1.jpg" alt="Image 1" class="gallery-image">
+          <img src="../static/images/image2.jpg" alt="Image 2" class="gallery-image">
+          <img src="../static/images/image3.jpg" alt="Image 3" class="gallery-image">
+          <img src="../static/images/image4.jpg" alt="Image 1" class="gallery-image">
+          <img src="../static/images/image5.jpg" alt="Image 2" class="gallery-image">
+          <img src="../static/images/image6.jpg" alt="Image 3" class="gallery-image">
+          <img src="../static/images/image5.jpg" alt="Image 2" class="gallery-image">
+          <img src="../static/images/image6.jpg" alt="Image 3" class="gallery-image">
+          <!-- Add more images as needed -->
+        </div>
+      </div>
+    </div>
+    <!-- Overlay for main image -->
+  <div id="overlay" class="overlay">
+    <span class="close-btn" onclick="closeOverlay()">&times;</span>
+    <div class="overlay-content">
+      <img src="" alt="Main Image" id="mainImageOverlay" class="main-image-overlay">
+    </div>
+    <span class="carousel-btn prev-btn" onclick="prevImage()">&#10094;</span>
+    <span class="carousel-btn next-btn" onclick="nextImage()">&#10095;</span>
+  </div>
+    </div>
 </section>
-{% endblock %}
+
+  {% endblock %}
 </body>
 </html>
