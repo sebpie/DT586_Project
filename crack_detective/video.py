@@ -1,3 +1,4 @@
+from .crack_detector  import CrackDetector
 from .auth import login_required
 from . import VideoProcessing
 from .utils import Buffer
@@ -11,8 +12,9 @@ from colorama import Fore, Back, Style
 
 rtmp_server : VideoProcessing.RTMPServer = None
 video_sources = []
+video_processors = {} # "stream_name" : Subscribable
 
-def create_videoprocessor(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
+def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
     print(f"Creating a new VideoProcessor instance.")
 
     # if using Windows, specify path to ffmpeg binary
@@ -27,28 +29,34 @@ def create_videoprocessor(url=None, app:Flask=None, ffmpeg_path=None) -> VideoPr
 
     return videoprocessor
 
-def get_videoprocessor():
-    global rtmp_server
-    if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
-        print(Fore.RED + f"no videoprocessor found. Creating one." + Style.RESET_ALL)
-        rtmp_server = create_videoprocessor()
+def get_videoprocessor(stream):
+    global video_processors
+    return video_processors[stream]
 
-    return rtmp_server
+    # global rtmp_server
+    # if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
+    #     print(Fore.RED + f"no videoprocessor found. Creating one." + Style.RESET_ALL)
+    #     rtmp_server = create_rtmpserver()
+    #     print(Fore.RED + f"Warning: creating a new RTMPserver but not attaching CrackDetector")
+
+    # return rtmp_server
 
 def init_app(app:Flask):
+    global video_processors
 
     # TODO: initialise list of possible input video
     global video_sources
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
 
-    global rtmp_server
-    rtmp_server = create_videoprocessor(video_sources[0], app)
+    video_processors["preprocessed"] = create_rtmpserver(video_sources[0], app)
+    # video_processors["processed"] = CrackDetector(video_processors["preprocessed"])
 
+    @app.route("/stream/<stream_name>", methods=['GET'])
+    def stream_preprocessed(stream_name):
 
-    @app.route("/stream/preprocessed", methods=['GET'])
-    def stream_preprocessed():
-        print(Fore.BLUE + f"ENTER /stream/preprocessed" + Style.RESET_ALL)
-        videoprocessor = get_videoprocessor()
+        print(Fore.BLUE + f"ENTER /stream/{stream_name}" + Style.RESET_ALL)
+        videoprocessor = get_videoprocessor(stream_name)
+        print(f"working with videoprocessor: {videoprocessor}")
         buffer = Buffer(maxsize=60)
 
         width=request.args.get("width", None)
@@ -58,6 +66,7 @@ def init_app(app:Flask):
 
         def format_frame(frame, format=".jpg", width=None, height=None):
             # Resize frame if required
+            resized_frame = None
             if(height or width ):
                 if not height:
                     width = int(int)
@@ -68,10 +77,12 @@ def init_app(app:Flask):
 
                 # print(Fore.YELLOW + f"frame type: {type(frame)}")
                 # print(f"Resize frame (type:{type(frame)}) to {width}x{height} (types: {type(width)}, {type(height)})")
-                frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
+                resized_frame = cv2.resize(frame, (width , height), interpolation=cv2.INTER_AREA)
+            else:
+                 resized_frame = frame
 
             # Encode the image to given format
-            _, b = cv2.imencode(format, frame)
+            _, b = cv2.imencode(format, resized_frame)
             return b.tobytes()
 
 
