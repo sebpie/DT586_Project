@@ -2,7 +2,9 @@ import tensorflow as tf
 import numpy as np
 import pathlib as pl
 from colorama import Fore, Style
-#import CNN
+import datasets as ds
+
+
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.layers import Dense, Flatten, Dropout
@@ -10,8 +12,8 @@ from tensorflow.keras.models import Model
 
 class Cnn():
     def __init__(self):
-        self.train_dir = CNN.datasets["Mendelay_1"]
-        self.test_dir = CNN.datasets["Mendelay_1"]
+        self.train_dir = ds.datasets["Mendelay_1"]
+        self.test_dir = ds.datasets["Mendelay_1"]
 
     def train_model(self):
         pass
