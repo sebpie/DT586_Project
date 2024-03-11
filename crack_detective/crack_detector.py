@@ -39,17 +39,31 @@ class CrackDetector(utils.Subscribable):
 
     def _worker(self):
         for frame in self.buffer_in.stream():
+            # print(f"Process frame size {frame.shape}")
             """Step 1: Patchify the frame in patches"""
-            patches = patchify.patchify(frame, (self.model.width, self.model.height, self.model.channels), step=1 )
+            patches = patchify.patchify(frame.copy(), (self.model.width, self.model.height, self.model.channels), step=224 )
 
             """Step 2: Predict each patch with cracks"""
-            # prediction_matrix = self.model.predict(patches)
+            # print(f"Process {(len(patches), patches.shape)} patches for this frame")
+            for row in patches:
+                for col in row:
+                    for patch in col:
+                        # print(f"patch size: {patch.shape}")
+                        # print(patch)
+                        if self.model.predict(patch) > 0.5:
+                            color = (0, 255, 0) # GREEN
+                        else:
+                            color = (0, 0, 255) # RED
+                        patch.setflags(write=1)
 
-            """Step 3: Apply visualisation to positive patches"""
-            # draw box outline
+                        """Step 3: Apply visualisation to positive patches"""
+                        cv2.rectangle(patch, (0, 0), (self.model.width, self.model.height), color=color, thickness=2 )
+                        # print("done drawing")
+
 
             """Step 4: Stitch up! (unpatchify)"""
             processed_frame = patchify.unpatchify(patches, frame.shape)
 
             """Step 5: Publish the results to subscribers"""
+            # print(f"Done with this frame.")
             self.publish(processed_frame)
