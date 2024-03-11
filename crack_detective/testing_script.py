@@ -1,6 +1,6 @@
 from PIL import Image
 import numpy as np
-import cnn_module as cnn
+import crack_detective.cnn_module as cnn
 import tensorflow as tf
 
 import pathlib as pl
