@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pathlib as pl
 from colorama import Fore, Style
-import CNN
+#import CNN
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.layers import Dense, Flatten, Dropout
@@ -94,3 +94,6 @@ class CnnVgg16(Cnn):
             print('crack_detected')
         else:
             print('no crack_detected')
+
+
+print("model loaded successfully!")

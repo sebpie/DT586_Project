@@ -1,11 +1,15 @@
 from PIL import Image
 import numpy as np
-import crack_detective.cnn_module as cnn
+import cnn_module as cnn
 import tensorflow as tf
+import importlib
 
 import pathlib as pl
 from colorama import Fore, Style
-import CNN
+
+#from Code_Images.code import CNN , not working
+CNN = importlib.reload('Code_Images/code/CNN.py')
+
 import os
 
 #instantiate the model
