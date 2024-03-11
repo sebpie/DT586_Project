@@ -57,7 +57,7 @@ class CrackDetector(utils.Subscribable):
                         patch.setflags(write=1)
 
                         """Step 3: Apply visualisation to positive patches"""
-                        cv2.rectangle(patch, (0, 0), (self.model.width, self.model.height), color=color, thickness=2 )
+                        cv2.rectangle(patch, (1, 1), (self.model.width -2, self.model.height -2), color=color, thickness=2 )
                         # print("done drawing")
 
 
