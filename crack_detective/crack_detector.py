@@ -5,13 +5,30 @@ import random
 from . import utils
 from threading import Thread
 
+color_scale = [
+    # value  BGR
+    (0.9,    (0, 0, 255)),
+    (0.7,    (100, 0, 255 )),
+    (0. ,    (0, 255, 0))
+]
+
+
 class MockedModel(object):
     width = 224
     height = 224
     channels = 3
-    def predict(self, image):
-        return random.random()
+    def predict(self, image, batch=False):
+        if batch:
+            # Should reduce 3 dimensions from input shape
+            # print(f"input array shape: {image.shape}")
+            return np.random.rand( 3, 6, 1)
+        else:
+            return random.random()
 
+def getColor(predict):
+    for threshold, color in color_scale:
+        if(predict >= threshold):
+            return color
 
 class CrackDetector(utils.Subscribable):
 
@@ -34,8 +51,41 @@ class CrackDetector(utils.Subscribable):
         self.__set_source(source)
         self.__set_model(model)
 
-        self._t_worker = Thread(target=self._worker, daemon=True)
+        self._t_worker = Thread(target=self._worker_batch, daemon=True)
         self._t_worker.start()
+
+
+    def _patch_coord(self, row, col):
+        return (((row * self.model.width) + 1, (col * self.model.height) +1 ),
+                ( ((row + 1) * self.model.width) - 2 , ((col + 1) * self.model.height) - 2 ))
+
+    def _worker_batch(self):
+        for frame in self.buffer_in.stream():
+            # print(f"Process frame size {frame.shape}")
+            """Step 1: Patchify the frame in patches"""
+            curent_frame = frame.copy()
+            patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=224 )
+
+            """Step 2: Predict each patch with cracks"""
+            predictions = self.model.predict(patches, batch=True)
+
+            for idx_row, row in enumerate(predictions):
+                for idx_col, col in enumerate(row):
+                    for prediction in col:
+                        color = getColor(prediction)
+
+                        """Step 3: Apply visualisation to positive patches"""
+                        pt1, pt2 = self._patch_coord(idx_col, idx_row)
+                        # print(f"idx_row:\t{idx_row}\tidx_col:{idx_col}.\tpt1:{pt1}\t-\tpt2:{pt2}")
+                        cv2.rectangle(curent_frame, pt1, pt2, color=color, thickness=2 )
+
+            """Step 4: Stitch up! (unpatchify)"""
+            processed_frame = patchify.unpatchify(patches, frame.shape)
+
+            """Step 5: Publish the results to subscribers"""
+            # print(f"Done with this frame.")
+            self.publish(processed_frame)
+
 
     def _worker(self):
         for frame in self.buffer_in.stream():
@@ -44,7 +94,7 @@ class CrackDetector(utils.Subscribable):
             patches = patchify.patchify(frame.copy(), (self.model.width, self.model.height, self.model.channels), step=224 )
 
             """Step 2: Predict each patch with cracks"""
-            # print(f"Process {(len(patches), patches.shape)} patches for this frame")
+            print(f"Process {(len(patches), patches.shape)} patches for this frame")
             for row in patches:
                 for col in row:
                     for patch in col:
