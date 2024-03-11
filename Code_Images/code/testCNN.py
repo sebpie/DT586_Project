@@ -23,48 +23,19 @@ def load_imgdir(*path, target_size=(80, 80)):
         pixels.append(img_array)
     return np.array(pixels)
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--size', type=int, help="Build model with image of size x size pixels.")
-    parser.add_argument('--epochs', type=int, help="Number of epochs.")
-    parser.add_argument('--batch_size', type=int, help="Batch size of each training step.")
-    parser.add_argument('--load', type=str, help="Load pre-trained model.")
-    parser.add_argument('--save', help="Train and save model to file.")
-    parser.add_argument('--train_set', help="Name of dataset to train the model with.")
+def main(args):
+
+    if args.train_set not in CNN.datasets.keys():
+        raise ValueError(f"Dataset {args.train_set} not found.")
+    train_dataset = CNN.datasets[args.train_set]
 
 
-    args = parser.parse_args()
-
-    if args.size:
-        size = args.size
-    else:
-        size = 80
-
-    if args.batch_size:
-        batch_size = args.batch_size
-    else:
-        batch_size = 64
-
-    if args.epochs:
-        epochs = args.epochs
-    else:
-        epochs = 5
-
-
-    if args.train_set:
-        if args.train_set not in CNN.datasets.keys():
-            raise ValueError(f"Dataset {args.train_set} not found.")
-        train_dataset = CNN.datasets[argparse.train_set]
-    else:
-        train_dataset = CNN.datasets["Mendelay_FULL"]
-
-
-    model:Model = CNN.setup(size=size)
+    model:Model = CNN.setup(size=args.size)
 
     CNN.train(model=model,
               train_data = train_dataset,
-              batch_size=batch_size,
-              epochs=epochs)
+              batch_size=args.batch_size,
+              epochs=args.epochs)
 
     if args.save:
         model.save(args.save)
@@ -86,7 +57,7 @@ def main():
 
     for file in pathlib.Path(test_dir, "Positive").iterdir():
         # print(f"Analysing file: {file}")
-        img = keras.utils.load_img(file, target_size=(size, size))
+        img = keras.utils.load_img(file, target_size=(args.size, args.size))
 
         img_array = keras.utils.img_to_array(img)
         # print(f"img: {img} | img_array: {img_array}")
@@ -114,4 +85,13 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--size', type=int, default=80, help="Build model with image of size x size pixels.")
+    parser.add_argument('--epochs', type=int, default=5, help="Number of epochs.")
+    parser.add_argument('--batch_size', type=int, default=64, help="Batch size of each training step.")
+    parser.add_argument('--load', type=str, help="Load pre-trained model.")
+    parser.add_argument('--save', help="Train and save model to file.")
+    parser.add_argument('--train_set', default="Mendelay_FULL", help="Name of dataset to train the model with.")
+
+    args = parser.parse_args()
+    main(args)
