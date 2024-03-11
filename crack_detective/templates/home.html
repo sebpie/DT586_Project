@@ -5,7 +5,7 @@
   <h3 class=" mt-5 teal">Video Feed</h3>
   <div class="image-cont">
       <div id="upload-container">
-         <img src="{{ url_for('static', filename='img/technical_difficulties1.jpeg')}}" srcset="{{url_for('stream_preprocessed', stream_name='preprocessed') }}" />
+         <img width="100%" src="{{ url_for('static', filename='img/technical_difficulties1.jpeg')}}" srcset="{{url_for('stream_preprocessed', stream_name='processed') }}" />
       </div>
       <div style = "display:flex;">
           <button id="start-stop-btn">Start/Stop</button>
