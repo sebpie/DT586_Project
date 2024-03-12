@@ -2,13 +2,11 @@ from PIL import Image
 import numpy as np
 import cnn_module as cnn
 import tensorflow as tf
-import importlib
 
 import pathlib as pl
 from colorama import Fore, Style
 
-#from Code_Images.code import CNN , not working
-CNN = importlib.reload('Code_Images/code/CNN.py')
+import datasets as ds
 
 import os
 
@@ -17,10 +15,10 @@ model = cnn.CnnVgg16()
 
 #model.train_model()
 
-test_dir = CNN.datasets["Mendelay_1"]
+test_dir = ds.datasets["Mendelay_1"]
 
 #load one file from the test directory
-file = pl.Path(test_dir,"Positive").iterdir()
+#file = pl.Path(test_dir,"Positive").iterdir()
 
 
 file_path = os.path.join(os.path.dirname(__file__), '00007.jpg')
