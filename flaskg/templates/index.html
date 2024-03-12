@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Key Generator</title>
+</head>
+
+<body>
+    <h1>Generate Stream Key</h1>
+    <button id="generateBtn">Generate Stream Key</button>
+    <p id="streamKey"></p>
+    <p id="streamUrl"></p>
+
+    <script>
+        document.getElementById('generateBtn').addEventListener('click', async () => {
+            const response = await fetch('/generate_stream_key', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById('streamKey').innerText = 'Stream Key: ' + data.stream_key;
+            document.getElementById('streamUrl').innerText = 'Stream URL: ' + data.stream_url;
+        });
+    </script>
+</body>
+
+</html>
