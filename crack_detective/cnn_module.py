@@ -18,11 +18,12 @@ class Cnn():
     def train_model(self):
         pass
 
-    def save_model(self):
-        pass
+    def save_model(self, path):
+        self.model.save(path)
 
-    def load_model(self):
-        pass
+    def load_model(self, path):
+        self.model = tf.keras.models.load_model(path)
+        print(path)
 
     def predict(self):
         pass
