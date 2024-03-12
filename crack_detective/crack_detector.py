@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import patchify
 import random
+from .cnn_module import CnnVgg16
 from . import utils
 from threading import Thread
 
@@ -42,7 +43,11 @@ class CrackDetector(utils.Subscribable):
         self.model = model
 
         if(model is None):
-            self.model = MockedModel()
+            # self.model = MockedModel()
+            self.model = CnnVgg16()
+            model_loadfile = "test101.keras"
+            self.model.load_model(model_loadfile)
+            # print(f"Crack detector model {type(self.model)} loaded with {model_loadfile}")
 
     def __init__(self, source:utils.Subscribable, model : MockedModel = None):
         super().__init__()
@@ -51,7 +56,7 @@ class CrackDetector(utils.Subscribable):
         self.__set_source(source)
         self.__set_model(model)
 
-        self._t_worker = Thread(target=self._worker_batch, daemon=True)
+        self._t_worker = Thread(target=self._worker, daemon=True)
         self._t_worker.start()
 
 
@@ -67,11 +72,11 @@ class CrackDetector(utils.Subscribable):
             patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=224 )
 
             """Step 2: Predict each patch with cracks"""
-            predictions = self.model.predict(patches, batch=True)
+            predictions = self.model.predict(np.reshape(patches, (24, 224, 224, 3))) #, batch=True
 
             for idx_row, row in enumerate(predictions):
                 for idx_col, col in enumerate(row):
-                    for prediction in col:
+                    for cell in col:
                         color = getColor(prediction)
 
                         """Step 3: Apply visualisation to positive patches"""
@@ -97,10 +102,14 @@ class CrackDetector(utils.Subscribable):
             print(f"Process {(len(patches), patches.shape)} patches for this frame")
             for row in patches:
                 for col in row:
-                    for patch in col:
+                     for patch in col:
                         # print(f"patch size: {patch.shape}")
                         # print(patch)
-                        if self.model.predict(patch) > 0.5:
+
+                        results = self.model.predict(col)
+                        print(f"predict results shape: {results.shape}")
+
+                        if results[0][0] > 0.5:
                             color = (0, 255, 0) # GREEN
                         else:
                             color = (0, 0, 255) # RED

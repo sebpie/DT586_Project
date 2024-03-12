@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pathlib as pl
 from colorama import Fore, Style
-import datasets as ds
+from . import datasets as ds
 
 
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
@@ -92,11 +92,15 @@ class CnnVgg16(Cnn):
 #______________
 # results = predict (npArray)
     def predict(self, img_array): #fix this
-        prediction = self.model.predict(img_array)[0][0]
-        if prediction > 0.5:
-            print('crack_detected')
-        else:
-            print('no crack_detected')
+        print(f"PREDICT. Input shape: {img_array.shape}")
 
+        predictions = self.model.predict(img_array)
+        # prediction = predictions[0][0]
+        # if prediction > 0.5:
+        #     print('crack_detected')
+        # else:
+        #     print('no crack_detected')
+
+        return predictions
 
 print("model loaded successfully!")

@@ -6,14 +6,13 @@ import pathlib as pl
 from colorama import Fore, Style
 import datasets as ds
 import os
-import scipy
 
 #instantiate the model
 model = cnn.CnnVgg16()
 #model.train_model()
 
-pat = os.path.abspath('test101.keras')
-model.load_model(pat)
+# pat = os.path.abspath('test101.keras')
+# model.load_model(pat)
 
 test_dir = ds.datasets["Mendelay_1"]
 
@@ -23,11 +22,13 @@ img = tf.keras.preprocessing.image.load_img(file_path, target_size=(224, 224))
 img_array = tf.keras.preprocessing.image.img_to_array(img)
 img_array = tf.expand_dims(img_array, 0)
 
+print(f"img shape: {img_array.shape}")
 
-model.predict(img_array)
+
+# model.predict(img_array)
 
 
-#train and save the model
+# #train and save the model
 # model.train_model()
 # model.save_model('test101.keras')
 
