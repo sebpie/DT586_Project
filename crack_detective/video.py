@@ -1,3 +1,5 @@
+import base64
+import datetime
 from .crack_detector  import CrackDetector
 from .auth import login_required
 from . import VideoProcessing
@@ -102,6 +104,43 @@ def init_app(app:Flask):
         return Response(gen_frames(buffer, width, height),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+
+    @app.route('/api/take_picture', methods=['POST'])
+    def save_image():
+        try:
+            data = request.json
+            image_data = data.get('image_data')
+            if image_data:
+                # Decode the base64 image data
+                image_binary = base64.b64decode(image_data.split(',')[1])
+                # Save the image to the images folder
+                # folder_name = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')  # Format: YYYY-MM-DD
+                folder_path = current_app["output_dir"]
+                image_filename = os.path.join(folder_path, f'captured_image_{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
+                with open(image_filename, 'wb') as f:
+                    f.write(image_binary)
+                return jsonify({'message': 'Image saved successfully', 'filename': f'{image_filename}'})
+            else:
+                return jsonify({'error': 'No image data received'})
+        except Exception as e:
+            return jsonify({'error': 'Error saving image: ' + str(e)})
+
+
+
+    @app.route("/api/take_picture", methods=['PUT'])
+    def take_picture():
+        buffer = Buffer()
+        source = video_processors["processed"]
+        source.subscribe(buffer.put)
+        pic = buffer.get()
+
+        # get selected folder
+
+        # filname
+
+        return {"error" : "not implemented"}, 501
+
     """
     """
     @app.route("/api/input", methods = ["GET", "PUT"])
@@ -134,14 +173,14 @@ def init_app(app:Flask):
     def control_output():
         match(request.method):
             case "GET":
-                if 'output_dir' not in g:
+                if 'output_dir' not in current_app:
                     return 404, "No folder selected"
 
-                return { 'output_dir' : g.output_dir }
+                return { 'output_dir' : current_app.output_dir }
 
             case "PUT":
                 try:
-                    g.output_dir = request.json['output_dir']
+                    current_app["output_dir"] = request.json['output_dir']
                     return 200
                 except KeyError:
                     return {"error" : "folder name is missing"}, 400
