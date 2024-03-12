@@ -1,3 +1,5 @@
+from colorama import Fore, Style
+from colorama import init as colorama_init
 import cv2
 import numpy as np
 import patchify
@@ -5,6 +7,8 @@ import random
 from .cnn_module import CnnVgg16
 from . import utils
 from threading import Thread
+
+colorama_init()
 
 color_scale = [
     # value  BGR
@@ -56,7 +60,7 @@ class CrackDetector(utils.Subscribable):
         self.__set_source(source)
         self.__set_model(model)
 
-        self._t_worker = Thread(target=self._worker, daemon=True)
+        self._t_worker = Thread(target=self._worker_batch, daemon=True)
         self._t_worker.start()
 
 
@@ -72,11 +76,13 @@ class CrackDetector(utils.Subscribable):
             patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=224 )
 
             """Step 2: Predict each patch with cracks"""
-            predictions = self.model.predict(np.reshape(patches, (24, 224, 224, 3))) #, batch=True
+            predictions = self.model.predict(np.reshape(patches, (18, 224, 224, 3))) #, batch=True
+            # print(Fore.RED + f"Prediction shape: {predictions.shape}" + Style.RESET_ALL)
+            predictions = np.reshape(predictions, (3, 6, 1))
 
             for idx_row, row in enumerate(predictions):
                 for idx_col, col in enumerate(row):
-                    for cell in col:
+                    for prediction in col:
                         color = getColor(prediction)
 
                         """Step 3: Apply visualisation to positive patches"""
