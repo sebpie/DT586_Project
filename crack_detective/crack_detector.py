@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import patchify
 import random
-from .cnn_module import CnnVgg16
+from .cnn_module import Cnn, CnnVgg16
 from . import utils
 from threading import Thread
 
@@ -18,17 +18,17 @@ color_scale = [
 ]
 
 
-class MockedModel(object):
-    width = 224
-    height = 224
-    channels = 3
-    def predict(self, image, batch=False):
-        if batch:
-            # Should reduce 3 dimensions from input shape
-            # print(f"input array shape: {image.shape}")
-            return np.random.rand( 3, 6, 1)
-        else:
-            return random.random()
+# class MockedModel(object):
+#     width = 224
+#     height = 224
+#     channels = 3
+#     def predict(self, image, batch=False):
+#         if batch:
+#             # Should reduce 3 dimensions from input shape
+#             # print(f"input array shape: {image.shape}")
+#             return np.random.rand( 3, 6, 1)
+#         else:
+#             return random.random()
 
 def getColor(predict):
     for threshold, color in color_scale:
@@ -53,7 +53,7 @@ class CrackDetector(utils.Subscribable):
             self.model.load_model(model_loadfile)
             # print(f"Crack detector model {type(self.model)} loaded with {model_loadfile}")
 
-    def __init__(self, source:utils.Subscribable, model : MockedModel = None):
+    def __init__(self, source:utils.Subscribable, model : Cnn = None):
         super().__init__()
         self.buffer_in = utils.Buffer(10)
 
@@ -76,7 +76,7 @@ class CrackDetector(utils.Subscribable):
             patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=224 )
 
             """Step 2: Predict each patch with cracks"""
-            predictions = self.model.predict(np.reshape(patches, (18, 224, 224, 3))) #, batch=True
+            predictions = self.model.predict(np.reshape(patches, (18, 224, 224, 3)), verbose=0) #, batch=True
             # print(Fore.RED + f"Prediction shape: {predictions.shape}" + Style.RESET_ALL)
             predictions = np.reshape(predictions, (3, 6, 1))
 

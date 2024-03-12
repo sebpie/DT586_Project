@@ -1,5 +1,7 @@
 import base64
 import datetime
+
+from .cnn_module import CnnOriginal
 from .crack_detector  import CrackDetector
 from .auth import login_required
 from . import VideoProcessing
@@ -32,7 +34,7 @@ def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProces
 
 def get_videoprocessor(stream):
     global video_processors
-    return video_processors[stream]
+    return
 
     # global rtmp_server
     # if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
@@ -50,13 +52,13 @@ def init_app(app:Flask):
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
     rtmp_server = create_rtmpserver(video_sources[0], app)
     video_processors["preprocessed"] = rtmp_server
-    video_processors["processed"] = CrackDetector(rtmp_server)
+    video_processors["processed"] = CrackDetector(rtmp_server, CnnOriginal())
 
     @app.route("/stream/<stream_name>", methods=['GET'])
     def stream_preprocessed(stream_name):
 
         print(Fore.BLUE + f"ENTER /stream/{stream_name}" + Style.RESET_ALL)
-        videoprocessor = get_videoprocessor(stream_name)
+        videoprocessor = video_processors[stream_name]
         print(f"working with videoprocessor: {videoprocessor}")
         buffer = Buffer(maxsize=60)
 
