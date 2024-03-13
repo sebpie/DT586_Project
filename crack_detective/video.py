@@ -31,17 +31,6 @@ def create_rtmpserver(model:Cnn, url=None, app:Flask=None, ffmpeg_path=None) -> 
 
     return rtmp_server
 
-# def get_videoprocessor(stream):
-#     global video_processors
-#     return
-
-    # global rtmp_server
-    # if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
-    #     print(Fore.RED + f"no videoprocessor found. Creating one." + Style.RESET_ALL)
-    #     rtmp_server = create_rtmpserver()
-    #     print(Fore.RED + f"Warning: creating a new RTMPserver but not attaching CrackDetector")
-
-    # return rtmp_server
 
 def init_app(app:Flask):
     global video_processors
@@ -143,7 +132,7 @@ def init_app(app:Flask):
 
         # get selected folder
 
-        # filname
+        # filename
 
         return {"error" : "not implemented"}, 501
 
@@ -193,7 +182,5 @@ def init_app(app:Flask):
 
 
         return {"error" : "Invalid request"}, 400
-
-
 
     return
