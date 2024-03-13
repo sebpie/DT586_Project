@@ -1,7 +1,7 @@
 import base64
 import datetime
 
-from .cnn_module import CnnOriginal
+from .cnn_module import Cnn, CnnOriginal, CnnVgg16
 from .crack_detector  import CrackDetector
 from .auth import login_required
 from . import VideoProcessing
@@ -18,8 +18,7 @@ rtmp_server : VideoProcessing.RTMPServer = None
 video_sources = []
 video_processors = {} # "stream_name" : Subscribable
 
-def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
-    print(f"Creating a new VideoProcessor instance.")
+def create_rtmpserver(model:Cnn, url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
 
     # if using Windows, specify path to ffmpeg binary
     if not ffmpeg_path and os.name == "nt":
@@ -27,14 +26,14 @@ def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProces
             app = current_app
         ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
-    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path)
+    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path, width=model.width, height=model.height)
     rtmp_server.start()
 
     return rtmp_server
 
-def get_videoprocessor(stream):
-    global video_processors
-    return
+# def get_videoprocessor(stream):
+#     global video_processors
+#     return
 
     # global rtmp_server
     # if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
@@ -50,9 +49,14 @@ def init_app(app:Flask):
     # TODO: initialise list of possible input video
     global video_sources
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
-    rtmp_server = create_rtmpserver(video_sources[0], app)
+
+    # model = CnnOriginal(load="CNN_Orig-224x224-Mendelay_FULL.keras")
+
+    model = CnnOriginal()
+
+    rtmp_server = create_rtmpserver(model, video_sources[0], app)
     video_processors["preprocessed"] = rtmp_server
-    video_processors["processed"] = CrackDetector(rtmp_server, CnnOriginal(load="CNN_Orig-224x224-Mendelay_FULL.keras"))
+    video_processors["processed"] = CrackDetector(rtmp_server, model)
 
     @app.route("/stream/<stream_name>", methods=['GET'])
     def stream_preprocessed(stream_name):
