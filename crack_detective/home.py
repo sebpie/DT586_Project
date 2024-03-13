@@ -24,7 +24,23 @@ def settings():
 
 @bp.route('/gallery')
 def gallery():
-    return render_template('gallery.html')
+     folder_path = os.path.join(current_app.instance_path, UPLOAD_DIR)
+     folders_with_images = []
+
+    # Iterating  through each folder in the instance path
+     for folder_name in os.listdir(folder_path):
+        folder_images = []
+
+        # Get the list of images in the current folder
+        folder_images_path = os.path.join(folder_path, folder_name)
+        for filename in os.listdir(folder_images_path):
+            if filename.endswith(".jpg"):
+                image_url = f"/{UPLOAD_DIR}/{folder_name}/{filename}"
+                folder_images.append(image_url)
+
+        folders_with_images.append({'folder_name': folder_name, 'images': folder_images})
+
+     return render_template('gallery.html', folders_with_images=folders_with_images)
 
 
 def init_home(app: Flask):
