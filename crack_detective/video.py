@@ -41,7 +41,17 @@ def init_app(app:Flask):
 
     # model = CnnOriginal(load="CNN_Orig-224x224-Mendelay_FULL.keras")
 
-    model = CnnOriginal(width=80, height=80, load="CNN_Orig-80x80-Mendelay_FULL.keras")
+    # model = CnnOriginal(width=80, height=80, load="CNN_Orig-80x80-Mendelay_FULL.keras")
+    match(app.config["MODEL"]):
+        case "ORIG":
+            model = CnnOriginal(width=app.config["MODEL_SIZE_X"],
+                                height=app.config["MODEL_SIZE_X"],
+                                load=app.config["MODEL_FILE"])
+        case "VGG16":
+            model = CnnOriginal(width=app.config["MODEL_SIZE_X"],
+                                height=app.config["MODEL_SIZE_X"],
+                                load=app.config["MODEL_FILE"])
+
 
     rtmp_server = create_rtmpserver(model, video_sources[0], app)
     video_processors["preprocessed"] = rtmp_server
