@@ -2,6 +2,9 @@ from flask import Flask, current_app, render_template, request, jsonify, Bluepri
 import sqlite3
 import os
 import shutil
+import base64
+import datetime
+
 
 UPLOAD_DIR = "uploads"
 
@@ -78,8 +81,32 @@ def init_home(app: Flask):
                 return jsonify({'error': f'Folder {folder_name} does not exist'}), 404
         except Exception as e:
             return jsonify({'error': 'Error deleting folder: ' + str(e)}), 500
+        
+    @app.route('/api/output', methods=['POST'])
+    def api_output():
+        if request.method == 'POST':
+             data = request.json
+             folder_name = data.get('folder_name')
+             screenshot_data = data.get('screenshot_data')
+             print(f"Folder Name: {folder_name}")
+             image_data = base64.b64decode(screenshot_data.split(',')[1])
+             timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+             filename = f"{timestamp}.jpg"
+             image_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name, filename)
+             print(image_path)
+             with open(image_path, 'wb') as f:
+                 f.write(image_data)
+             print(f"Screenshot saved to: {image_path}")
+           
+             return jsonify({'message': 'Data received and image saved successfully'})
+        else :
+             return jsonify({'error': 'Method Not Allowed'}), 405
+            
+        
+        
+            
 
-
+   
 
     @app.route('/users', methods=['GET'])
     def list_users():
