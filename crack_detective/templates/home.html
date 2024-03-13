@@ -8,7 +8,7 @@
          <img width="100%" src="{{ url_for('static', filename='img/technical_difficulties1.jpeg')}}" srcset="{{url_for('stream_preprocessed', stream_name='processed') }}" />
       </div>
       <div style = "display:flex;">
-          <button id="start-stop-btn">Start/Stop</button>
+          <!-- <button id="start-stop-btn">Start/Stop</button> -->
           <button id="capture-btn" style ="margin-left:23px;">Capture</button>
           <canvas id="canvas" width="640" height="360" style="display: none;"></canvas>
 
@@ -16,13 +16,15 @@
     </div>
 
     <!-- select option -->
-
+    <div style = "display:flex;">
     <div>
       <label for="folder-action">Select the output folder:</label>
       <select id="folder-action" class="form-select" aria-label="Default select example">
-        <option value="create">Create Folder</option>
-        <option value="list">Show List of Folders</option>
+         <!-- <option value="create">Create Folder</option> -->
+        <option value="list">Show List of Folders</option> 
       </select>
+    </div>
+    <button id="create-folder-btn">+</button>
     </div>
 <!-- select option -->
 

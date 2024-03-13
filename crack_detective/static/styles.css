@@ -233,14 +233,14 @@ position: absolute;
         border-radius: 5px; 
       }
 
-      #start-stop-btn {
+      #create-folder-btn {
         background-color: #0b4465;
         color: white;
         font-weight: 500;
         margin-left: 0; 
         margin-top: 20px; 
         font-size: 20px;
-        padding: 10px 50px;
+         padding: 4px 17px;
         cursor: pointer;
         border-radius: 5px;
         border:none !important;
@@ -272,6 +272,18 @@ position: absolute;
         border: none !important;
     }
 
+    .notification {
+      margin-top:20px;
+    }
+
+    .success {
+      color: green;
+  }
+  
+  .error {
+      color: red;
+  }
+  
       /* folder structure */
 .folder-list {
     list-style: none;
