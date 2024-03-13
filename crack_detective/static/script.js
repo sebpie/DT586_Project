@@ -107,16 +107,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Event listener for closing the folder creation popup
 document.getElementById('close-popup').addEventListener('click', function() {
-    console.log("Close button clicked"); // Log a message to verify the event listener is triggered
-
     const folderNameInput = document.getElementById('folder-name');
     const responseMessage = document.getElementById('response-message');
 
-    folderNameInput.value = ''; // Clear the input field
-    responseMessage.innerText = ''; // Clear the response message
+    folderNameInput.value = ''; // Clearing the input field
+    responseMessage.innerText = ''; // Clearing the response message
 
-    console.log("Input field cleared:", folderNameInput.value); // Log the input field value after clearing
-    console.log("Response message cleared:", responseMessage.innerText); // Log the response message after clearing
+    
 
     document.getElementById('create-folder-popup').style.display = 'none';
     updateFolderList();
@@ -133,8 +130,8 @@ document.getElementById('close-popup').addEventListener('click', function() {
             // Show folder list
             document.getElementById('folder-list').style.display = 'block';
         } else {
-            // Handle other actions here
-            sendPutRequest(selectedOption);
+           
+            //sendPutRequest(selectedOption);
         }
     });
 
@@ -188,6 +185,20 @@ document.getElementById('close-popup').addEventListener('click', function() {
     // Fetch folders when the page loads
     updateFolderList();
 });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const element = document.getElementById('capture-btn');
+    if (element) {
+        element.addEventListener('click', function() {
+            console.log("djhfgdjhs hi")
+            const selectedFolder = document.getElementById('folder-action').value;
+            console.log(selectedFolder)
+        });
+    } 
+});
+
+
 
   
   //settings page
