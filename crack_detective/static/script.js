@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const folderDropdown = document.getElementById('folder-action'); // Get the dropdown
     
                 foldersList.innerHTML = '';
-                folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; // Reset dropdown
+                // folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; 
     
                 if (data.folders && data.folders.length > 0) {
                     data.folders.forEach(folder => {
@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Event listener for closing the folder creation popup
 document.getElementById('close-popup').addEventListener('click', function() {
-    console.log("Close button clicked"); // Log a message to verify the event listener is triggered
+    console.log("Close button clicked"); 
 
     const folderNameInput = document.getElementById('folder-name');
     const responseMessage = document.getElementById('response-message');
@@ -109,9 +109,8 @@ document.getElementById('close-popup').addEventListener('click', function() {
     folderNameInput.value = ''; // Clear the input field
     responseMessage.innerText = ''; // Clear the response message
 
-    console.log("Input field cleared:", folderNameInput.value); // Log the input field value after clearing
-    console.log("Response message cleared:", responseMessage.innerText); // Log the response message after clearing
-
+    console.log("Input field cleared:", folderNameInput.value); 
+    console.log("Response message cleared:", responseMessage.innerText); 
     document.getElementById('create-folder-popup').style.display = 'none';
     updateFolderList();
 });
@@ -124,10 +123,10 @@ document.getElementById('close-popup').addEventListener('click', function() {
             console.log("open create folder")
         } else if (selectedOption === 'list') {
             console.log("list folder")
-            // Show folder list
+            
             document.getElementById('folder-list').style.display = 'block';
         } else {
-            // Handle other actions here
+            
             sendPutRequest(selectedOption);
         }
     });
@@ -171,7 +170,7 @@ document.getElementById('close-popup').addEventListener('click', function() {
             .then(response => response.json())
             .then(data => {
                 console.log(data.message);
-                updateFolderList(); // Refresh folder list after deletion
+                updateFolderList(); 
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -187,7 +186,7 @@ document.getElementById('close-popup').addEventListener('click', function() {
   //settings page
   
   document.addEventListener('DOMContentLoaded', function() {
-    // Retrieve the username passed from the Flask route
+    
     var username = "{{ username }}";
     // Set the value of the username input field
     document.getElementById('username').value = username;
@@ -197,7 +196,7 @@ document.getElementById('close-popup').addEventListener('click', function() {
 
 const images = ["../static/images/image1.jpg", "../static/images/image2.jpg", 
 "../static/images/image3.jpg","../static/images/image4.jpg","../static/images/image5.jpg",
-"../static/images/image6.jpg"]; // Add more images as needed
+"../static/images/image6.jpg"]; 
 let currentIndex = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
