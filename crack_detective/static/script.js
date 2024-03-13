@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const folderDropdown = document.getElementById('folder-action'); // Get the dropdown
     
                 foldersList.innerHTML = '';
-                folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; // Reset dropdown
+                // folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; 
     
                 if (data.folders && data.folders.length > 0) {
                     data.folders.forEach(folder => {
