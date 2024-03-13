@@ -8,7 +8,7 @@ from .utils import Subscribable
 DEFAULT_URL="rtmp://0.0.0.0:8000/live/stream"
 DEFAULT_WIDTH=6*224
 DEFAULT_HEIGHT=3*224
-DEFAULT_COLOR='bgr24'
+DEFAULT_PXLFMT='bgr24'
 PIXEL_SIZE= { "bgr24": 3, }
 
 colorama_init()
@@ -20,14 +20,14 @@ class RTMPServer(Subscribable):
 
     def __init__(self,
                  url=None,
-                 color=DEFAULT_COLOR,
+                 pix_fmt=DEFAULT_PXLFMT,
                  width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT,
                  ffmpeg_path=None) -> None:
 
         super().__init__()
 
         self.url = url or DEFAULT_URL
-        self.color = color or DEFAULT_COLOR
+        self.pxl_fmt = pix_fmt or DEFAULT_PXLFMT
         self.width = width or DEFAULT_WIDTH
         self.height = height or DEFAULT_WIDTH
         self.ffmpeg_path=ffmpeg_path
@@ -36,7 +36,7 @@ class RTMPServer(Subscribable):
     def _framegrabber(self):
         print(f"--thread framegrabber--")
         while True:
-            in_bytes = self.ffmpeg_process.stdout.read(self.width * self.height * PIXEL_SIZE[self.color])
+            in_bytes = self.ffmpeg_process.stdout.read(self.width * self.height * PIXEL_SIZE[self.pxl_fmt])
 
             if self.ffmpeg_process.poll() is not None:
                 print(Fore.RED + "ffmpeg process is dead." + Style.RESET_ALL)
@@ -46,7 +46,7 @@ class RTMPServer(Subscribable):
                 print(f"Error reading from FFMPEG. poll: {self.ffmpeg_process.poll()}")
                 continue
 
-            frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.color]])
+            frame = np.frombuffer(in_bytes, np.uint8).reshape([self.height, self.width, PIXEL_SIZE[self.pxl_fmt]])
 
             if type(frame) is not np.ndarray:
                 print(Fore.Yellow + f"couldnt convert frame to 'numpy.ndarray'" + Style.RESET_ALL)
@@ -71,7 +71,7 @@ class RTMPServer(Subscribable):
                 .filter("crop", w=6*224, h=3*224, x=0, y=(720-3*224)/2)
                 .output('pipe:',
                         format='rawvideo',
-                        pix_fmt=self.color,
+                        pix_fmt=self.pxl_fmt,
                         s=f'{self.width}x{self.height}')
                 .global_args("-nostdin", "-hide_banner", "-loglevel", "warning")
                 .run_async(**args)
