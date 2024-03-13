@@ -102,8 +102,7 @@ def init_app(app:Flask):
         return Response(gen_frames(buffer, width, height),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
-    """
-    """
+  
     @app.route("/api/input", methods = ["GET", "PUT"])
     @login_required
     def control_input():
@@ -127,8 +126,7 @@ def init_app(app:Flask):
 
         return {"error" : "Invalid request"}, 400
 
-    """
-    """
+    
     @app.route("/api/take_picture", methods = ["GET", "PUT"])
     @login_required
     def control_output():
