@@ -317,6 +317,15 @@ position: absolute;
    /* home */
 
 /* gallery */
+
+
+.folder-icon {
+     position: relative !important;
+    left: 0;
+    top: 0;
+    color: #607D8B;
+    font-size:  50px;
+}
 .gallery-container {
   display: flex;
   flex-direction: row;
