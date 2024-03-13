@@ -307,3 +307,46 @@ function nextImage() {
   currentIndex = (currentIndex + 1) % images.length;
   document.getElementById('mainImageOverlay').src = images[currentIndex];
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Function to add event listeners to folders in the gallery
+    function addFolderEventListeners() {
+        document.querySelectorAll('.folder-icon').forEach(folder => {
+            folder.addEventListener('click', function() {
+                const folderName = this.querySelector('h6').textContent;
+                console.log(folderName)
+                loadImages(folderName);
+            });
+        });
+    }
+
+  // Function to load images for a specific folder
+function loadImages(folderName) {
+    console.log(folderName)
+    fetch(`/api/folders/${folderName}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            const imagesContainer = document.querySelector('.images-container');
+            imagesContainer.innerHTML = ''; // Clear the previous images
+
+            if (data.images && data.images.length > 0) {
+                data.images.forEach(imageUrl => {
+                    const img = document.createElement('img');
+                    img.src = imageUrl;
+                    img.alt = 'Image';
+                    img.classList.add('gallery-image');
+                    imagesContainer.appendChild(img);
+                });
+            } else {
+                imagesContainer.innerHTML = '<p>No images found in this folder</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+    // Call the function to add event listeners to folders
+    addFolderEventListeners();
+});

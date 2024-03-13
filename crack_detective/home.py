@@ -119,7 +119,12 @@ def init_home(app: Flask):
              return jsonify({'error': 'Method Not Allowed'}), 405
             
         
-        
+    @app.route('/api/folders/<folder_name>')
+    def get_folder_images(folder_name):
+     folder_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name)
+     images= [f'/{UPLOAD_DIR}/{folder_name}/{filename}' for filename in os.listdir(folder_path) if filename.endswith('.jpg')]
+     return jsonify({'images': images})
+
             
 
    
