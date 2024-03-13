@@ -9,13 +9,21 @@
         <div class="row">
             <div class="gallery-container">
                 {% for folder in folders_with_images %}
-                <div class="gallery-grid">
+                <div class="gallery-grid mb-4">
                     <!-- Display folder icon with folder name -->
                     <div class="folder-icon" onclick="loadImages('{{ folder.folder_name }}')">
                         <i class="fa fa-folder folder-icon"><h4>{{ folder.folder_name }}</h4></i>
                         <!-- <h4>{{ folder.folder_name }}</h4> -->
                     </div>
                     <!-- Display images in the folder -->
+                    <img src="../static/images/image1.jpg" alt="Image 1" class="gallery-image">
+                    <img src="../static/images/image2.jpg" alt="Image 2" class="gallery-image">
+                    <img src="../static/images/image3.jpg" alt="Image 3" class="gallery-image">
+                    <img src="../static/images/image4.jpg" alt="Image 1" class="gallery-image">
+                    <img src="../static/images/image5.jpg" alt="Image 2" class="gallery-image">
+                    <img src="../static/images/image6.jpg" alt="Image 3" class="gallery-image">
+                    <img src="../static/images/image5.jpg" alt="Image 2" class="gallery-image">
+                    <img src="../static/images/image6.jpg" alt="Image 3" class="gallery-image">
                     <!-- {% for image in folder.images %}
                     <img src="{{ image }}" alt="Image" class="gallery-image">
                     {% endfor %} -->
