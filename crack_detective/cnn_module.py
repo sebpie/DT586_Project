@@ -15,7 +15,7 @@ from tensorflow.keras.callbacks         import History
 
 
 class Cnn(object):
-    def __init__(self, width=224, height=224, channels=3, train_dataset=None, test_dataset=None):
+    def __init__(self, width=224, height=224, channels=3, train_dataset=None, test_dataset=None, load=None):
         # self.train_dir = ds.datasets["Mendelay_1"]
         # self.test_dir = ds.datasets["Mendelay_1"]
 
@@ -119,6 +119,8 @@ class CnnOriginal(Cnn):
         model.add(Activation('sigmoid'))
 
         self.model = model
+        if kvargs.get("load"):
+            self.load_model(kvargs["load"])
 
 
     def train(self, batch_size=64, epochs=20, **kvargs):
