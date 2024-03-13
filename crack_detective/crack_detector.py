@@ -76,9 +76,15 @@ class CrackDetector(utils.Subscribable):
             patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=224 )
 
             """Step 2: Predict each patch with cracks"""
-            predictions = self.model.predict(np.reshape(patches, (18, 224, 224, 3)), verbose=0) #, batch=True
+            tile_x, tile_y =  (int(self.source.width / self.model.width) , int(self.source.height / self.model.height))
+
+            shape = (tile_x * tile_y,
+                     self.model.width,
+                     self.model.height,
+                     3)   # (18, 224, 224, 3)
+            predictions = self.model.predict(np.reshape(patches, shape), verbose=0) #, batch=True
             # print(Fore.RED + f"Prediction shape: {predictions.shape}" + Style.RESET_ALL)
-            predictions = np.reshape(predictions, (3, 6, 1))
+            predictions = np.reshape(predictions, (tile_y, tile_x, 1))
 
             for idx_row, row in enumerate(predictions):
                 for idx_col, col in enumerate(row):
