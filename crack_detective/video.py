@@ -129,7 +129,7 @@ def init_app(app:Flask):
 
     """
     """
-    @app.route("/api/output", methods = ["GET", "PUT"])
+    @app.route("/api/take_picture", methods = ["GET", "PUT"])
     @login_required
     def control_output():
         match(request.method):

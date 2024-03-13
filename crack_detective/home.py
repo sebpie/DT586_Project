@@ -98,7 +98,7 @@ def init_home(app: Flask):
         except Exception as e:
             return jsonify({'error': 'Error deleting folder: ' + str(e)}), 500
         
-    @app.route('/api/output', methods=['POST'])
+    @app.route('/api/take_picture', methods=['POST'])
     def api_output():
         if request.method == 'POST':
              data = request.json

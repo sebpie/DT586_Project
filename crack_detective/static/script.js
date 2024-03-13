@@ -126,7 +126,7 @@ document.getElementById('folder-action').addEventListener('change', function() {
     } else {
         // Clear the create folder popup and send the captured image to the selected folder
         document.getElementById('create-folder-popup').style.display = 'none';
-        sendCapturedImage(selectedOption); 
+        // sendCapturedImage(selectedOption); 
     }
 });
 
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const dataURL = canvas.toDataURL('image/jpeg');
         
         // Send the captured screenshot to the folder for save
-        fetch('/api/output', {
+        fetch('/api/take_picture', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
