@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const folderDropdown = document.getElementById('folder-action'); // Get the dropdown
     
                 foldersList.innerHTML = '';
-                // folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; 
+                folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; // Reset dropdown
     
                 if (data.folders && data.folders.length > 0) {
                     data.folders.forEach(folder => {
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     foldersList.innerHTML = '<li>No folders found</li>';
                 }
     
-        
+             
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -101,35 +101,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Event listener for closing the folder creation popup
 document.getElementById('close-popup').addEventListener('click', function() {
-    console.log("Close button clicked"); 
-
     const folderNameInput = document.getElementById('folder-name');
     const responseMessage = document.getElementById('response-message');
 
-    folderNameInput.value = ''; // Clear the input field
-    responseMessage.innerText = ''; // Clear the response message
+    folderNameInput.value = ''; // Clearing the input field
+    responseMessage.innerText = ''; // Clearing the response message
 
-    console.log("Input field cleared:", folderNameInput.value); 
-    console.log("Response message cleared:", responseMessage.innerText); 
+    
+
     document.getElementById('create-folder-popup').style.display = 'none';
     updateFolderList();
 });
     // Event listener for folder action dropdown
-    document.getElementById('folder-action').addEventListener('change', function() {
-        console.log("dropdown selected")
-        var selectedOption = this.value;
-        if (selectedOption === 'create') {
-            showCreateFolderPopup()
-            console.log("open create folder")
-        } else if (selectedOption === 'list') {
-            console.log("list folder")
-            
-            document.getElementById('folder-list').style.display = 'block';
-        } else {
-            
-            sendPutRequest(selectedOption);
-        }
-    });
+// Event listener for folder action dropdown
+document.getElementById('folder-action').addEventListener('change', function() {
+    var selectedOption = this.value;
+    if (selectedOption === 'create') {
+        showCreateFolderPopup();
+        console.log("open create folder");
+    } else if (selectedOption === 'list') {
+        console.log("list folder");
+        // Show folder list
+        document.getElementById('folder-list').style.display = 'block';
+    } else {
+        // Clear the create folder popup and send the captured image to the selected folder
+        document.getElementById('create-folder-popup').style.display = 'none';
+        sendCapturedImage(selectedOption); 
+    }
+});
+
 
     function showCreateFolderPopup() {
         document.getElementById('create-folder-popup').style.display = 'flex';
@@ -170,7 +170,7 @@ document.getElementById('close-popup').addEventListener('click', function() {
             .then(response => response.json())
             .then(data => {
                 console.log(data.message);
-                updateFolderList(); 
+                updateFolderList(); // Refresh folder list after deletion
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -182,11 +182,77 @@ document.getElementById('close-popup').addEventListener('click', function() {
     updateFolderList();
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('capture-btn').addEventListener('click', function() {
+        // Get the selected folder name from the dropdown
+        const selectedFolder = document.getElementById('folder-action').value;
+        const img = document.querySelector('.image-cont img'); 
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width; 
+        canvas.height = img.height; 
+        
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const dataURL = canvas.toDataURL('image/jpeg');
+        
+        // Send the captured screenshot to the folder for save
+        fetch('/api/output', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                folder_name: selectedFolder,
+                screenshot_data: dataURL
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                showNotification(data.message);
+            } else {
+                
+                showNotification('Error: Image could not be saved');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('Error: Failed to send image data');
+        });
+    });
+});
+
+// Function to display a notification message
+function showNotification(message) {
+    // Create a notification element
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    const isSuccess = message.toLowerCase().includes('success');
+    if (isSuccess) {
+        notification.style.color = 'green';
+    } else {
+        notification.style.color = 'red';
+    }
+
+    notification.textContent = message;
+    const container = document.querySelector('.container');
+
+    // Append the notification to the container
+    container.appendChild(notification);
+    setTimeout(function() {
+        container.removeChild(notification);
+    }, 5000); 
+}
+
+
+
+
   
   //settings page
   
   document.addEventListener('DOMContentLoaded', function() {
-    
+    // Retrieve the username passed from the Flask route
     var username = "{{ username }}";
     // Set the value of the username input field
     document.getElementById('username').value = username;
@@ -194,17 +260,9 @@ document.getElementById('close-popup').addEventListener('click', function() {
 
 //gallery page
 
-// Function to load images for a given folder
-function loadImages(folderName) {
-    
-}
-
-
-
-
 const images = ["../static/images/image1.jpg", "../static/images/image2.jpg", 
 "../static/images/image3.jpg","../static/images/image4.jpg","../static/images/image5.jpg",
-"../static/images/image6.jpg"]; 
+"../static/images/image6.jpg"]; // Add more images as needed
 let currentIndex = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
