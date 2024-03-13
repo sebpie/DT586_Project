@@ -60,8 +60,8 @@ class Cnn(object):
         self.model.save(path)
 
     def load_model(self, path):
+        print(Fore.RED + f"Loading model: {path}" + Style.RESET_ALL)
         self.model = tf.keras.models.load_model(path)
-        print(path)
 
     def predict(self, x, **kvargs):
         return self.model.predict(x, **kvargs)
