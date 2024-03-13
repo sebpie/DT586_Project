@@ -13,7 +13,7 @@ colorama_init()
 color_scale = [
     # value  BGR
     (0.9,    (0, 0, 255)),
-    (0.7,    (100, 0, 255 )),
+    (0.7,    (200, 0, 205 )),
     (0. ,    (0, 255, 0))
 ]
 
@@ -73,7 +73,7 @@ class CrackDetector(utils.Subscribable):
             # print(f"Process frame size {frame.shape}")
             """Step 1: Patchify the frame in patches"""
             curent_frame = frame.copy()
-            patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=224 )
+            patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=self.model.width )
 
             """Step 2: Predict each patch with cracks"""
             tile_x, tile_y =  (int(self.source.width / self.model.width) , int(self.source.height / self.model.height))
@@ -104,37 +104,37 @@ class CrackDetector(utils.Subscribable):
             self.publish(processed_frame)
 
 
-    def _worker(self):
-        for frame in self.buffer_in.stream():
-            # print(f"Process frame size {frame.shape}")
-            """Step 1: Patchify the frame in patches"""
-            patches = patchify.patchify(frame.copy(), (self.model.width, self.model.height, self.model.channels), step=224 )
+    # def _worker(self):
+    #     for frame in self.buffer_in.stream():
+    #         # print(f"Process frame size {frame.shape}")
+    #         """Step 1: Patchify the frame in patches"""
+    #         patches = patchify.patchify(frame.copy(), (self.model.width, self.model.height, self.model.channels), step=224 )
 
-            """Step 2: Predict each patch with cracks"""
-            print(f"Process {(len(patches), patches.shape)} patches for this frame")
-            for row in patches:
-                for col in row:
-                     for patch in col:
-                        # print(f"patch size: {patch.shape}")
-                        # print(patch)
+    #         """Step 2: Predict each patch with cracks"""
+    #         print(f"Process {(len(patches), patches.shape)} patches for this frame")
+    #         for row in patches:
+    #             for col in row:
+    #                  for patch in col:
+    #                     # print(f"patch size: {patch.shape}")
+    #                     # print(patch)
 
-                        results = self.model.predict(col)
-                        print(f"predict results shape: {results.shape}")
+    #                     results = self.model.predict(col)
+    #                     print(f"predict results shape: {results.shape}")
 
-                        if results[0][0] > 0.5:
-                            color = (0, 255, 0) # GREEN
-                        else:
-                            color = (0, 0, 255) # RED
-                        patch.setflags(write=1)
+    #                     if results[0][0] > 0.5:
+    #                         color = (0, 255, 0) # GREEN
+    #                     else:
+    #                         color = (0, 0, 255) # RED
+    #                     patch.setflags(write=1)
 
-                        """Step 3: Apply visualisation to positive patches"""
-                        cv2.rectangle(patch, (1, 1), (self.model.width -2, self.model.height -2), color=color, thickness=2 )
-                        # print("done drawing")
+    #                     """Step 3: Apply visualisation to positive patches"""
+    #                     cv2.rectangle(patch, (1, 1), (self.model.width -2, self.model.height -2), color=color, thickness=2 )
+    #                     # print("done drawing")
 
 
-            """Step 4: Stitch up! (unpatchify)"""
-            processed_frame = patchify.unpatchify(patches, frame.shape)
+    #         """Step 4: Stitch up! (unpatchify)"""
+    #         processed_frame = patchify.unpatchify(patches, frame.shape)
 
-            """Step 5: Publish the results to subscribers"""
-            # print(f"Done with this frame.")
-            self.publish(processed_frame)
+    #         """Step 5: Publish the results to subscribers"""
+    #         # print(f"Done with this frame.")
+    #         self.publish(processed_frame)
