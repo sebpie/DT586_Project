@@ -48,18 +48,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     foldersList.innerHTML = '<li>No folders found</li>';
                 }
+    
+                // Event listener for folder action dropdown
+                folderDropdown.addEventListener('click', function(event) {
+                    if (event.target.value === 'create') {
+                        showCreateFolderPopup();
+                        console.log("open create folder");
+                        const folderNameInput = document.getElementById('folder-name');
+                        const responseMessage = document.getElementById('response-message');
+                
+                        
+                        folderNameInput.value = ''; // Clear the input field
+                        responseMessage.innerText = ''; // Clear the response message
+                    }
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
+    
 
     // Event listener for folder creation form submission
     document.getElementById('create-folder-form').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent form submission
-        
-        // Get the folder name from the input field
-        const folderName = document.getElementById('folder-name').value;
+          
+        const folderNameInput = document.getElementById('folder-name');
+        const responseMessage = document.getElementById('response-message');
+
+        const folderName = folderNameInput.value;
+        folderNameInput.value = ''; // Clear the input field
+        responseMessage.innerText = ''; // Clear the response message
 
         // Send a POST request to the Flask endpoint
         fetch('/api/folders', {
@@ -83,20 +102,34 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listener to close the delete-folder-popup
     document.getElementById('close-popup-delete').addEventListener('click', function() {
         document.getElementById('delete-folder-popup').style.display = 'none';
+        updateFolderList();
     });
 
-    // Event listener for closing the folder creation popup
-    document.getElementById('close-popup').addEventListener('click', function() {
-        document.getElementById('create-folder-popup').style.display = 'none';
-        updateFolderList(); // Refresh folder list
-    });
+// Event listener for closing the folder creation popup
+document.getElementById('close-popup').addEventListener('click', function() {
+    console.log("Close button clicked"); // Log a message to verify the event listener is triggered
 
+    const folderNameInput = document.getElementById('folder-name');
+    const responseMessage = document.getElementById('response-message');
+
+    folderNameInput.value = ''; // Clear the input field
+    responseMessage.innerText = ''; // Clear the response message
+
+    console.log("Input field cleared:", folderNameInput.value); // Log the input field value after clearing
+    console.log("Response message cleared:", responseMessage.innerText); // Log the response message after clearing
+
+    document.getElementById('create-folder-popup').style.display = 'none';
+    updateFolderList();
+});
     // Event listener for folder action dropdown
     document.getElementById('folder-action').addEventListener('change', function() {
+        console.log("dropdown selected")
         var selectedOption = this.value;
         if (selectedOption === 'create') {
-            document.getElementById('create-folder-popup').style.display = 'flex';
+            showCreateFolderPopup()
+            console.log("open create folder")
         } else if (selectedOption === 'list') {
+            console.log("list folder")
             // Show folder list
             document.getElementById('folder-list').style.display = 'block';
         } else {
@@ -104,6 +137,10 @@ document.addEventListener('DOMContentLoaded', function() {
             sendPutRequest(selectedOption);
         }
     });
+
+    function showCreateFolderPopup() {
+        document.getElementById('create-folder-popup').style.display = 'flex';
+    }
 
     // Function to send a PUT request to the selected folder
   function sendPutRequest(folderName) {
