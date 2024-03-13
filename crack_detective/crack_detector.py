@@ -81,7 +81,7 @@ class CrackDetector(utils.Subscribable):
             shape = (tile_x * tile_y,
                      self.model.width,
                      self.model.height,
-                     3)   # (18, 224, 224, 3)
+                     self.model.channels)   # (18, 224, 224, 3)
             predictions = self.model.predict(np.reshape(patches, shape), verbose=0) #, batch=True
             # print(Fore.RED + f"Prediction shape: {predictions.shape}" + Style.RESET_ALL)
             predictions = np.reshape(predictions, (tile_y, tile_x, 1))
