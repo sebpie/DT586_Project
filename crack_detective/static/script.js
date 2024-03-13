@@ -49,36 +49,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     foldersList.innerHTML = '<li>No folders found</li>';
                 }
     
-                // Event listener for folder action dropdown
-                folderDropdown.addEventListener('click', function(event) {
-                    if (event.target.value === 'create') {
-                        showCreateFolderPopup();
-                        console.log("open create folder");
-                        const folderNameInput = document.getElementById('folder-name');
-                        const responseMessage = document.getElementById('response-message');
-                
-                        
-                        folderNameInput.value = ''; // Clear the input field
-                        responseMessage.innerText = ''; // Clear the response message
-                    }
-                });
+        
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
     
+    
 
     // Event listener for folder creation form submission
     document.getElementById('create-folder-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent form submission
+        event.preventDefault(); 
           
         const folderNameInput = document.getElementById('folder-name');
         const responseMessage = document.getElementById('response-message');
 
         const folderName = folderNameInput.value;
-        folderNameInput.value = ''; // Clear the input field
-        responseMessage.innerText = ''; // Clear the response message
+        folderNameInput.value = ''; 
+        responseMessage.innerText = ''; 
 
         // Send a POST request to the Flask endpoint
         fetch('/api/folders', {
@@ -92,11 +81,16 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             document.getElementById('response-message').innerText = data.message || data.error;
             updateFolderList(); // Refresh folder list after creation
-            document.getElementById('create-folder-popup').style.display = 'none'
+            document.getElementById('create-folder-popup').style.display = 'none';
         })
         .catch(error => {
             console.error('Error:', error);
         });
+    });
+
+    document.getElementById('create-folder-btn').addEventListener('click', function() {
+        document.getElementById('response-message').innerText = '';
+        showCreateFolderPopup();
     });
 
     // Event listener to close the delete-folder-popup
@@ -142,9 +136,9 @@ document.getElementById('close-popup').addEventListener('click', function() {
         document.getElementById('create-folder-popup').style.display = 'flex';
     }
 
-    // Function to send a PUT request to the selected folder
+    // to rename folders in gallery management
   function sendPutRequest(folderName) {
-    fetch('/folder/' + folderName, {
+    fetch('/api/folders/' + folderName, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
