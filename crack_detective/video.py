@@ -52,7 +52,7 @@ def init_app(app:Flask):
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
     rtmp_server = create_rtmpserver(video_sources[0], app)
     video_processors["preprocessed"] = rtmp_server
-    video_processors["processed"] = CrackDetector(rtmp_server, CnnOriginal(load="CNN_Orig-Mendelay_FULL.keras"))
+    video_processors["processed"] = CrackDetector(rtmp_server, CnnOriginal(load="CNN_Orig-224x224-Mendelay_FULL.keras"))
 
     @app.route("/stream/<stream_name>", methods=['GET'])
     def stream_preprocessed(stream_name):
