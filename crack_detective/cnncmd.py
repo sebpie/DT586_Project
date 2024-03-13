@@ -32,7 +32,7 @@ def main(args):
                 epochs=args.epochs)
 
     if args.save:
-        model.save(args.save)
+        model.save_model(args.save)
 
 
 if __name__ == "__main__":
