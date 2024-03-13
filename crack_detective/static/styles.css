@@ -323,8 +323,12 @@ position: absolute;
      position: relative !important;
     left: 0;
     top: 0;
-    color: #607D8B;
+    color: #0b4465;
     font-size:  50px;
+}
+
+.folder h4 {
+  font-size: 20px;
 }
 .gallery-container {
   display: flex;
