@@ -26,7 +26,7 @@ def create_rtmpserver(model:Cnn, url=None, app:Flask=None, ffmpeg_path=None) -> 
             app = current_app
         ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
-    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path, width=model.width, height=model.height)
+    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path, model_inputshape=(model.width, model.height))
     rtmp_server.start()
 
     return rtmp_server
