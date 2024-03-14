@@ -5,40 +5,40 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteIcon.addEventListener('click', deleteFolder);
         });
     }
-    
+
     function updateFolderList() {
         fetch('/api/folders')
             .then(response => response.json())
             .then(data => {
                 const foldersList = document.getElementById('folders');
                 const folderDropdown = document.getElementById('folder-action'); // Get the dropdown
-    
+
                 foldersList.innerHTML = '';
-                // folderDropdown.innerHTML = '<option value="create">Create Folder</option>'; 
-    
+                // folderDropdown.innerHTML = '<option value="create">Create Folder</option>';
+
                 if (data.folders && data.folders.length > 0) {
                     data.folders.forEach(folder => {
                         const listItem = document.createElement('li');
                         listItem.classList.add('folder-item');
-    
+
                         // Create folder icon
                         const folderIcon = document.createElement('i');
                         folderIcon.classList.add('fa', 'fa-folder', 'folder-icon');
-    
+
                         const folderName = document.createElement('span');
                         folderName.classList.add('folder-name');
                         folderName.textContent = folder;
-    
+
                         listItem.appendChild(folderIcon);
                         listItem.appendChild(folderName);
-    
+
                         const deleteIcon = document.createElement('i');
                         deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
                         deleteIcon.dataset.folderName = folder;
                         listItem.appendChild(deleteIcon);
-    
+
                         foldersList.appendChild(listItem);
-    
+
                         // Add folder to dropdown
                         const option = document.createElement('option');
                         option.value = folder;
@@ -48,26 +48,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     foldersList.innerHTML = '<li>No folders found</li>';
                 }
-    
-             
+
+                // Event listener for folder action dropdown
+                folderDropdown.addEventListener('click', function(event) {
+                    if (event.target.value === 'create') {
+                        showCreateFolderPopup();
+                        console.log("open create folder");
+                        const folderNameInput = document.getElementById('folder-name');
+                        const responseMessage = document.getElementById('response-message');
+
+
+                        folderNameInput.value = ''; // Clear the input field
+                        responseMessage.innerText = ''; // Clear the response message
+                    }
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
-    
-    
+
+
+
 
     // Event listener for folder creation form submission
     document.getElementById('create-folder-form').addEventListener('submit', function(event) {
-        event.preventDefault(); 
-          
+        event.preventDefault();
+
         const folderNameInput = document.getElementById('folder-name');
         const responseMessage = document.getElementById('response-message');
 
         const folderName = folderNameInput.value;
-        folderNameInput.value = ''; 
-        responseMessage.innerText = ''; 
+        folderNameInput.value = '';
+        responseMessage.innerText = '';
 
         // Send a POST request to the Flask endpoint
         fetch('/api/folders', {
@@ -107,7 +120,7 @@ document.getElementById('close-popup').addEventListener('click', function() {
     folderNameInput.value = ''; // Clearing the input field
     responseMessage.innerText = ''; // Clearing the response message
 
-    
+
 
     document.getElementById('create-folder-popup').style.display = 'none';
     updateFolderList();
@@ -126,7 +139,7 @@ document.getElementById('folder-action').addEventListener('change', function() {
     } else {
         // Clear the create folder popup and send the captured image to the selected folder
         document.getElementById('create-folder-popup').style.display = 'none';
-        // sendCapturedImage(selectedOption); 
+        // sendCapturedImage(selectedOption);
     }
 });
 
@@ -186,16 +199,16 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('capture-btn').addEventListener('click', function() {
         // Get the selected folder name from the dropdown
         const selectedFolder = document.getElementById('folder-action').value;
-        const img = document.querySelector('.image-cont img'); 
-        
+        const img = document.querySelector('.image-cont img');
+
         const canvas = document.createElement('canvas');
-        canvas.width = img.width; 
-        canvas.height = img.height; 
-        
+        canvas.width = img.width;
+        canvas.height = img.height;
+
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL('image/jpeg');
-        
+
         // Send the captured screenshot to the folder for save
         fetch('/api/take_picture', {
             method: 'POST',
@@ -212,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (data.message) {
                 showNotification(data.message);
             } else {
-                
+
                 showNotification('Error: Image could not be saved');
             }
         })
@@ -242,15 +255,15 @@ function showNotification(message) {
     container.appendChild(notification);
     setTimeout(function() {
         container.removeChild(notification);
-    }, 5000); 
+    }, 5000);
 }
 
 
 
 
-  
+
   //settings page
-  
+
   document.addEventListener('DOMContentLoaded', function() {
     // Retrieve the username passed from the Flask route
     var username = "{{ username }}";
@@ -260,7 +273,7 @@ function showNotification(message) {
 
 //gallery page
 
-const images = ["../static/images/image1.jpg", "../static/images/image2.jpg", 
+const images = ["../static/images/image1.jpg", "../static/images/image2.jpg",
 "../static/images/image3.jpg","../static/images/image4.jpg","../static/images/image5.jpg",
 "../static/images/image6.jpg"]; // Add more images as needed
 let currentIndex = 0;

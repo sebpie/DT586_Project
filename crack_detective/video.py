@@ -1,3 +1,7 @@
+import base64
+import datetime
+
+from .cnn_module import Cnn, CnnOriginal, CnnVgg16
 from .crack_detector  import CrackDetector
 from .auth import login_required
 from . import VideoProcessing
@@ -14,8 +18,7 @@ rtmp_server : VideoProcessing.RTMPServer = None
 video_sources = []
 video_processors = {} # "stream_name" : Subscribable
 
-def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
-    print(f"Creating a new VideoProcessor instance.")
+def create_rtmpserver(model:Cnn, url=None, app:Flask=None, ffmpeg_path=None) -> VideoProcessing.RTMPServer:
 
     # if using Windows, specify path to ffmpeg binary
     if not ffmpeg_path and os.name == "nt":
@@ -23,22 +26,11 @@ def create_rtmpserver(url=None, app:Flask=None, ffmpeg_path=None) -> VideoProces
             app = current_app
         ffmpeg_path = os.path.join(app.root_path, "bin", "ffmpeg.exe")
 
-    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path)
+    rtmp_server = VideoProcessing.RTMPServer(url, ffmpeg_path=ffmpeg_path, model_inputshape=(model.width, model.height))
     rtmp_server.start()
 
     return rtmp_server
 
-def get_videoprocessor(stream):
-    global video_processors
-    return video_processors[stream]
-
-    # global rtmp_server
-    # if not rtmp_server or rtmp_server.ffmpeg_process.poll() is not None:
-    #     print(Fore.RED + f"no videoprocessor found. Creating one." + Style.RESET_ALL)
-    #     rtmp_server = create_rtmpserver()
-    #     print(Fore.RED + f"Warning: creating a new RTMPserver but not attaching CrackDetector")
-
-    # return rtmp_server
 
 def init_app(app:Flask):
     global video_processors
@@ -46,15 +38,30 @@ def init_app(app:Flask):
     # TODO: initialise list of possible input video
     global video_sources
     video_sources.append("rtmp://0.0.0.0:8000/live/stream")
-    rtmp_server = create_rtmpserver(video_sources[0], app)
+
+    # model = CnnOriginal(load="CNN_Orig-224x224-Mendelay_FULL.keras")
+
+    # model = CnnOriginal(width=80, height=80, load="CNN_Orig-80x80-Mendelay_FULL.keras")
+    match(app.config["MODEL"]):
+        case "ORIG":
+            model = CnnOriginal(width=app.config["MODEL_SIZE_X"],
+                                height=app.config["MODEL_SIZE_X"],
+                                load=app.config["MODEL_FILE"])
+        case "VGG16":
+            model = CnnOriginal(width=app.config["MODEL_SIZE_X"],
+                                height=app.config["MODEL_SIZE_X"],
+                                load=app.config["MODEL_FILE"])
+
+
+    rtmp_server = create_rtmpserver(model, video_sources[0], app)
     video_processors["preprocessed"] = rtmp_server
-    video_processors["processed"] = CrackDetector(rtmp_server)
+    video_processors["processed"] = CrackDetector(rtmp_server, model)
 
     @app.route("/stream/<stream_name>", methods=['GET'])
     def stream_preprocessed(stream_name):
 
         print(Fore.BLUE + f"ENTER /stream/{stream_name}" + Style.RESET_ALL)
-        videoprocessor = get_videoprocessor(stream_name)
+        videoprocessor = video_processors[stream_name]
         print(f"working with videoprocessor: {videoprocessor}")
         buffer = Buffer(maxsize=60)
 
@@ -102,7 +109,45 @@ def init_app(app:Flask):
         return Response(gen_frames(buffer, width, height),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
 
-  
+
+
+    @app.route('/api/take_picture', methods=['POST'])
+    def save_image():
+        try:
+            data = request.json
+            image_data = data.get('image_data')
+            if image_data:
+                # Decode the base64 image data
+                image_binary = base64.b64decode(image_data.split(',')[1])
+                # Save the image to the images folder
+                # folder_name = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')  # Format: YYYY-MM-DD
+                folder_path = current_app["output_dir"]
+                image_filename = os.path.join(folder_path, f'captured_image_{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
+                with open(image_filename, 'wb') as f:
+                    f.write(image_binary)
+                return jsonify({'message': 'Image saved successfully', 'filename': f'{image_filename}'})
+            else:
+                return jsonify({'error': 'No image data received'})
+        except Exception as e:
+            return jsonify({'error': 'Error saving image: ' + str(e)})
+
+
+
+    @app.route("/api/take_picture", methods=['PUT'])
+    def take_picture():
+        buffer = Buffer()
+        source = video_processors["processed"]
+        source.subscribe(buffer.put)
+        pic = buffer.get()
+
+        # get selected folder
+
+        # filename
+
+        return {"error" : "not implemented"}, 501
+
+    """
+    """
     @app.route("/api/input", methods = ["GET", "PUT"])
     @login_required
     def control_input():
@@ -126,27 +171,25 @@ def init_app(app:Flask):
 
         return {"error" : "Invalid request"}, 400
 
-    
+
     @app.route("/api/take_picture", methods = ["GET", "PUT"])
     @login_required
     def control_output():
         match(request.method):
             case "GET":
-                if 'output_dir' not in g:
+                if 'output_dir' not in current_app:
                     return 404, "No folder selected"
 
-                return { 'output_dir' : g.output_dir }
+                return { 'output_dir' : current_app.output_dir }
 
             case "PUT":
                 try:
-                    g.output_dir = request.json['output_dir']
+                    current_app["output_dir"] = request.json['output_dir']
                     return 200
                 except KeyError:
                     return {"error" : "folder name is missing"}, 400
 
 
         return {"error" : "Invalid request"}, 400
-
-
 
     return
