@@ -111,25 +111,25 @@ def init_app(app:Flask):
 
 
 
-    @app.route('/api/take_picture', methods=['POST'])
-    def save_image():
-        try:
-            data = request.json
-            image_data = data.get('image_data')
-            if image_data:
-                # Decode the base64 image data
-                image_binary = base64.b64decode(image_data.split(',')[1])
-                # Save the image to the images folder
-                # folder_name = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')  # Format: YYYY-MM-DD
-                folder_path = current_app["output_dir"]
-                image_filename = os.path.join(folder_path, f'captured_image_{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
-                with open(image_filename, 'wb') as f:
-                    f.write(image_binary)
-                return jsonify({'message': 'Image saved successfully', 'filename': f'{image_filename}'})
-            else:
-                return jsonify({'error': 'No image data received'})
-        except Exception as e:
-            return jsonify({'error': 'Error saving image: ' + str(e)})
+    # @app.route('/api/take_picture', methods=['POST'])
+    # def save_image():
+    #     try:
+    #         data = request.json
+    #         image_data = data.get('image_data')
+    #         if image_data:
+    #             # Decode the base64 image data
+    #             image_binary = base64.b64decode(image_data.split(',')[1])
+    #             # Save the image to the images folder
+    #             # folder_name = datetime.now().strftime('%Y-%m-%d-%H-%M-%S')  # Format: YYYY-MM-DD
+    #             folder_path = current_app["output_dir"]
+    #             image_filename = os.path.join(folder_path, f'captured_image_{datetime.now().strftime("%Y-%m-%d-%H-%M-%S")}.png')
+    #             with open(image_filename, 'wb') as f:
+    #                 f.write(image_binary)
+    #             return jsonify({'message': 'Image saved successfully', 'filename': f'{image_filename}'})
+    #         else:
+    #             return jsonify({'error': 'No image data received'})
+    #     except Exception as e:
+    #         return jsonify({'error': 'Error saving image: ' + str(e)})
 
 
 
@@ -172,7 +172,7 @@ def init_app(app:Flask):
         return {"error" : "Invalid request"}, 400
 
 
-    @app.route("/api/take_picture", methods = ["GET", "PUT"])
+    @app.route("/api/output", methods = ["GET", "PUT"])
     @login_required
     def control_output():
         match(request.method):
