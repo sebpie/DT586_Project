@@ -1,4 +1,4 @@
-from flask import Flask, current_app, render_template, request, jsonify, Blueprint
+from flask import Flask, current_app, render_template,send_from_directory, request, jsonify, Blueprint
 import sqlite3
 import os
 import shutil
@@ -7,6 +7,7 @@ import datetime
 
 
 UPLOAD_DIR = "uploads"
+
 
 
 bp = Blueprint('home', __name__)
@@ -122,10 +123,28 @@ def init_home(app: Flask):
      folder_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name)
      images= [f'/{UPLOAD_DIR}/{folder_name}/{filename}' for filename in os.listdir(folder_path) if filename.endswith('.jpg')]
      return jsonify({'images': images})
+    
+    @app.route('/api/folders/<folder_name>/<filename>')
+    def get_image(folder_name, filename):
+     folder_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name)
+     image_path = os.path.join(folder_path, filename)
+     print(image_path)
+     if os.path.exists(image_path) and filename.endswith('.jpg'):
+        return send_from_directory(folder_path, filename)
+     else:
+        return 'Image not found', 404
+
+<<<<<<< Updated upstream
 
 
 
+=======
+    
+    @app.route('/uploads/<path:filename>')
+    def serve_uploads(filename):
+     return send_from_directory(UPLOAD_DIR, filename)
 
+>>>>>>> Stashed changes
 
     @app.route('/users', methods=['GET'])
     def list_users():
@@ -138,3 +157,5 @@ def init_home(app: Flask):
         user_list = [{'id': user[0], 'username': user[1], 'password': user[2]} for user in users]
 
         return jsonify({'users': user_list})
+    
+    
