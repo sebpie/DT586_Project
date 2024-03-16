@@ -187,8 +187,9 @@ position: absolute;
     background: #0b4465 !important;
     border: 1px solid #0b4465 !important;
     color: #fff !important;
-    font-size: 20px !important;
-    font-weight: 600 !important;
+    font-size: 18px;
+    font-weight: 600 ;
+    border-radius: 3px !important;
   }
 
   .login-wrap .fa-user {
@@ -247,6 +248,19 @@ position: absolute;
       }
 
       #capture-btn {
+        background-color: #0b4465;
+        color: white;
+        font-weight: 500;
+        margin-left: 0; 
+        margin-top: 20px; 
+        font-size: 20px;
+        padding: 10px 50px;
+        cursor: pointer;
+        border-radius: 5px; 
+        border:none !important;
+      }
+
+      #full-screen-btn {
         background-color: #0b4465;
         color: white;
         font-weight: 500;
@@ -342,10 +356,19 @@ position: absolute;
 }
 
 .gallery-image {
-  width: 100%;
-  height: auto;
-  cursor: pointer;
+  width: 150px; /* Set the width of each image */
+  height: auto; /* Automatically adjust height to maintain aspect ratio */
+  margin: 10px;
+  cursor: pointer; /* Add margin around each image for spacing */
 }
+
+#back-button {
+width: auto;
+margin :40px auto;
+padding: 2px 32px;
+font-size: 16px !important;
+}
+
 
 /* Overlay styles */
 .overlay {

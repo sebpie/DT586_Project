@@ -4,7 +4,8 @@
 <section class="gallery-block grid-gallery">
     <div class="container">
         <div class="heading">
-            <h3 class="mt-5 teal text-center mb-4">Grid Gallery</h3>
+            <h3 class="mt-5 teal text-center mb-5
+            ">Gallery</h3>
         </div>
         <div class="row">
             <div class="gallery-container">
@@ -17,24 +18,16 @@
                         </i>
                         
                     </div>
-                    <!-- Display images in the folder -->
-                    <!-- <img src="../static/images/image1.jpg" alt="Image 1" class="gallery-image">
-                    <img src="../static/images/image2.jpg" alt="Image 2" class="gallery-image">
-                    <img src="../static/images/image3.jpg" alt="Image 3" class="gallery-image">
-                    <img src="../static/images/image4.jpg" alt="Image 1" class="gallery-image">
-                    <img src="../static/images/image5.jpg" alt="Image 2" class="gallery-image">
-                    <img src="../static/images/image6.jpg" alt="Image 3" class="gallery-image">
-                    <img src="../static/images/image5.jpg" alt="Image 2" class="gallery-image">
-                    <img src="../static/images/image6.jpg" alt="Image 3" class="gallery-image"> -->
-                    <!-- {% for image in folder.images %}
-                    <img src="{{ image }}" alt="Image" class="gallery-image">
-                    {% endfor %} -->
                 </div>
                 {% endfor %}
             </div>
             <div class="images-container">
-              <!-- Images for the selected folder will be displayed here -->
+                {% for image in folder_images %}
+    <img src="{{ image }}" alt="Image">
+    {% endfor %}
+              
           </div>
+          <button id="back-button" class = "mt-4" style="display: none;">Back</button>
         </div>
         <!-- Overlay for main image -->
         <div id="overlay" class="overlay">
