@@ -270,12 +270,7 @@ function showNotification(message) {
 
 //gallery page
 
-<<<<<<< Updated upstream
-const images = ["../static/images/image1.jpg", "../static/images/image2.jpg",
-"../static/images/image3.jpg","../static/images/image4.jpg","../static/images/image5.jpg",
-"../static/images/image6.jpg"]; // Add more images as needed
-=======
->>>>>>> Stashed changes
+
 let currentIndex = 0;
 let images = [];
 

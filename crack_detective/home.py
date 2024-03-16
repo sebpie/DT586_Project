@@ -134,17 +134,9 @@ def init_home(app: Flask):
      else:
         return 'Image not found', 404
 
-<<<<<<< Updated upstream
 
 
 
-=======
-    
-    @app.route('/uploads/<path:filename>')
-    def serve_uploads(filename):
-     return send_from_directory(UPLOAD_DIR, filename)
-
->>>>>>> Stashed changes
 
     @app.route('/users', methods=['GET'])
     def list_users():
