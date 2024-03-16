@@ -106,7 +106,7 @@ class CrackDetector(utils.Subscribable):
         (top_border, right_border, bottom_border, left_border) = (False, False, False, False)
         ((left, top), (right, bottom)) = (pt0, pt1) = self._patch_coord(row, col)
 
-        print(f"DRAW BORDER for {(row, col)}. bbox (left, top, right, bottom): {(left, top, right, bottom)}")
+        # print(f"DRAW BORDER for {(row, col)}. bbox (left, top, right, bottom): {(left, top, right, bottom)}")
 
 
         def get_prediction(predictions, row, col):
@@ -123,7 +123,7 @@ class CrackDetector(utils.Subscribable):
 
             # cv2.rectangle(frame, ( top + 10, left + 10), (bottom -10, right - 10), color=color, thickness=2 )
 
-            print(f"frame shape: {frame.shape} vs prediction shape: {predictions.shape}")
+            # print(f"frame shape: {frame.shape} vs prediction shape: {predictions.shape}")
 
             RED     = (0,   0,      255)
             YELLOW  = (0,   255,    255)
@@ -143,39 +143,39 @@ class CrackDetector(utils.Subscribable):
                 top_border = True
                 tcolor = (0, 255, 0)
 
-            elif get_prediction(predictions, row=row -1, col=col) < 0.9:
+            elif getColor(get_prediction(predictions, row=row -1, col=col)) != color:
                 tcolor = (255, 0, 0)
                 top_border = True
 
             if top_border == True:
-                cv2.line(frame, (left, top), (right, top), color=debug_color["top"], thickness=thickness )
+                cv2.line(frame, (left, top), (right, top), color, thickness=thickness )
 
 
             # right
             if col == last_col:
                 right_border = True
             else:
-                if get_prediction(predictions, row= row, col = col+1 ) < 0.9:
+                if getColor( get_prediction(predictions, row= row, col = col+1 ) ) != color:
                     right_border = True
             if right_border:
-                cv2.line(frame, (right, top), (right, bottom) , color=debug_color["right"], thickness=thickness )
+                cv2.line(frame, (right, top), (right, bottom) , color, thickness=thickness )
 
 
             # bottom
             if row == last_row:
                 bottom_border = True
-            elif get_prediction(predictions, row=row +1, col=col) < 0.9:
+            elif getColor(get_prediction(predictions, row=row +1, col=col) ) != color:
                 bottom_border = True
             if bottom_border:
-                cv2.line(frame, (left, bottom), (right, bottom), color=debug_color["bottom"], thickness=thickness )
+                cv2.line(frame, (left, bottom), (right, bottom), color, thickness=thickness )
 
             # left
             if col == 0:
                 left_border = True
-            elif get_prediction(predictions, row= row, col = col - 1) < 0.9:
+            elif getColor(get_prediction(predictions, row= row, col = col - 1) ) != color:
                 left_border = True
             if left_border:
-                cv2.line(frame, (left, top), (left, bottom), color=debug_color["left"], thickness=thickness )
+                cv2.line(frame, (left, top), (left, bottom), color, thickness=thickness )
 
 
         return (top_border, right_border, bottom_border, left_border)
@@ -200,21 +200,21 @@ class CrackDetector(utils.Subscribable):
             predictions_shape = predictions.shape
             predictions = np.reshape(predictions, (tile_x, tile_y))
 
-            print(Fore.RED + f"Current frame shape: {current_frame.shape}" + Style.RESET_ALL)
-            print(Fore.RED + f"Patches shape: {patches.shape}" + Style.RESET_ALL)
-            print(Fore.RED + f"Patches reshaped to: {shape}" + Style.RESET_ALL)
-            print(Fore.RED + f"Prediction shape: {predictions_shape}" + Style.RESET_ALL)
-            print(Fore.RED + f"Prediction reshaped to: {predictions.shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Current frame shape: {current_frame.shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Patches shape: {patches.shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Patches reshaped to: {shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Prediction shape: {predictions_shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Prediction reshaped to: {predictions.shape}" + Style.RESET_ALL)
 
             for idx_row, row in enumerate(predictions):
-                print(f"enumerating row. Current {idx_row}, shape: {row.shape}")
+                # print(f"enumerating row. Current {idx_row}, shape: {row.shape}")
                 for idx_col, col in enumerate(row):
                     # for prediction in col:
 
 
                         """Step 3: Apply visualisation to positive patches"""
                         self._draw_borders(current_frame, predictions, idx_row, idx_col)
-                        self.box_label(current_frame,  idx_row, idx_col, predictions=predictions)
+                        # self.box_label(current_frame,  idx_row, idx_col, predictions=predictions)
 
                         # pt1, pt2 = self._patch_coord(idx_col, idx_row)
                         # # print(f"idx_row:\t{idx_row}\tidx_col:{idx_col}.\tpt1:{pt1}\t-\tpt2:{pt2}")
