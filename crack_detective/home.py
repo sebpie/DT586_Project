@@ -27,7 +27,6 @@ def gallery():
      folder_path = os.path.join(current_app.instance_path, UPLOAD_DIR)
      folders_with_images = []
 
-    # Iterating  through each folder in the instance path
      for folder_name in os.listdir(folder_path):
         folder_images = []
 
@@ -45,7 +44,6 @@ def gallery():
 
 def init_home(app: Flask):
 
-    # ensure the instance folder exists
     try:
         os.makedirs(os.path.join(app.instance_path, UPLOAD_DIR))
     except OSError:
