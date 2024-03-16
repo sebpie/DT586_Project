@@ -14,7 +14,8 @@ color_scale = [
     # value  BGR
     (0.9,    (0, 0, 255)),
     (0.7,    (200, 0, 205 )),
-    (0. ,    (0, 255, 0))
+    (0.,      None)
+    # (0. ,    (0, 255, 0))
 ]
 
 
@@ -89,7 +90,10 @@ class CrackDetector(utils.Subscribable):
             for idx_row, row in enumerate(predictions):
                 for idx_col, col in enumerate(row):
                     for prediction in col:
+
                         color = getColor(prediction)
+                        if color is None: # No color -> no grid drawing
+                            continue
 
                         """Step 3: Apply visualisation to positive patches"""
                         pt1, pt2 = self._patch_coord(idx_col, idx_row)
