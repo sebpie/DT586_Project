@@ -48,7 +48,7 @@ def init_app(app:Flask):
                                 height=app.config["MODEL_SIZE_X"],
                                 load=app.config["MODEL_FILE"])
         case "VGG16":
-            model = CnnOriginal(width=app.config["MODEL_SIZE_X"],
+            model = CnnVgg16(width=app.config["MODEL_SIZE_X"],
                                 height=app.config["MODEL_SIZE_X"],
                                 load=app.config["MODEL_FILE"])
 
