@@ -1,0 +1,385 @@
+
+python -m crack_detective.cnncmd --size 80 --save CNN_Orig-80x80-Mendelay_FULL.keras  --cnn Orig --epochs=5
+500/500 [==============================] - 28s 53ms/step - loss: 0.1513 - accuracy: 0.9457 - val_loss: 0.0726 - val_accuracy: 0.9791 - lr: 0.0010
+Epoch 2/5
+500/500 [==============================] - 25s 50ms/step - loss: 0.0713 - accuracy: 0.9781 - val_loss: 0.0654 - val_accuracy: 0.9809 - lr: 0.0010
+Epoch 3/5
+500/500 [==============================] - 25s 50ms/step - loss: 0.0607 - accuracy: 0.9799 - val_loss: 0.0639 - val_accuracy: 0.9795 - lr: 0.0010
+Epoch 4/5
+500/500 [==============================] - 28s 55ms/step - loss: 0.0579 - accuracy: 0.9808 - val_loss: 0.0491 - val_accuracy: 0.9859 - lr: 0.0010
+Epoch 5/5
+500/500 [==============================] - 26s 53ms/step - loss: 0.0541 - accuracy: 0.9817 - val_loss: 0.0454 - val_accuracy: 0.9862 - lr: 0.0010
+TRAIN TIME:  132.64466857910156
+
+
+
+
+python -m crack_detective.cnncmd --size 80 --save Win_CNN_Orig-80x80-Mendelay_FULL-epoch20.keras  --cnn Orig --epochs=20
+500/500 [==============================] - 31s 59ms/step - loss: 0.1536 - accuracy: 0.9443 - val_loss: 0.0680 - val_accuracy: 0.9800 - lr: 0.0010
+Epoch 2/20
+500/500 [==============================] - 31s 61ms/step - loss: 0.0709 - accuracy: 0.9775 - val_loss: 0.0683 - val_accuracy: 0.9811 - lr: 0.0010
+Epoch 3/20
+500/500 [==============================] - 33s 65ms/step - loss: 0.0630 - accuracy: 0.9796 - val_loss: 0.0517 - val_accuracy: 0.9836 - lr: 0.0010
+Epoch 4/20
+500/500 [==============================] - 29s 57ms/step - loss: 0.0593 - accuracy: 0.9812 - val_loss: 0.0495 - val_accuracy: 0.9852 - lr: 0.0010
+Epoch 5/20
+500/500 [==============================] - 29s 58ms/step - loss: 0.0538 - accuracy: 0.9824 - val_loss: 0.0459 - val_accuracy: 0.9851 - lr: 0.0010
+Epoch 6/20
+500/500 [==============================] - 34s 68ms/step - loss: 0.0537 - accuracy: 0.9827 - val_loss: 0.0435 - val_accuracy: 0.9869 - lr: 0.0010
+Epoch 7/20
+500/500 [==============================] - 28s 56ms/step - loss: 0.0497 - accuracy: 0.9846 - val_loss: 0.0447 - val_accuracy: 0.9854 - lr: 0.0010
+Epoch 8/20
+500/500 [==============================] - 28s 56ms/step - loss: 0.0465 - accuracy: 0.9860 - val_loss: 0.0473 - val_accuracy: 0.9847 - lr: 0.0010
+Epoch 9/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0494 - accuracy: 0.9850 - val_loss: 0.0436 - val_accuracy: 0.9864 - lr: 0.0010
+Epoch 10/20
+500/500 [==============================] - 34s 68ms/step - loss: 0.0438 - accuracy: 0.9867 - val_loss: 0.0373 - val_accuracy: 0.9894 - lr: 0.0010
+Epoch 11/20
+500/500 [==============================] - 31s 61ms/step - loss: 0.0435 - accuracy: 0.9861 - val_loss: 0.0381 - val_accuracy: 0.9872 - lr: 0.0010
+Epoch 12/20
+500/500 [==============================] - 30s 60ms/step - loss: 0.0389 - accuracy: 0.9880 - val_loss: 0.0394 - val_accuracy: 0.9874 - lr: 5.0000e-04
+Epoch 13/20
+500/500 [==============================] - 29s 57ms/step - loss: 0.0375 - accuracy: 0.9884 - val_loss: 0.0336 - val_accuracy: 0.9896 - lr: 5.0000e-04
+Epoch 14/20
+500/500 [==============================] - 28s 55ms/step - loss: 0.0363 - accuracy: 0.9890 - val_loss: 0.0371 - val_accuracy: 0.9886 - lr: 5.0000e-04
+Epoch 15/20
+500/500 [==============================] - 30s 59ms/step - loss: 0.0367 - accuracy: 0.9892 - val_loss: 0.0336 - val_accuracy: 0.9893 - lr: 5.0000e-04
+Epoch 16/20
+500/500 [==============================] - 30s 59ms/step - loss: 0.0354 - accuracy: 0.9892 - val_loss: 0.0345 - val_accuracy: 0.9894 - lr: 5.0000e-04
+Epoch 17/20
+500/500 [==============================] - 28s 55ms/step - loss: 0.0347 - accuracy: 0.9897 - val_loss: 0.0350 - val_accuracy: 0.9895 - lr: 5.0000e-04
+Epoch 18/20
+500/500 [==============================] - 28s 56ms/step - loss: 0.0342 - accuracy: 0.9901 - val_loss: 0.0321 - val_accuracy: 0.9914 - lr: 5.0000e-04
+Epoch 19/20
+500/500 [==============================] - 28s 56ms/step - loss: 0.0343 - accuracy: 0.9899 - val_loss: 0.0427 - val_accuracy: 0.9875 - lr: 5.0000e-04
+Epoch 20/20
+500/500 [==============================] - 29s 59ms/step - loss: 0.0352 - accuracy: 0.9894 - val_loss: 0.0412 - val_accuracy: 0.9872 - lr: 5.0000e-04
+TRAIN TIME:  597.5195093154907
+
+
+
+
+PS C:\Users\sebas\src\DT586_Project> python -m crack_detective.cnncmd --save CNN_Orig-256x256-Mendelay_FULL-20epochs.keras  --cnn Orig --epochs=20 --size 256
+
+model is CnnOriginal
+Found 40000 files belonging to 2 classes.
+Using 32000 files for training.
+Found 40000 files belonging to 2 classes.
+Using 8000 files for validation.
+TRAIN BEGINS
+Epoch 1/20
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+500/500 [==============================] - 196s 388ms/step - loss: 0.1836 - accuracy: 0.9265 - val_loss: 0.0589 - val_accuracy: 0.9804 - lr: 0.0010
+Epoch 2/20
+500/500 [==============================] - 194s 388ms/step - loss: 0.0626 - accuracy: 0.9786 - val_loss: 0.0543 - val_accuracy: 0.9783 - lr: 0.0010
+Epoch 3/20
+500/500 [==============================] - 247s 494ms/step - loss: 0.0438 - accuracy: 0.9847 - val_loss: 0.0332 - val_accuracy: 0.9898 - lr: 0.0010
+Epoch 4/20
+500/500 [==============================] - 243s 486ms/step - loss: 0.0559 - accuracy: 0.9849 - val_loss: 0.0302 - val_accuracy: 0.9909 - lr: 0.0010
+Epoch 5/20
+500/500 [==============================] - 232s 463ms/step - loss: 0.0227 - accuracy: 0.9932 - val_loss: 0.0381 - val_accuracy: 0.9883 - lr: 0.0010
+Epoch 6/20
+500/500 [==============================] - 222s 444ms/step - loss: 0.0194 - accuracy: 0.9941 - val_loss: 0.0170 - val_accuracy: 0.9942 - lr: 0.0010
+Epoch 7/20
+500/500 [==============================] - 201s 402ms/step - loss: 0.0178 - accuracy: 0.9944 - val_loss: 0.0152 - val_accuracy: 0.9948 - lr: 0.0010
+Epoch 8/20
+500/500 [==============================] - 214s 427ms/step - loss: 0.0164 - accuracy: 0.9947 - val_loss: 0.0405 - val_accuracy: 0.9860 - lr: 0.0010
+Epoch 9/20
+500/500 [==============================] - 219s 437ms/step - loss: 0.0141 - accuracy: 0.9956 - val_loss: 0.0149 - val_accuracy: 0.9946 - lr: 0.0010
+Epoch 10/20
+500/500 [==============================] - 195s 390ms/step - loss: 0.0154 - accuracy: 0.9948 - val_loss: 0.0147 - val_accuracy: 0.9959 - lr: 0.0010
+Epoch 11/20
+500/500 [==============================] - 218s 435ms/step - loss: 0.0153 - accuracy: 0.9949 - val_loss: 0.0283 - val_accuracy: 0.9912 - lr: 0.0010
+Epoch 12/20
+500/500 [==============================] - 215s 430ms/step - loss: 0.0096 - accuracy: 0.9973 - val_loss: 0.0174 - val_accuracy: 0.9942 - lr: 5.0000e-04
+Epoch 13/20
+500/500 [==============================] - 220s 440ms/step - loss: 0.0097 - accuracy: 0.9968 - val_loss: 0.0163 - val_accuracy: 0.9945 - lr: 5.0000e-04
+Epoch 14/20
+500/500 [==============================] - 243s 485ms/step - loss: 0.0077 - accuracy: 0.9976 - val_loss: 0.0187 - val_accuracy: 0.9942 - lr: 5.0000e-04
+Epoch 15/20
+500/500 [==============================] - 250s 500ms/step - loss: 0.0078 - accuracy: 0.9976 - val_loss: 0.0127 - val_accuracy: 0.9954 - lr: 5.0000e-04
+Epoch 16/20
+500/500 [==============================] - 233s 465ms/step - loss: 0.0069 - accuracy: 0.9974 - val_loss: 0.0183 - val_accuracy: 0.9936 - lr: 5.0000e-04
+Epoch 17/20
+500/500 [==============================] - 231s 461ms/step - loss: 0.0074 - accuracy: 0.9977 - val_loss: 0.0125 - val_accuracy: 0.9965 - lr: 5.0000e-04
+Epoch 18/20
+500/500 [==============================] - 242s 483ms/step - loss: 0.0068 - accuracy: 0.9982 - val_loss: 0.0317 - val_accuracy: 0.9876 - lr: 5.0000e-04
+Epoch 19/20
+500/500 [==============================] - 211s 421ms/step - loss: 0.0065 - accuracy: 0.9980 - val_loss: 0.0197 - val_accuracy: 0.9926 - lr: 5.0000e-04
+Epoch 20/20
+500/500 [==============================] - 205s 410ms/step - loss: 0.0062 - accuracy: 0.9982 - val_loss: 0.0169 - val_accuracy: 0.9945 - lr: 5.0000e-04
+TRAIN TIME:  4433.3188688755035
+
+
+
+
+
+(.venv) C:\Users\sebas\src\DT586_Project>python -m crack_detective.cnncmd --cnn Orig --epochs=5  --size 80  --save CNN_Orig-80x80-Mendelay_FULL.keras
+2024-03-17 12:04:55.324991: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+ENTER constructor for Cnn. Object is :CnnOriginal. kwargs:(80, 80)
+self: w:80, h:80
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\backend.py:873: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+2024-03-17 12:04:58.735744: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\layers\pooling\max_pooling2d.py:161: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+
+model is CnnOriginal
+Found 40000 files belonging to 2 classes.
+Using 32000 files for training.
+Found 40000 files belonging to 2 classes.
+Using 8000 files for validation.
+TRAIN BEGINS
+Epoch 1/5
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+500/500 [==============================] - 33s 64ms/step - loss: 0.1567 - accuracy: 0.9394 - val_loss: 0.0725 - val_accuracy: 0.9799 - lr: 0.0010
+Epoch 2/5
+500/500 [==============================] - 38s 77ms/step - loss: 0.0696 - accuracy: 0.9781 - val_loss: 0.0622 - val_accuracy: 0.9811 - lr: 0.0010
+Epoch 3/5
+500/500 [==============================] - 36s 72ms/step - loss: 0.0633 - accuracy: 0.9800 - val_loss: 0.0500 - val_accuracy: 0.9845 - lr: 0.0010
+Epoch 4/5
+500/500 [==============================] - 39s 77ms/step - loss: 0.0551 - accuracy: 0.9819 - val_loss: 0.0425 - val_accuracy: 0.9871 - lr: 0.0010
+Epoch 5/5
+500/500 [==============================] - 42s 84ms/step - loss: 0.0516 - accuracy: 0.9837 - val_loss: 0.0473 - val_accuracy: 0.9839 - lr: 0.0010
+TRAIN TIME:  188.79467010498047
+
+(.venv) C:\Users\sebas\src\DT586_Project>python -m crack_detective.cnncmd --cnn Orig --epochs=5  --size 256 --save CNN_Orig-256x256-Mendelay_FULL.keras
+2024-03-17 12:08:15.575952: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+ENTER constructor for Cnn. Object is :CnnOriginal. kwargs:(256, 256)
+self: w:256, h:256
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\backend.py:873: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+2024-03-17 12:08:21.455747: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\layers\pooling\max_pooling2d.py:161: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+
+model is CnnOriginal
+Found 40000 files belonging to 2 classes.
+Using 32000 files for training.
+Found 40000 files belonging to 2 classes.
+Using 8000 files for validation.
+TRAIN BEGINS
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTeWARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+500/500 [==============================] - 217s 431ms/step - loss: 0.2756 - accuracy: 0.8425 - val_loss: 0.0838 - val_accuracy: 0.9785 - lr: 0.0010
+Epoch 2/5
+248/500 [=============>................] - ETA: 1:49 - loss: 0.0726 - accuracy: 0.9752[vost#0:0/rawvideo @ 000001ad0fac3b80] Error submitting a packet to the muxer: Invalid argument
+249/500 [=============>................] - ETA: 1:48 - loss: 0.0726 - accuracy: 0.9752ed 1 times
+[out#0/rawvideo @ 000001ad10130f40] Error muxing a packet
+[out#0/rawvideo @ 000001ad10130f40] Task finished with error code: -22 (Invalid argument)
+[out#0/rawvideo @ 000001ad10130f40] Terminating thread with return code -22 (Invalid argument)
+[out#0/rawvideo @ 000001ad10130f40] Error writing trailer: Invalid argument
+[out#0/rawvideo @ 000001ad10130f40] Error closing file: Invalid argument
+500/500 [==============================] - 231s 462ms/step - loss: 0.0645 - accuracy: 0.9770 - val_loss: 0.0828 - val_accuracy: 0.9710 - lr: 0.0010
+Epoch 3/5
+500/500 [==============================] - 242s 484ms/step - loss: 0.0364 - accuracy: 0.9880 - val_loss: 0.0373 - val_accuracy: 0.9895 - lr: 0.0010
+Epoch 4/5
+500/500 [==============================] - 245s 490ms/step - loss: 0.0279 - accuracy: 0.9912 - val_loss: 0.0275 - val_accuracy: 0.9902 - lr: 0.0010
+Epoch 5/5
+500/500 [==============================] - 251s 501ms/step - loss: 0.0265 - accuracy: 0.9911 - val_loss: 0.0203 - val_accuracy: 0.9929 - lr: 0.0010
+TRAIN TIME:  1185.8739001750946
+
+(.venv) C:\Users\sebas\src\DT586_Project>python -m crack_detective.cnncmd --cnn Orig --epochs=20 --size 80  --save Win_CNN_Orig-80x80-Mendelay_FULL-20epochs.keras
+2024-03-17 12:28:15.788733: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+ENTER constructor for Cnn. Object is :CnnOriginal. kwargs:(80, 80)
+self: w:80, h:80
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\backend.py:873: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+2024-03-17 12:28:22.694383: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\layers\pooling\max_pooling2d.py:161: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+
+model is CnnOriginal
+Found 40000 files belonging to 2 classes.
+Using 32000 files for training.
+Found 40000 files belonging to 2 classes.
+Using 8000 files for validation.
+TRAIN BEGINS
+Epoch 1/20
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+500/500 [==============================] - 35s 67ms/step - loss: 0.1986 - accuracy: 0.9068 - val_loss: 0.0737 - val_accuracy: 0.9809 - lr: 0.0010
+Epoch 2/20
+500/500 [==============================] - 33s 65ms/step - loss: 0.0708 - accuracy: 0.9774 - val_loss: 0.0728 - val_accuracy: 0.9795 - lr: 0.0010
+Epoch 3/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0638 - accuracy: 0.9789 - val_loss: 0.0502 - val_accuracy: 0.9850 - lr: 0.0010
+Epoch 4/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0568 - accuracy: 0.9813 - val_loss: 0.0474 - val_accuracy: 0.9841 - lr: 0.0010
+Epoch 5/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0518 - accuracy: 0.9833 - val_loss: 0.0445 - val_accuracy: 0.9859 - lr: 0.0010
+Epoch 6/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0514 - accuracy: 0.9834 - val_loss: 0.0438 - val_accuracy: 0.9870 - lr: 0.0010
+Epoch 7/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0474 - accuracy: 0.9854 - val_loss: 0.0407 - val_accuracy: 0.9877 - lr: 0.0010
+Epoch 8/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0475 - accuracy: 0.9849 - val_loss: 0.0396 - val_accuracy: 0.9889 - lr: 0.0010
+Epoch 9/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0455 - accuracy: 0.9855 - val_loss: 0.0373 - val_accuracy: 0.9894 - lr: 0.0010
+Epoch 10/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0434 - accuracy: 0.9865 - val_loss: 0.0355 - val_accuracy: 0.9893 - lr: 0.0010
+Epoch 11/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0402 - accuracy: 0.9880 - val_loss: 0.0428 - val_accuracy: 0.9871 - lr: 0.0010
+Epoch 12/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0353 - accuracy: 0.9894 - val_loss: 0.0353 - val_accuracy: 0.9886 - lr: 5.0000e-04
+Epoch 13/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0347 - accuracy: 0.9901 - val_loss: 0.0288 - val_accuracy: 0.9916 - lr: 5.0000e-04
+Epoch 14/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0342 - accuracy: 0.9902 - val_loss: 0.0336 - val_accuracy: 0.9899 - lr: 5.0000e-04
+Epoch 15/20
+500/500 [==============================] - 32s 64ms/step - loss: 0.0327 - accuracy: 0.9905 - val_loss: 0.0355 - val_accuracy: 0.9886 - lr: 5.0000e-04
+Epoch 16/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0322 - accuracy: 0.9903 - val_loss: 0.0303 - val_accuracy: 0.9908 - lr: 5.0000e-04
+Epoch 17/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0319 - accuracy: 0.9902 - val_loss: 0.0290 - val_accuracy: 0.9910 - lr: 5.0000e-04
+Epoch 18/20
+500/500 [==============================] - 31s 62ms/step - loss: 0.0306 - accuracy: 0.9912 - val_loss: 0.0386 - val_accuracy: 0.9872 - lr: 5.0000e-04
+Epoch 19/20
+500/500 [==============================] - 32s 63ms/step - loss: 0.0315 - accuracy: 0.9911 - val_loss: 0.0359 - val_accuracy: 0.9893 - lr: 5.0000e-04
+Epoch 20/20
+500/500 [==============================] - 32s 64ms/step - loss: 0.0313 - accuracy: 0.9913 - val_loss: 0.0268 - val_accuracy: 0.9930 - lr: 5.0000e-04
+TRAIN TIME:  636.2298195362091
+
+(.venv) C:\Users\sebas\src\DT586_Project>python -m crack_detective.cnncmd --cnn Orig --epochs=20 --size 256 --save Win_CNN_Orig-256x256-Mendelay_FULL-20epochs.keras
+2024-03-17 12:39:14.840237: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+ENTER constructor for Cnn. Object is :CnnOriginal. kwargs:(256, 256)
+self: w:256, h:256
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\backend.py:873: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+2024-03-17 12:39:18.751987: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\layers\pooling\max_pooling2d.py:161: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+
+model is CnnOriginal
+Found 40000 files belonging to 2 classes.
+Using 32000 files for training.
+Found 40000 files belonging to 2 classes.
+Using 8000 files for validation.
+TRAIN BEGINS
+Epoch 1/20
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+500/500 [==============================] - 198s 394ms/step - loss: 0.1838 - accuracy: 0.9219 - val_loss: 0.0731 - val_accuracy: 0.9765 - lr: 0.0010
+Epoch 2/20
+500/500 [==============================] - 194s 388ms/step - loss: 0.0750 - accuracy: 0.9747 - val_loss: 0.0346 - val_accuracy: 0.9906 - lr: 0.0010
+Epoch 3/20
+500/500 [==============================] - 201s 403ms/step - loss: 0.0335 - accuracy: 0.9892 - val_loss: 0.0189 - val_accuracy: 0.9933 - lr: 0.0010
+Epoch 4/20
+500/500 [==============================] - 191s 382ms/step - loss: 0.0221 - accuracy: 0.9932 - val_loss: 0.0189 - val_accuracy: 0.9936 - lr: 0.0010
+Epoch 5/20
+500/500 [==============================] - 187s 373ms/step - loss: 0.0217 - accuracy: 0.9930 - val_loss: 0.0135 - val_accuracy: 0.9961 - lr: 0.0010
+Epoch 6/20
+500/500 [==============================] - 179s 358ms/step - loss: 0.0187 - accuracy: 0.9943 - val_loss: 0.0226 - val_accuracy: 0.9929 - lr: 0.0010
+Epoch 7/20
+500/500 [==============================] - 176s 352ms/step - loss: 0.0174 - accuracy: 0.9949 - val_loss: 0.0171 - val_accuracy: 0.9948 - lr: 0.0010
+Epoch 8/20
+500/500 [==============================] - 172s 343ms/step - loss: 0.0202 - accuracy: 0.9937 - val_loss: 0.0213 - val_accuracy: 0.9927 - lr: 0.0010
+Epoch 9/20
+500/500 [==============================] - 191s 381ms/step - loss: 0.0194 - accuracy: 0.9934 - val_loss: 0.0214 - val_accuracy: 0.9939 - lr: 0.0010
+Epoch 10/20
+500/500 [==============================] - 213s 425ms/step - loss: 0.0130 - accuracy: 0.9959 - val_loss: 0.0211 - val_accuracy: 0.9918 - lr: 0.0010
+Epoch 11/20
+500/500 [==============================] - 224s 445ms/step - loss: 0.0129 - accuracy: 0.9962 - val_loss: 0.0352 - val_accuracy: 0.9902 - lr: 0.0010
+Epoch 12/20
+500/500 [==============================] - 218s 435ms/step - loss: 0.0088 - accuracy: 0.9975 - val_loss: 0.0146 - val_accuracy: 0.9958 - lr: 5.0000e-04
+Epoch 13/20
+500/500 [==============================] - 218s 434ms/step - loss: 0.0081 - accuracy: 0.9973 - val_loss: 0.0113 - val_accuracy: 0.9960 - lr: 5.0000e-04
+Epoch 14/20
+500/500 [==============================] - 216s 430ms/step - loss: 0.0086 - accuracy: 0.9971 - val_loss: 0.0114 - val_accuracy: 0.9965 - lr: 5.0000e-04
+Epoch 15/20
+500/500 [==============================] - 215s 429ms/step - loss: 0.0080 - accuracy: 0.9975 - val_loss: 0.0171 - val_accuracy: 0.9954 - lr: 5.0000e-04
+Epoch 16/20
+500/500 [==============================] - 214s 428ms/step - loss: 0.0070 - accuracy: 0.9980 - val_loss: 0.0187 - val_accuracy: 0.9935 - lr: 5.0000e-04
+Epoch 17/20
+500/500 [==============================] - 217s 432ms/step - loss: 0.0074 - accuracy: 0.9978 - val_loss: 0.0120 - val_accuracy: 0.9967 - lr: 5.0000e-04
+Epoch 18/20
+500/500 [==============================] - 214s 428ms/step - loss: 0.0060 - accuracy: 0.9984 - val_loss: 0.0146 - val_accuracy: 0.9941 - lr: 5.0000e-04
+Epoch 19/20
+500/500 [==============================] - 215s 429ms/step - loss: 0.0061 - accuracy: 0.9981 - val_loss: 0.0164 - val_accuracy: 0.9949 - lr: 5.0000e-04
+Epoch 20/20
+500/500 [==============================] - 218s 435ms/step - loss: 0.0067 - accuracy: 0.9978 - val_loss: 0.0091 - val_accuracy: 0.9973 - lr: 5.0000e-04
+TRAIN TIME:  4070.7195518016815
+
+(.venv) C:\Users\sebas\src\DT586_Project>python -m crack_detective.cnncmd --cnn Orig --epochs=20 --size 224 --save CNN_Orig-224x224-Mendelay_FULL.keras
+2024-03-17 13:47:15.885890: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\losses.py:2976: The name tf.losses.sparse_softmax_cross_entropy is deprecated. Please use tf.compat.v1.losses.sparse_softmax_cross_entropy instead.
+
+ENTER constructor for Cnn. Object is :CnnOriginal. kwargs:(224, 224)
+self: w:224, h:224
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\backend.py:873: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+2024-03-17 13:47:21.035413: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE SSE2 SSE3 SSE4.1 SSE4.2 AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\layers\pooling\max_pooling2d.py:161: The name tf.nn.max_pool is deprecated. Please use tf.nn.max_pool2d instead.
+
+model is CnnOriginal
+Found 40000 files belonging to 2 classes.
+Using 32000 files for training.
+Found 40000 files belonging to 2 classes.
+Using 8000 files for validation.
+TRAIN BEGINS
+Epoch 1/20
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\utils\tf_utils.py:492: The name tf.ragged.RaggedTensorValue is deprecated. Please use tf.compat.v1.ragged.RaggedTensorValue instead.
+
+WARNING:tensorflow:From c:\Users\sebas\src\DT586_Project\.venv\lib\site-packages\keras\src\engine\base_layer_utils.py:384: The name tf.executing_eagerly_outside_functions is deprecated. Please use tf.compat.v1.executing_eagerly_outside_functions instead.
+
+500/500 [==============================] - 185s 366ms/step - loss: 0.2351 - accuracy: 0.8684 - val_loss: 0.0765 - val_accuracy: 0.9819 - lr: 0.0010
+Epoch 2/20
+500/500 [==============================] - 181s 362ms/step - loss: 0.0582 - accuracy: 0.9789 - val_loss: 0.0599 - val_accuracy: 0.9830 - lr: 0.0010
+Epoch 3/20
+500/500 [==============================] - 182s 363ms/step - loss: 0.0444 - accuracy: 0.9842 - val_loss: 0.0310 - val_accuracy: 0.9894 - lr: 0.0010
+Epoch 4/20
+500/500 [==============================] - 181s 362ms/step - loss: 0.0285 - accuracy: 0.9906 - val_loss: 0.0399 - val_accuracy: 0.9864 - lr: 0.0010
+Epoch 5/20
+500/500 [==============================] - 188s 375ms/step - loss: 0.0244 - accuracy: 0.9921 - val_loss: 0.0161 - val_accuracy: 0.9949 - lr: 0.0010
+Epoch 6/20
+500/500 [==============================] - 183s 366ms/step - loss: 0.0209 - accuracy: 0.9935 - val_loss: 0.0243 - val_accuracy: 0.9915 - lr: 0.0010
+Epoch 7/20
+500/500 [==============================] - 171s 340ms/step - loss: 0.0203 - accuracy: 0.9935 - val_loss: 0.0491 - val_accuracy: 0.9844 - lr: 0.0010
+Epoch 8/20
+500/500 [==============================] - 166s 330ms/step - loss: 0.0179 - accuracy: 0.9940 - val_loss: 0.0226 - val_accuracy: 0.9914 - lr: 0.0010
+Epoch 9/20
+500/500 [==============================] - 163s 326ms/step - loss: 0.0201 - accuracy: 0.9934 - val_loss: 0.0214 - val_accuracy: 0.9935 - lr: 0.0010
+Epoch 10/20
+500/500 [==============================] - 167s 333ms/step - loss: 0.0185 - accuracy: 0.9943 - val_loss: 0.0146 - val_accuracy: 0.9954 - lr: 0.0010
+Epoch 11/20
+500/500 [==============================] - 163s 326ms/step - loss: 0.0140 - accuracy: 0.9957 - val_loss: 0.0379 - val_accuracy: 0.9889 - lr: 0.0010
+Epoch 12/20
+500/500 [==============================] - 157s 313ms/step - loss: 0.0116 - accuracy: 0.9966 - val_loss: 0.0148 - val_accuracy: 0.9959 - lr: 5.0000e-04
+Epoch 13/20
+500/500 [==============================] - 158s 316ms/step - loss: 0.0100 - accuracy: 0.9970 - val_loss: 0.0099 - val_accuracy: 0.9973 - lr: 5.0000e-04
+Epoch 14/20
+500/500 [==============================] - 155s 310ms/step - loss: 0.0089 - accuracy: 0.9974 - val_loss: 0.0132 - val_accuracy: 0.9961 - lr: 5.0000e-04
+Epoch 15/20
+500/500 [==============================] - 177s 353ms/step - loss: 0.0091 - accuracy: 0.9971 - val_loss: 0.0123 - val_accuracy: 0.9962 - lr: 5.0000e-04
+Epoch 16/20
+500/500 [==============================] - 188s 376ms/step - loss: 0.0087 - accuracy: 0.9972 - val_loss: 0.0086 - val_accuracy: 0.9974 - lr: 5.0000e-04
+Epoch 17/20
+500/500 [==============================] - 179s 356ms/step - loss: 0.0081 - accuracy: 0.9976 - val_loss: 0.0120 - val_accuracy: 0.9961 - lr: 5.0000e-04
+Epoch 18/20
+500/500 [==============================] - 169s 337ms/step - loss: 0.0077 - accuracy: 0.9979 - val_loss: 0.0101 - val_accuracy: 0.9970 - lr: 5.0000e-04
+Epoch 19/20
+500/500 [==============================] - 157s 314ms/step - loss: 0.0066 - accuracy: 0.9981 - val_loss: 0.0108 - val_accuracy: 0.9970 - lr: 5.0000e-04
+Epoch 20/20
+500/500 [==============================] - 151s 301ms/step - loss: 0.0068 - accuracy: 0.9977 - val_loss: 0.0250 - val_accuracy: 0.9919 - lr: 5.0000e-04
+TRAIN TIME:  3420.468703508377
+PS C:\Users\sebas\src\DT586_Project>
