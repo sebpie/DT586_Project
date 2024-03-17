@@ -12,9 +12,11 @@ colorama_init()
 
 color_scale = [
     # value  BGR
-    (0.9,    (0, 0, 255)),
-    (0.7,    (200, 0, 205 )),
-    (0. ,    (0, 255, 0))
+    (0.9,    (0,    0,   255)),
+    (0.7,    (200,  0,   205 )),
+    (0.5,    (105,  105, 105)),
+    (0.,      None)
+    # (0. ,    (0, 255, 0))
 ]
 
 
@@ -65,36 +67,159 @@ class CrackDetector(utils.Subscribable):
 
 
     def _patch_coord(self, row, col):
-        return (((row * self.model.width) + 1, (col * self.model.height) +1 ),
-                ( ((row + 1) * self.model.width) - 2 , ((col + 1) * self.model.height) - 2 ))
+        return (((col * self.model.width) + 1, (row * self.model.height) +1 ),
+                ( ((col + 1) * self.model.width) - 2 , ((row + 1) * self.model.height) - 2 ))
+
+    def box_label(self, frame, row, col, predictions=None):
+        ((left, top), (right, bottom)) = (pt1, pt2) = self._patch_coord(row, col)
+        print(f"coord: {(pt1, pt2)}")
+        x = min(left, right) + col # * abs(pt1[0] -pt2[0])
+        #y = int(abs(pt2[1] - pt1[1])/2) # + row * abs(pt2[1]-pt1[1])
+
+        y = max(top, bottom) - 20
+
+        # print(f"x: {x}, y:{y}")
+        fontScale=.3
+        color=(255, 0, 0)
+        thickness = 1
+        org = (x, y)
+        # print(f"org: {org} - {left} - {right}")
+        cv2.putText(frame, f"{(row, col)}", org, cv2.FONT_HERSHEY_SIMPLEX, fontScale, color, thickness, cv2.LINE_AA, False )
+
+        if predictions is not None:
+            value = predictions[row][col]
+            fontScale = 0.5
+            if value > 0.9:
+                color = (0, 0, 255)
+            else:
+                color = (255, 255, 255)
+            org = (x + 10, y -40)
+            cv2.putText(frame, f"{value:.2f}", org, cv2.FONT_HERSHEY_SIMPLEX, fontScale, color, thickness, cv2.LINE_AA, False )
+
+        return
+
+
+    def _draw_borders(self, frame, predictions, row, col, thickness=2):
+        # (top, right, bottom, left) = (False, False, False, False)
+        last_row = predictions.shape[0] -1
+        last_col = predictions.shape[1] -1
+
+        (top_border, right_border, bottom_border, left_border) = (False, False, False, False)
+        ((left, top), (right, bottom)) = (pt0, pt1) = self._patch_coord(row, col)
+
+        # print(f"DRAW BORDER for {(row, col)}. bbox (left, top, right, bottom): {(left, top, right, bottom)}")
+
+
+        def get_prediction(predictions, row, col):
+            return predictions[row][col]
+
+        prediction = get_prediction(predictions, row, col)
+
+        color = getColor(prediction)
+        if color is not None: # No color -> no grid drawing
+
+                        # pt1, pt2 = self._patch_coord(idx_col, idx_row)
+                        # # print(f"idx_row:\t{idx_row}\tidx_col:{idx_col}.\tpt1:{pt1}\t-\tpt2:{pt2}")
+                        # cv2.rectangle(current_frame, pt1, pt2, color=color, thickness=2 )
+
+            # cv2.rectangle(frame, ( top + 10, left + 10), (bottom -10, right - 10), color=color, thickness=2 )
+
+            # print(f"frame shape: {frame.shape} vs prediction shape: {predictions.shape}")
+
+            RED     = (0,   0,      255)
+            YELLOW  = (0,   255,    255)
+            BLUE    = (255, 0,      0)
+            BLACK   = (0,   0,      0)
+            WHITE   = (255, 255,    255)
+
+            debug_color = {
+                "top":      RED,
+                "bottom" : YELLOW,
+                "left"  : BLUE,
+                "right" : WHITE
+            }
+
+            # top
+            if row == 0 :
+                top_border = True
+                tcolor = (0, 255, 0)
+
+            elif getColor(get_prediction(predictions, row=row -1, col=col)) != color:
+                tcolor = (255, 0, 0)
+                top_border = True
+
+            if top_border == True:
+                cv2.line(frame, (left, top), (right, top), color, thickness=thickness )
+
+
+            # right
+            if col == last_col:
+                right_border = True
+            else:
+                if getColor( get_prediction(predictions, row= row, col = col+1 ) ) != color:
+                    right_border = True
+            if right_border:
+                cv2.line(frame, (right, top), (right, bottom) , color, thickness=thickness )
+
+
+            # bottom
+            if row == last_row:
+                bottom_border = True
+            elif getColor(get_prediction(predictions, row=row +1, col=col) ) != color:
+                bottom_border = True
+            if bottom_border:
+                cv2.line(frame, (left, bottom), (right, bottom), color, thickness=thickness )
+
+            # left
+            if col == 0:
+                left_border = True
+            elif getColor(get_prediction(predictions, row= row, col = col - 1) ) != color:
+                left_border = True
+            if left_border:
+                cv2.line(frame, (left, top), (left, bottom), color, thickness=thickness )
+
+
+        return (top_border, right_border, bottom_border, left_border)
+
 
     def _worker_batch(self):
         for frame in self.buffer_in.stream():
             # print(f"Process frame size {frame.shape}")
             """Step 1: Patchify the frame in patches"""
-            curent_frame = frame.copy()
-            patches = patchify.patchify(curent_frame, (self.model.width, self.model.height, self.model.channels), step=self.model.width )
+            current_frame = frame.copy()
+            patches = patchify.patchify(current_frame, (self.model.width, self.model.height, self.model.channels), step=self.model.width )
 
             """Step 2: Predict each patch with cracks"""
-            tile_x, tile_y =  (int(self.source.width / self.model.width) , int(self.source.height / self.model.height))
+            # tile_x, tile_y =  (int(self.source.width / self.model.width) , int(self.source.height / self.model.height))
+            tile_x, tile_y, *_ = patches.shape
 
             shape = (tile_x * tile_y,
                      self.model.width,
                      self.model.height,
                      self.model.channels)   # (18, 224, 224, 3)
             predictions = self.model.predict(np.reshape(patches, shape), verbose=0) #, batch=True
-            # print(Fore.RED + f"Prediction shape: {predictions.shape}" + Style.RESET_ALL)
-            predictions = np.reshape(predictions, (tile_y, tile_x, 1))
+            predictions_shape = predictions.shape
+            predictions = np.reshape(predictions, (tile_x, tile_y))
+
+            # print(Fore.RED + f"Current frame shape: {current_frame.shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Patches shape: {patches.shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Patches reshaped to: {shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Prediction shape: {predictions_shape}" + Style.RESET_ALL)
+            # print(Fore.RED + f"Prediction reshaped to: {predictions.shape}" + Style.RESET_ALL)
 
             for idx_row, row in enumerate(predictions):
+                # print(f"enumerating row. Current {idx_row}, shape: {row.shape}")
                 for idx_col, col in enumerate(row):
-                    for prediction in col:
-                        color = getColor(prediction)
+                    # for prediction in col:
+
 
                         """Step 3: Apply visualisation to positive patches"""
-                        pt1, pt2 = self._patch_coord(idx_col, idx_row)
-                        # print(f"idx_row:\t{idx_row}\tidx_col:{idx_col}.\tpt1:{pt1}\t-\tpt2:{pt2}")
-                        cv2.rectangle(curent_frame, pt1, pt2, color=color, thickness=2 )
+                        self._draw_borders(current_frame, predictions, idx_row, idx_col)
+                        # self.box_label(current_frame,  idx_row, idx_col, predictions=predictions)
+
+                        # pt1, pt2 = self._patch_coord(idx_col, idx_row)
+                        # # print(f"idx_row:\t{idx_row}\tidx_col:{idx_col}.\tpt1:{pt1}\t-\tpt2:{pt2}")
+                        # cv2.rectangle(current_frame, pt1, pt2, color=color, thickness=2 )
 
             """Step 4: Stitch up! (unpatchify)"""
             processed_frame = patchify.unpatchify(patches, frame.shape)
@@ -102,7 +227,6 @@ class CrackDetector(utils.Subscribable):
             """Step 5: Publish the results to subscribers"""
             # print(f"Done with this frame.")
             self.publish(processed_frame)
-
 
     # def _worker(self):
     #     for frame in self.buffer_in.stream():
