@@ -16,7 +16,7 @@
         },
         "Orig80-20" : {
             "MODEL" : "ORIG",
-            "MODEL_FILE" : "Win_CNN_Orig-80x80-Mendelay_FULL-epoch20.keras",
+            "MODEL_FILE" : "CNN_Orig-80x80-Mendelay_FULL-epoch20.keras",
             "MODEL_SIZE_X" : 80,
             "MODEL_SIZE_Y" : 80,
             "MODEL_SIZE_C" : 3
