@@ -40,7 +40,7 @@ body {
 .ftco-section {
     padding: 7em 0;
 }
-.error {
+.notification .error {
    color: #d04646;
     background: #fff0f3;
     padding: 5px;
@@ -121,12 +121,7 @@ position: absolute;
   .ftco-section {
     padding: 7em 0;
 }
-.error {
-   color: #d04646;
-    background: #fff0f3;
-    padding: 5px;
-    border-radius: 6px;
-}
+
 .login-wrap .icon {
     width: 80px;
     height: 80px;
@@ -203,23 +198,24 @@ position: absolute;
     color:#0b4465;
 }
 #upload-container {
-      display: flex;
-      align-items: flex-start; 
-      justify-content: flex-start; 
-      position: relative;
-      overflow: hidden;
-      margin-right: 10px;
-      border: 20px solid #edeff2;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      min-height: 45vh;
-      width: 90vh; 
-      padding: 20px;
-      margin-top: 40px;
-  }
+  display: flex;
+  align-items: flex-start; 
+  justify-content: flex-start; 
+  position: relative;
+  overflow: hidden;
+  margin-right: 10px;
+  border: 20px solid #edeff2d4;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-height: 610px; /* Adjust the height as needed */
+  width: 100%; 
+  margin-top: 10px;
+}
+
 
   #folder-action {
     width: 500px; /* Adjust the width as per your preference */
+    height: 50px;
   }
   
   #refresh-btn {
@@ -290,14 +286,12 @@ position: absolute;
       margin-top:20px;
     }
 
-    .success {
+  .notification  .success {
       color: green;
+      background: #8aac98;
   }
   
-  .error {
-      color: red;
-  }
-  
+
       /* folder structure */
 .folder-list {
     list-style: none;
@@ -314,8 +308,11 @@ position: absolute;
     top: 0;
     color: #607D8B;
 }
+.folder-icon h6 {
+  font-family: var(--bs-font-sans-serif);
+}
 .folder-name {
-    margin-left: 30px;
+    margin-left: 20px;
     position: relative;
 }
 .delete-icon {
@@ -341,9 +338,7 @@ position: absolute;
     font-size:  50px;
 }
 
-.folder h4 {
-  font-size: 20px;
-}
+
 .gallery-container {
   display: flex;
   flex-direction: row;
@@ -356,7 +351,7 @@ position: absolute;
 }
 
 .gallery-image {
-  width: 150px; /* Set the width of each image */
+  width: 200px; /* Set the width of each image */
   height: auto; /* Automatically adjust height to maintain aspect ratio */
   margin: 10px;
   cursor: pointer; /* Add margin around each image for spacing */

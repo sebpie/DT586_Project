@@ -254,7 +254,7 @@ function showNotification(message) {
     container.appendChild(notification);
     setTimeout(function() {
         container.removeChild(notification);
-    }, 5000);
+    }, 10000);
 }
 
 
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                     });
                 } else {
-                    imagesContainer.innerHTML = '<p>No images found in this folder</p>';
+                    imagesContainer.innerHTML = '<h6 class = "text-center">No images found in this folder</h6>';
                 }
 
                 // back button
