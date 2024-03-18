@@ -2,30 +2,29 @@
 
 {% block content %}
 <div class="container">
-  <h3 class=" mt-5 teal">Video Feed</h3>
+  <!-- <h3 class=" mt-5 teal">Video Feed</h3> -->
   <div class="image-cont">
-      <div id="upload-container">
-         <img width="100%" src="{{ url_for('static', filename='img/technical_difficulties1.jpeg')}}" srcset="{{url_for('stream_preprocessed', stream_name='processed') }}" />
-      </div>
-      <div style = "display:flex;">
-          <!-- <button id="start-stop-btn">Start/Stop</button> -->
-          <button id="capture-btn" style ="margin-left:23px;">Capture</button>
-          <button id="full-screen-btn" style="margin-left:23px;">Full Screen</button>
-          <canvas id="canvas" width="640" height="360" style="display: none;"></canvas>
+    <div id="upload-container">
+      <img width="1240" height="697" src="{{ url_for('static', filename='img/technical_difficulties1.jpeg')}}" srcset="{{url_for('stream_preprocessed', stream_name='processed') }}" />
+   </div>
+      <!-- <div style = "display:flex;">
 
-      </div>
+      </div> -->
     </div>
 
     <!-- select option -->
     <div style = "display:flex;">
     <div>
-      <label for="folder-action">Select the output folder:</label>
+      <label for="folder-action" class = "teal"><h6>Select the output folder:</h6></label>
       <select id="folder-action" class="form-select" aria-label="Default select example">
          <!-- <option value="create">Create Folder</option> -->
         <option value="list">Show List of Folders</option> 
       </select>
     </div>
     <button id="create-folder-btn">+</button>
+    <button id="capture-btn" style ="margin-left:23px;">Capture</button>
+    <button id="full-screen-btn" style="margin-left:23px;">Full Screen</button>
+    <canvas id="canvas" width="640" height="360" style="display: none;"></canvas>
     </div>
 <!-- select option -->
 
