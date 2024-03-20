@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Function to add event listeners to delete icons
     function addDeleteIconEventListeners() {
         document.querySelectorAll('.delete-icon').forEach(deleteIcon => {
             deleteIcon.addEventListener('click', deleteFolder);
@@ -193,13 +192,13 @@ document.getElementById('folder-action').addEventListener('change', function() {
         }
     }
 
-    // Fetch folders when the page loads
+   
     updateFolderList();
 });
 
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('capture-btn').addEventListener('click', function() {
-        // Get the selected folder name from the dropdown
+   
         const selectedFolder = document.getElementById('folder-action').value;
         const img = document.querySelector('.image-cont img');
 
@@ -457,26 +456,26 @@ document.addEventListener('DOMContentLoaded', function() {
         xhr.open("POST", "/change_password_without_auth", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     
-        // Define the callback function to handle the response
+       
         xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     if (response.error || newPassword !== confirmNewPassword) {
-                        // Display error message
+                        
                         notification.textContent = response.error || "Passwords do not match";
-                        notification.style.color = '#d04646'; // Red color for error
-                        notification.style.background = '#fff0f3'; // Light pink background
-                        notification.style.padding = '5px'; // Padding
+                        notification.style.color = '#d04646'; 
+                        notification.style.background = '#fff0f3'; 
+                        notification.style.padding = '5px'; 
                     } else {
-                        // Display success message
+                      
                         notification.textContent = response.message;
-                        notification.style.color = '#0b500b'; // Green color for success
-                        notification.style.background = '#c1e3b9'; // Light green background
-                        notification.style.padding = '10px'; // Padding
+                        notification.style.color = '#0b500b'; 
+                        notification.style.background = '#c1e3b9'; 
+                        notification.style.padding = '10px';
                     }
                 } else {
-                    // Display error message if request fails
+                   
                     notification.textContent = "An error occurred while processing your request.";
                     notification.style.color = '#d04646'; 
                     notification.style.background = '#fff0f3'; 
@@ -487,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Hide the notification after 10 seconds
                 setTimeout(function () {
                     notification.style.display = 'none';
-                }, 10000);
+                }, 4000);
             }
         };
     
