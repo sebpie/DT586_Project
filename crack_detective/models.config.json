@@ -21,7 +21,8 @@
             "MODEL_SIZE_Y" : 80,
             "MODEL_SIZE_C" : 3
         },
-        "VGG16_224" : {
+        "Orig256" : {
+            "MODEL" : "ORIG",
             "MODEL_FILE" : "CNN_Orig-256x256-Mendelay_FULL.keras",
             "MODEL_SIZE_X":256,
             "MODEL_SIZE_Y":256,
