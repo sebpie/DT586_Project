@@ -11,34 +11,40 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 const foldersList = document.getElementById('folders');
-                const folderDropdown = document.getElementById('folder-action'); // Get the dropdown
-
+                const folderDropdown = document.getElementById('folder-action'); 
+    
                 foldersList.innerHTML = '';
-                // folderDropdown.innerHTML = '<option value="create">Create Folder</option>';
-
+                folderDropdown.innerHTML = ''; 
+                let showListOption = document.createElement('option');
+                showListOption.value = 'list';
+                showListOption.textContent = 'Show List';
+                if (!folderDropdown.querySelector('option[value="list"]')) {
+                    folderDropdown.appendChild(showListOption);
+                }
+    
                 if (data.folders && data.folders.length > 0) {
                     data.folders.forEach(folder => {
                         const listItem = document.createElement('li');
                         listItem.classList.add('folder-item');
-
+    
                         // Create folder icon
                         const folderIcon = document.createElement('i');
                         folderIcon.classList.add('fa', 'fa-folder', 'folder-icon');
-
+    
                         const folderName = document.createElement('span');
                         folderName.classList.add('folder-name');
                         folderName.textContent = folder;
-
+    
                         listItem.appendChild(folderIcon);
                         listItem.appendChild(folderName);
-
+    
                         const deleteIcon = document.createElement('i');
                         deleteIcon.classList.add('fa', 'fa-trash', 'delete-icon');
                         deleteIcon.dataset.folderName = folder;
                         listItem.appendChild(deleteIcon);
-
+    
                         foldersList.appendChild(listItem);
-
+    
                         // Add folder to dropdown
                         const option = document.createElement('option');
                         option.value = folder;
@@ -48,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     foldersList.innerHTML = '<li>No folders found</li>';
                 }
-
+    
                 // Event listener for folder action dropdown
                 folderDropdown.addEventListener('click', function(event) {
                     if (event.target.value === 'create') {
@@ -56,10 +62,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.log("open create folder");
                         const folderNameInput = document.getElementById('folder-name');
                         const responseMessage = document.getElementById('response-message');
-
-
-                        folderNameInput.value = ''; // Clear the input field
-                        responseMessage.innerText = ''; // Clear the response message
+    
+                        folderNameInput.value = ''; 
+                        responseMessage.innerText = ''; 
                     }
                 });
             })
@@ -67,9 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error:', error);
             });
     }
-
-
-
+    
 
     // Event listener for folder creation form submission
     document.getElementById('create-folder-form').addEventListener('submit', function(event) {
@@ -263,10 +266,10 @@ function showNotification(message) {
 
   //settings page
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var username = "{{ username }}";
-    document.getElementById('username').value = username;
-});
+//   document.addEventListener('DOMContentLoaded', function() {
+//     var username = "{{ username }}";
+//     document.getElementById('username').value = username;
+// });
 
 //gallery page
 
@@ -439,4 +442,55 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
- 
+// settings.html 
+
+    function changePassword() {
+        var notification = document.getElementById('notification');
+        var username = document.getElementById('username').value;
+        var newPassword = document.getElementById('newPassword').value;
+        var confirmNewPassword = document.getElementById('confirmNewPassword').value;
+    
+
+        var xhr = new XMLHttpRequest();
+    
+        // Configure request
+        xhr.open("POST", "/change_password_without_auth", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+        // Define the callback function to handle the response
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.error || newPassword !== confirmNewPassword) {
+                        // Display error message
+                        notification.textContent = response.error || "Passwords do not match";
+                        notification.style.color = '#d04646'; // Red color for error
+                        notification.style.background = '#fff0f3'; // Light pink background
+                        notification.style.padding = '5px'; // Padding
+                    } else {
+                        // Display success message
+                        notification.textContent = response.message;
+                        notification.style.color = '#0b500b'; // Green color for success
+                        notification.style.background = '#c1e3b9'; // Light green background
+                        notification.style.padding = '10px'; // Padding
+                    }
+                } else {
+                    // Display error message if request fails
+                    notification.textContent = "An error occurred while processing your request.";
+                    notification.style.color = '#d04646'; 
+                    notification.style.background = '#fff0f3'; 
+                    notification.style.padding = '5px'; 
+                }
+                notification.style.display = 'block';
+    
+                // Hide the notification after 10 seconds
+                setTimeout(function () {
+                    notification.style.display = 'none';
+                }, 10000);
+            }
+        };
+    
+        // Send the request with the form data
+        xhr.send("username=" + username + "&newPassword=" + newPassword + "&confirmNewPassword=" + confirmNewPassword);
+    }

@@ -21,19 +21,21 @@
        <input type="text" id="username" name="username" class="form-control mb-3" >
        
   
-      <label for="Password" class="form-label">Password:</label>
-      <input type="text" id="Password" name="Password" class="form-control mb-3" >
+       <label for="newPassword" class="form-label">New Password:</label>
+    <input type="password" id="newPassword" name="newPassword" class="form-control mb-3">
   
-      <label for="newPassword" class="form-label">Confirm password:</label>
-      <input type="text" id="newPassword" name="newPassword" class="form-control mb-3" >
+    <label for="confirmNewPassword" class="form-label">Confirm New Password:</label>
+    <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control mb-3">
+
   
 
 
        <div class="form-group">
          <label class="col-md-3 control-label"></label>
          <div class="col-md-10">
-          <button type="button" class="save-btn edit-button mt-4 mb-2" onclick="validateForm()">Save</button>
-          <button type="button" class="cancel_btn mt-4 mb-2 ml-3 mr-4" onclick="cancelEdit()">Cancel</button>
+          <button type="button" class="save-btn edit-button mt-2 mb-2" onclick="changePassword()">Save</button>
+          <button type="button" class="cancel_btn mt-2 mb-2 ml-3 mr-4" onclick="cancelEdit()">Cancel</button>
+          <div id="notification"></div>
          </div>
        </div>
 
