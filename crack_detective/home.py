@@ -1,4 +1,4 @@
-from flask import Flask, current_app, render_template,send_from_directory, request, jsonify, Blueprint
+from flask import Flask, current_app, render_template,send_from_directory,redirect, url_for,request, jsonify, Blueprint
 import sqlite3
 import os
 import shutil
@@ -12,16 +12,70 @@ UPLOAD_DIR = "uploads"
 
 bp = Blueprint('home', __name__)
 
+def create_users_table():
+    connection = sqlite3.connect('users.db')
+    cursor = connection.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL
+        )
+    ''')
+    connection.commit()
+    connection.close()
+
+create_users_table()
+
+
+@bp.route('/', methods=['GET', 'POST'])
+def login():
+    hide_navbar = True
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        connection = sqlite3.connect('users.db')
+        cursor = connection.cursor()
+        cursor.execute('SELECT * FROM users WHERE username = ? AND password = ?', (username, password))
+        user = cursor.fetchone()
+        connection.close()
+
+        if user:
+            return redirect(url_for('home.home', username=username))
+        else:
+            error_message = 'Invalid username or password. Please try again.'
+            print("hide_navbar:", hide_navbar)
+            return render_template('login.html', error=error_message, hide_navbar=hide_navbar,username=username)  # Pass username here
+    else:
+        return render_template('login.html', username='')
+    
+@bp.route('/settings')
+def settings():
+    username = request.args.get('username') 
+    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+
+    
+@bp.route('/change_password_without_auth', methods=['POST'])
+def change_password_without_auth():
+    username = request.form.get('username')
+    new_password = request.form.get('newPassword')
+
+    # Update the password in the database
+    connection = sqlite3.connect('users.db')
+    cursor = connection.cursor()
+    cursor.execute('UPDATE users SET password = ? WHERE username = ?', (new_password, username))
+    connection.commit()
+    connection.close()
+    
+    return jsonify({'message': 'Password changed successfully'})
+
+
 # Route for the home page
-@bp.route('/')
+@bp.route('/home')
 def home():
     username = request.args.get('username')
     return render_template('home.html', username=username)
-
-@bp.route('/settings')
-def settings():
-    username = request.args.get('username')  # Retrieve the logged-in username
-    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
 
 @bp.route('/gallery')
 def gallery():
@@ -73,6 +127,29 @@ def init_home(app: Flask):
                 return jsonify({'error': 'No folder name received'})
         except Exception as e:
             return jsonify({'error': 'Error creating folder: ' + str(e)})
+        
+    @app.route('/register', methods=['GET', 'POST'])
+    def register():
+       if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        connection = sqlite3.connect('users.db')
+        cursor = connection.cursor()
+        cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
+        connection.commit()
+        connection.close()
+
+        return redirect(url_for('list_users'))
+       else:
+           return render_template('register.html')
+       
+    # @app.route('/logout')
+    # def logout():
+    #    return redirect(url_for('login'))
+           
+       
+         
 
 
     @app.route('/api/folders', methods=['GET'])
@@ -138,7 +215,7 @@ def init_home(app: Flask):
 
 
 
-    @app.route('/users', methods=['GET'])
+    @app.route('/api/users', methods=['GET'])
     def list_users():
         connection = sqlite3.connect('users.db')
         cursor = connection.cursor()

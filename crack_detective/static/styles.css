@@ -256,6 +256,32 @@ position: absolute;
         border:none !important;
       }
 
+      .save-btn {
+        background-color: #0b4465;
+        color: white;
+        font-weight: 500;
+        margin-left: 0; 
+        margin-top: 20px; 
+        font-size: 18px !important;
+        padding: 6px 36px;
+        cursor: pointer;
+        border-radius: 5px; 
+        border:none !important;
+      }
+
+      .cancel_btn {
+        background-color: #0b4465;
+        color: white;
+        font-weight: 500;
+        margin-left: 0; 
+        margin-top: 20px; 
+        font-size: 18px !important;
+        padding: 6px 36px;
+        cursor: pointer;
+        border-radius: 5px; 
+        border:none !important;
+      }
+
       #full-screen-btn {
         background-color: #0b4465;
         color: white;
@@ -290,6 +316,18 @@ position: absolute;
       color: green;
       background: #8aac98;
   }
+
+  .notification.error {
+    color: #d04646;
+    background: #fff0f3;
+    padding: 5px;
+    border-radius: 6px;
+}
+
+.notification.success {
+    color: green;
+    background: #8aac98;
+}
   
 
       /* folder structure */
