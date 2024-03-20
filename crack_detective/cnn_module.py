@@ -15,6 +15,8 @@ from tensorflow.keras.callbacks         import History
 
 
 class Cnn(object):
+    stats = None
+
     def __init__(self, width=224, height=224, channels=3, train_dataset=None, test_dataset=None, load=None):
         # self.train_dir = ds.datasets["Mendelay_1"]
         # self.test_dir = ds.datasets["Mendelay_1"]
@@ -27,6 +29,8 @@ class Cnn(object):
         self.width = width
         self.height = height
         self.channels = channels
+
+        self.stats = []
 
         print(f"self: w:{self.width}, h:{self.height}")
 
@@ -64,7 +68,13 @@ class Cnn(object):
         self.model = tf.keras.models.load_model(path)
 
     def predict(self, x, **kvargs):
-        return self.model.predict(x, **kvargs)
+        import time
+        start = time.time()
+        predictions=self.model.predict(x, **kvargs)
+        stop = time.time()
+        self.stats.append((predictions.shape, stop - start))
+
+        return predictions
 
 
 

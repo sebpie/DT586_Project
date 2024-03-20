@@ -57,6 +57,19 @@ def init_app(app:Flask):
     video_processors["preprocessed"] = rtmp_server
     video_processors["processed"] = CrackDetector(rtmp_server, model)
 
+    @app.route("/stats")
+    def crack_detector_stats():
+        model =  video_processors["processed"].model
+        return {
+            "model" : {
+                "type"      : type(model).__name__,
+                "width"     : model.width,
+                "height"    : model.height,
+                "channels"  : model.channels,
+            },
+            "measurements" : model.stats
+        }
+
     @app.route("/stream/<stream_name>", methods=['GET'])
     def stream_preprocessed(stream_name):
 
