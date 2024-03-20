@@ -3,7 +3,6 @@ from colorama import init as colorama_init
 import cv2
 import numpy as np
 import patchify
-import random
 from .cnn_module import Cnn, CnnVgg16
 from . import utils
 from threading import Thread
@@ -52,7 +51,7 @@ class CrackDetector(utils.Subscribable):
 
         self._t_worker = Thread(target=self._worker_batch, daemon=True)
         self._t_worker.start()
-
+        print(Fore.GREEN + f"Crack_Detector is READY." + Style.RESET_ALL)
 
     def _patch_coord(self, row, col):
         return (((col * self.model.width) + 1, (row * self.model.height) +1 ),
@@ -171,6 +170,7 @@ class CrackDetector(utils.Subscribable):
 
 
     def _worker_batch(self):
+        print(Fore.BLUE + f"(thread) crack_detector thread started.")
         for frame in self.buffer_in.stream():
             # print(f"Process frame size {frame.shape}")
             """Step 1: Patchify the frame in patches"""
