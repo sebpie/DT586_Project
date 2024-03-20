@@ -1,10 +1,57 @@
+//Home page
 document.addEventListener('DOMContentLoaded', function() {
-    function addDeleteIconEventListeners() {
-        document.querySelectorAll('.delete-icon').forEach(deleteIcon => {
-            deleteIcon.addEventListener('click', deleteFolder);
-        });
+    const fullScreenBtn = document.getElementById('full-screen-btn');
+    const uploadContainer = document.getElementById('upload-container');
+    let isFullScreen = false;
+
+    // Function to toggle full screen mode
+    function toggleFullScreen() {
+        if (!isFullScreen) {
+            if (uploadContainer.requestFullscreen) {
+                uploadContainer.requestFullscreen();
+            } else if (uploadContainer.webkitRequestFullscreen) { 
+                uploadContainer.webkitRequestFullscreen();
+            } else if (uploadContainer.msRequestFullscreen) { 
+                uploadContainer.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) { 
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { 
+                document.msExitFullscreen();
+            }
+        }
+
+        isFullScreen = !isFullScreen;
     }
 
+    // for full screen button
+    fullScreenBtn.addEventListener('click', toggleFullScreen);
+
+    //  for exiting full screen mode 
+    document.addEventListener('fullscreenchange', function(event) {
+        if (!document.fullscreenElement) {
+            isFullScreen = false;
+        }
+    });
+
+    document.addEventListener('webkitfullscreenchange', function(event) {
+        if (!document.webkitFullscreenElement) {
+            isFullScreen = false;
+        }
+    });
+
+    document.addEventListener('msfullscreenchange', function(event) {
+        if (!document.msFullscreenElement) {
+            isFullScreen = false;
+        }
+    });
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
     function updateFolderList() {
         fetch('/api/folders')
             .then(response => response.json())
@@ -16,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 folderDropdown.innerHTML = ''; 
                 let showListOption = document.createElement('option');
                 showListOption.value = 'list';
-                showListOption.textContent = 'Show List';
+                showListOption.textContent = 'Show List of Folders';
                 if (!folderDropdown.querySelector('option[value="list"]')) {
                     folderDropdown.appendChild(showListOption);
                 }
@@ -108,12 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showCreateFolderPopup();
     });
 
-    // Event listener to close the delete-folder-popup
-    document.getElementById('close-popup-delete').addEventListener('click', function() {
-        document.getElementById('delete-folder-popup').style.display = 'none';
-        updateFolderList();
-    });
-
+   
 
 document.getElementById('close-popup').addEventListener('click', function() {
     const folderNameInput = document.getElementById('folder-name');
@@ -147,49 +189,6 @@ document.getElementById('folder-action').addEventListener('change', function() {
 
     function showCreateFolderPopup() {
         document.getElementById('create-folder-popup').style.display = 'flex';
-    }
-
-    // to rename folders in gallery management
-  function sendPutRequest(folderName) {
-    fetch('/api/folders/' + folderName, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ folder_name: folderName })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log(data);
-    })
-    .catch(error => {
-        console.error('Error:', error.message);
-    });
-}
-
-    // Function to handle folder deletion
-    function deleteFolder() {
-        const folderName = this.dataset.folderName;
-        const confirmation = confirm(`Are you sure you want to delete the folder "${folderName}"?`);
-
-        if (confirmation) {
-            fetch(`/api/folders/${folderName}`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data.message);
-                updateFolderList(); 
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
     }
 
    
@@ -259,16 +258,6 @@ function showNotification(message) {
     }, 10000);
 }
 
-
-
-
-
-  //settings page
-
-//   document.addEventListener('DOMContentLoaded', function() {
-//     var username = "{{ username }}";
-//     document.getElementById('username').value = username;
-// });
 
 //gallery page
 
@@ -390,56 +379,7 @@ document.getElementById('mainImageOverlay').src = images[currentIndex];
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const fullScreenBtn = document.getElementById('full-screen-btn');
-    const uploadContainer = document.getElementById('upload-container');
-    let isFullScreen = false;
 
-    // Function to toggle full screen mode
-    function toggleFullScreen() {
-        if (!isFullScreen) {
-            if (uploadContainer.requestFullscreen) {
-                uploadContainer.requestFullscreen();
-            } else if (uploadContainer.webkitRequestFullscreen) { 
-                uploadContainer.webkitRequestFullscreen();
-            } else if (uploadContainer.msRequestFullscreen) { 
-                uploadContainer.msRequestFullscreen();
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) { 
-                document.webkitExitFullscreen();
-            } else if (document.msExitFullscreen) { 
-                document.msExitFullscreen();
-            }
-        }
-
-        isFullScreen = !isFullScreen;
-    }
-
-    // for full screen button
-    fullScreenBtn.addEventListener('click', toggleFullScreen);
-
-    //  for exiting full screen mode 
-    document.addEventListener('fullscreenchange', function(event) {
-        if (!document.fullscreenElement) {
-            isFullScreen = false;
-        }
-    });
-
-    document.addEventListener('webkitfullscreenchange', function(event) {
-        if (!document.webkitFullscreenElement) {
-            isFullScreen = false;
-        }
-    });
-
-    document.addEventListener('msfullscreenchange', function(event) {
-        if (!document.msFullscreenElement) {
-            isFullScreen = false;
-        }
-    });
-});
 
 // settings.html 
 
