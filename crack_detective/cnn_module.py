@@ -73,7 +73,7 @@ class Cnn(object):
         predictions=self.model.predict(x, **kvargs)
         stop = time.time()
         self.stats.append((predictions.shape[0], stop - start))
-        print(f"Measurement: {(predictions.shape[0], stop - start)}")
+        # print(f"Measurement: {(predictions.shape[0], stop - start)}")
         return predictions
 
 
