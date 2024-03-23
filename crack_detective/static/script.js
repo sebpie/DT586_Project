@@ -1,3 +1,22 @@
+//Login Page and registration
+document.addEventListener("DOMContentLoaded", function() {
+    const loginForm = document.getElementById('login-form');
+    const loginBtn = document.getElementById('login-btn');
+
+    loginForm.addEventListener('submit', function(event) {
+        if (!document.querySelector('.error')) {
+            return; 
+        } else {
+            event.preventDefault(); // Prevent form submission if there's an error
+        }
+    });
+    function clearErrorMessage() {
+        document.getElementById('error-message').innerText = '';
+    }
+    document.getElementById('registration-form').addEventListener('submit', clearErrorMessage);
+});
+
+
 //Home page
 document.addEventListener('DOMContentLoaded', function() {
     const fullScreenBtn = document.getElementById('full-screen-btn');
@@ -236,7 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// display a notification message
+
 function showNotification(message) {
     // Create a notification element
     const notification = document.createElement('div');
@@ -335,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    // Call the function to add event listeners to folders
+   
     addFolderEventListeners();
 });
 
@@ -423,13 +442,12 @@ document.getElementById('mainImageOverlay').src = images[currentIndex];
                 }
                 notification.style.display = 'block';
     
-                // Hide the notification after 10 seconds
                 setTimeout(function () {
                     notification.style.display = 'none';
                 }, 4000);
             }
         };
     
-        // Send the request with the form data
+      
         xhr.send("username=" + username + "&newPassword=" + newPassword + "&confirmNewPassword=" + confirmNewPassword);
     }

@@ -324,6 +324,13 @@ position: absolute;
     border-radius: 6px;
 }
 
+.errormsg {
+  color: #d04646;
+  background: #fff0f3;
+  padding: 5px;
+  border-radius: 6px;
+}
+
 .notification.success {
     color: green;
     background: #8aac98;

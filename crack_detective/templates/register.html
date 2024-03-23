@@ -14,14 +14,17 @@
       <!-- <div class="input-group"> -->
     <label for="username">Username:</label>
     <div class="form-group">
-    <input type="text"  class="form-control" id="username" name="username" required>
+    <input type="text"  class="form-control" id="username" name="username" placeholder = "Enter your Username" required>
     </div>
     <!-- <div class="input-group"> -->
     <label for="password">password:</label>
     <div class="form-group d-flex">
-    <input type="password" class="form-control" id="password" name="password" required>
+    <input type="password" class="form-control" id="password" name="password" placeholder = "Enter the Password" required>
   </div>
-   
+  <label for="password">Confirm Password:</label>
+  <div class="form-group d-flex">
+  <input type="password" class="form-control" id="cfrmpassword" name="cfrmpassword" placeholder = "Confirm the Password" required>
+</div>
  
     <div class="d-grid gap-2">
       <button id="login-btn" class="btn btn-primary mt-3 p-3 px-5">Register</button>
@@ -29,6 +32,11 @@
         <a href = "/" class = "register-link" class = "text-center">Go back to Login</a>
       </div>
     </div>
+    {% if error %}
+    <div class="errormsg">
+    {{ error }}
+    </div>
+    {% endif %}
     </form>
 
   </div>
@@ -37,6 +45,7 @@
 </div>
   </section>
   {% endblock %}
+  {% set hide_navbar = True %}
 </body>
 </html>
 

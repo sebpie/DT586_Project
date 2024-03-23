@@ -11,7 +11,7 @@
               <i class="fa fa-user" aria-hidden="true"></i>
             </div>
             <h3 class="text-center mb-4">Have an account?</h3>
-            <form id="registration-form" method="POST" action="/">
+            <form id="login-form" method="POST" action="/">
               <!-- <div class="input-group"> -->
               <label for="username">Username:</label>
               <div class="form-group">
@@ -28,6 +28,11 @@
                   <a href="/register" class="register-link" class = "text-center">Don't have an account? Sign up</a>
                 </div>
               </div>
+              {% if error %}
+              <div class="errormsg">
+              {{ error }}
+              </div>
+              {% endif %}
             </form>
           </div>
         </div>

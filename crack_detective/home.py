@@ -1,9 +1,10 @@
-from flask import Flask, current_app, render_template,send_from_directory,redirect, url_for,request, jsonify, Blueprint
+from flask import Flask, current_app,render_template,send_from_directory,redirect, url_for,request, jsonify, Blueprint
 import sqlite3
 import os
 import shutil
 import base64
 import datetime
+import re
 
 
 UPLOAD_DIR = "uploads"
@@ -45,15 +46,14 @@ def login():
             return redirect(url_for('home.home', username=username))
         else:
             error_message = 'Invalid username or password. Please try again.'
-            print("hide_navbar:", hide_navbar)
-            return render_template('login.html', error=error_message, hide_navbar=hide_navbar,username=username)  # Pass username here
+            return render_template('login.html', error=error_message, hide_navbar=hide_navbar,username=username)
     else:
         return render_template('login.html', username='')
     
 @bp.route('/settings')
 def settings():
     username = request.args.get('username') 
-    return render_template('settings.html', username=username)  # Pass the username to the settings.html template
+    return render_template('settings.html', username=username)  
 
     
 @bp.route('/change_password_without_auth', methods=['POST'])
@@ -108,12 +108,10 @@ def init_home(app: Flask):
     @app.route('/api/folders', methods=['POST'])
     def create_folder():
         try:
-            # Get folder name from the request JSON data
             data = request.json
             folder_name = data.get('folder_name')
 
             if folder_name:
-                # Define the full path to the uploads directory
                 uploads_dir = os.path.join(app.instance_path, UPLOAD_DIR)
                 folder_path = os.path.join(uploads_dir, folder_name)
 
@@ -130,26 +128,31 @@ def init_home(app: Flask):
         
     @app.route('/register', methods=['GET', 'POST'])
     def register():
+       
        if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-
+        confirm_password = request.form.get('cfrmpassword')
+        username_pattern = r"^[a-zA-Z0-9]+$"
+        if not re.match(username_pattern, username):
+            error_message = 'Username must contain only letters and digits.'
+            return render_template('register.html', error=error_message)
+        password_pattern = r"^[a-zA-Z0-9]+$"
+        if not re.match(password_pattern, password):
+            error_message = 'Password must contain only letters and digits.'
+            return render_template('register.html', error=error_message)
+        if password != confirm_password:
+            error_message = 'Password and Confirm Password do not match.'
+            return render_template('register.html', error=error_message)
         connection = sqlite3.connect('users.db')
         cursor = connection.cursor()
         cursor.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, password))
         connection.commit()
         connection.close()
-
-        return redirect(url_for('list_users'))
+        return redirect(url_for('login'))
        else:
            return render_template('register.html')
-       
-    # @app.route('/logout')
-    # def logout():
-    #    return redirect(url_for('login'))
-           
-       
-         
+
 
 
     @app.route('/api/folders', methods=['GET'])
@@ -165,7 +168,6 @@ def init_home(app: Flask):
     def delete_folder(folder_name):
         try:
             folder_path = os.path.join(app.instance_path, UPLOAD_DIR, folder_name)
-            # print(folder_path)
             if os.path.exists(folder_path):
                 shutil.rmtree(folder_path)
                 return jsonify({'message': f'Folder {folder_name} deleted successfully'})
